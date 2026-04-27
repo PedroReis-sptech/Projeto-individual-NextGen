@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NextGen - Login</title>
+    <link rel="stylesheet" href="../Site/css/styleLogin.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="cartao">
+
+            <div class="botoes-troca">
+                <button id="btn-login" class="ativo" onclick="mostrarLogin()">Entrar</button>
+                <button id="btn-cadastro" onclick="mostrarCadastro()">Cadastrar</button>
+            </div>
+
+            <form id="form-login">
+                <h2>Bem-vindo de volta</h2>
+                <p>Entre para ver as peneiras abertas.</p>
+
+                <p>E-mail</p>
+                <input type="email" placeholder="seu@email.com">
+
+                <p>Senha</p>
+                <input type="password" placeholder="********">
+
+                <button type="submit" class="btn-verm">Entrar</button>
+            </form>
+
+            <form id="form-cadastro" style="display: none;">
+                <h2>Crie sua conta</h2>
+                <p>Em 30 segundos você está dentro.</p>
+
+                <p>Nome</p>
+                <input type="text" placeholder="Seu nome">
+
+                <p>E-mail</p>
+                <input type="email" placeholder="seu@email.com">
+
+                <p>Senha</p>
+                <input type="password" placeholder="Crie uma senha">
+
+                <button type="submit" class="btn-verm">Criar conta</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        var formLogin = document.getElementById("form-login");
+        var formCadastro = document.getElementById("form-cadastro");
+
+        var btnLogin = document.getElementById("btn-login");
+        var btnCadastro = document.getElementById("btn-cadastro");
+
+        function mostrarLogin() {
+            formLogin.style.display = "block";
+            formCadastro.style.display = "none";
+
+            btnLogin.classList.add("ativo");
+            btnCadastro.classList.remove("ativo");
+        }
+
+        function mostrarCadastro() {
+            formLogin.style.display = "none";
+            formCadastro.style.display = "block";
+
+            btnCadastro.classList.add("ativo");
+            btnLogin.classList.remove("ativo");
+        }
+    </script>
+
+</body>
+
+</html>

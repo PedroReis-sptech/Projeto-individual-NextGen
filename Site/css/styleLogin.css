@@ -1,0 +1,119 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #050a0e; 
+    color: white;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cartao {
+    background-color: #0b1218; 
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    text-align: center;
+    /* Adicione as linhas abaixo */
+    width: 400px;      /* Define uma largura fixa para não achatar */
+    min-height: 520px; /* Altura suficiente para o cadastro */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.botoes-troca {
+    display: flex;
+    background-color: #070d13;
+    padding: 5px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.botoes-troca button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: gray;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.botoes-troca button:hover {
+    color: white;
+    background: #0c131a;
+    border-radius: 10px;
+}
+
+.ativo {
+    background-color: #0b1218 !important; 
+    color: white !important;
+    border-radius: 8px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+p {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+p {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    background-color: #070d13;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #ee1919; 
+}
+
+.btn-verm {
+    width: 100%;
+    background-color: #ee1919; 
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-verm:hover {
+    background-color: #b91212; 
+}
