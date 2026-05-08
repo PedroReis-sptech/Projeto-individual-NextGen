@@ -30,9 +30,8 @@ body {
 .principal {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     padding: 50px;
-    gap: 400px;
     background-color: #0b1218;
 }
 
@@ -229,6 +228,11 @@ footer {
     transition: 0.3s;
 }
 
+.titulo-secao{
+    text-align: center;
+    margin-bottom: 40px;
+}
+
 .item-categoria:hover {
     border-color: #ee1919;
     color: #ee1919;
@@ -302,4 +306,8 @@ footer {
 .time-hover:hover .logo-time-hover {
     width: 45px; 
     margin: 0 15px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
