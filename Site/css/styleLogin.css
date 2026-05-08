@@ -117,3 +117,18 @@ input:focus {
 .btn-verm:hover {
     background-color: #b91212; 
 }
+
+.exibir {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.erro {
+    color: #ff4d4d; /* Vermelho para erro */
+}
+
+.sucesso {
+    color: #00ff88; /* Verde para sucesso */
+}
