@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <title>NextGen - Login</title>
     <link rel="stylesheet" href="../Site/css/styleLogin.css">
 </head>
-
 <body>
 
     <div class="container">
-
         <div class="cartao">
-
             <div class="botoes-troca">
                 <button id="btn-login" class="ativo" onclick="mostrarLogin()">Entrar</button>
                 <button id="btn-cadastro" onclick="mostrarCadastro()">Cadastrar</button>
             </div>
 
-            <form id="form-login">
+            <form id="form-login" onsubmit="event.preventDefault()">
                 <h2>Bem-vindo de volta</h2>
                 <p>Entre para ver as peneiras abertas.</p>
 
                 <p>E-mail</p>
-                <input type="email" placeholder="seu@email.com">
+                <input type="email" id="input_email" placeholder="seu@email.com">
 
                 <p>Senha</p>
-                <input type="password" placeholder="********">
+                <input type="password" id="input_senha" placeholder="********">
 
-                <button type="submit" class="btn-verm">Entrar</button>
+                <button type="submit" class="btn-verm" onclick="logar()">Entrar</button>
+                
+                <div id="div_mensagem"></div>
             </form>
 
             <form id="form-cadastro" style="display: none;">
@@ -46,34 +44,47 @@
 
                 <button type="submit" class="btn-verm">Criar conta</button>
             </form>
-
         </div>
     </div>
 
     <script>
         var formLogin = document.getElementById("form-login");
         var formCadastro = document.getElementById("form-cadastro");
-
         var btnLogin = document.getElementById("btn-login");
         var btnCadastro = document.getElementById("btn-cadastro");
 
         function mostrarLogin() {
             formLogin.style.display = "block";
             formCadastro.style.display = "none";
-
             btnLogin.classList.add("ativo");
             btnCadastro.classList.remove("ativo");
+            div_mensagem.innerHTML = "";
         }
 
         function mostrarCadastro() {
             formLogin.style.display = "none";
             formCadastro.style.display = "block";
-
             btnCadastro.classList.add("ativo");
             btnLogin.classList.remove("ativo");
         }
+
+        function logar() {
+            let email = input_email.value;
+            let senhaInserida = input_senha.value;
+
+            let emailCorreto = "pedro.dreis@sptech.school";
+            let senhaCorreta = "123";
+
+            if (email == emailCorreto && senhaInserida == senhaCorreta) {
+                div_mensagem.innerHTML = `<p class="exibir sucesso">Login confirmado! Redirecionando...</p>`;
+                
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1500);
+            } else {
+                div_mensagem.innerHTML = `<p class="exibir erro">E-mail ou senha incorretos.</p>`;
+            }
+        }
     </script>
-
 </body>
-
 </html>
