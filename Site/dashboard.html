@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen | Dashboard</title>
+    <link rel="stylesheet" href="css/styleDashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="menu-lateral">
+        <div class="bloco-logo">
+            <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo NextGen">
+        </div>
+
+        <a href="index.html">Início</a>
+        <a href="dashboard.html" class="ativo">Dashboard</a>
+        <a href="#">Peneiras</a>
+        <a href="#">Atletas</a>
+        <a href="login.html">Sair</a>
+    </div>
+
+    <div class="conteudo">
+
+        <h1>Dashboard</h1>
+        <p class="subtitulo">Temporada 2026 · São Paulo</p>
+
+        <div class="cards-resumo">
+
+            <div class="card-resumo">
+                <p>Atletas cadastrados</p>
+                <h2>2.847</h2>
+            </div>
+
+            <div class="card-resumo">
+                <p>Peneiras ativas</p>
+                <h2>54</h2>
+            </div>
+
+            <div class="card-resumo">
+                <p>Atletas aprovados</p>
+                <h2>318</h2>
+            </div>
+
+            <div class="card-resumo">
+                <p>Taxa de aprovação</p>
+                <h2>11,2%</h2>
+            </div>
+
+        </div>
+
+        <div class="linha-graficos">
+
+            <div class="caixa-grafico grande">
+                <h3>Peneiras por dia</h3>
+                <canvas id="graficoPeneirasDia"></canvas>
+            </div>
+
+            <div class="caixa-grafico">
+                <h3>Atletas por posição</h3>
+                <canvas id="graficoPosicoes"></canvas>
+            </div>
+
+        </div>
+
+        <div class="linha-graficos">
+
+            <div class="caixa-grafico">
+                <h3>Times com mais peneiras</h3>
+                <canvas id="graficoTimes"></canvas>
+            </div>
+
+            <div class="caixa-grafico grande">
+                <h3>Aprovados por categoria</h3>
+                <canvas id="graficoAprovados"></canvas>
+            </div>
+
+        </div>
+
+        <div class="linha-graficos">
+
+            <div class="caixa-grafico">
+                <h3>Inscrições por mês</h3>
+                <canvas id="graficoInscricoes"></canvas>
+            </div>
+
+            <div class="caixa-grafico">
+                <h3>Atletas por categoria</h3>
+                <canvas id="graficoFaixaEtaria"></canvas>
+            </div>
+
+            <div class="caixa-grafico">
+                <h3>Taxa de aprovação por time</h3>
+                <canvas id="graficoTaxaTime"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+
+        var ctxDia = document.getElementById('graficoPeneirasDia');
+        new Chart(ctxDia, {
+            type: 'bar',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [
+                    {
+                        label: 'Semana passada',
+                        data: [3, 5, 4, 6, 8, 5, 2],
+                        backgroundColor: '#333333'
+                    },
+                    {
+                        label: 'Semana atual',
+                        data: [5, 7, 6, 9, 11, 7, 3],
+                        backgroundColor: '#ee1919'
+                    }
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+
+        var ctxPosicoes = document.getElementById('graficoPosicoes');
+        new Chart(ctxPosicoes, {
+            type: 'doughnut',
+            data: {
+                labels: ['Goleiro', 'Zagueiro', 'Lateral', 'Volante', 'Meia', 'Atacante'],
+                datasets: [{
+                    data: [180, 420, 310, 390, 480, 620],
+                    backgroundColor: ['#ee1919', '#f59e0b', '#10b981', '#6366f1', '#06b6d4', '#ec4899']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        var ctxTimes = document.getElementById('graficoTimes');
+        new Chart(ctxTimes, {
+            type: 'bar',
+            data: {
+                labels: ['Corinthians', 'São Paulo', 'Palmeiras', 'Santos', 'Red Bull', 'Portuguesa'],
+                datasets: [{
+                    label: 'Peneiras realizadas',
+                    data: [22, 19, 17, 15, 12, 9],
+                    backgroundColor: ['#ee1919', '#f59e0b', '#10b981', '#06b6d4', '#6366f1', '#ec4899']
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+
+        var ctxAprovados = document.getElementById('graficoAprovados');
+        new Chart(ctxAprovados, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Sub-13',
+                        data: [12, 15, 11, 18, 14, 16],
+                        borderColor: '#10b981',
+                        fill: false
+                    },
+                    {
+                        label: 'Sub-15',
+                        data: [15, 18, 14, 22, 17, 20],
+                        borderColor: '#f59e0b',
+                        fill: false
+                    },
+                    {
+                        label: 'Sub-17',
+                        data: [18, 22, 16, 28, 21, 25],
+                        borderColor: '#ee1919',
+                        fill: false
+                    },
+                    {
+                        label: 'Sub-20',
+                        data: [10, 13, 9, 15, 12, 14],
+                        borderColor: '#6366f1',
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+
+        var ctxInscricoes = document.getElementById('graficoInscricoes');
+        new Chart(ctxInscricoes, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov'],
+                datasets: [{
+                    label: 'Inscrições',
+                    data: [180, 240, 210, 320, 290, 410, 380, 450, 390, 480, 520],
+                    borderColor: '#ee1919',
+                    backgroundColor: 'rgba(238, 25, 25, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+
+        var ctxFaixa = document.getElementById('graficoFaixaEtaria');
+        new Chart(ctxFaixa, {
+            type: 'bar',
+            data: {
+                labels: ['Sub-11', 'Sub-13', 'Sub-15', 'Sub-17', 'Sub-20', 'Profissional'],
+                datasets: [{
+                    label: 'Atletas',
+                    data: [320, 480, 610, 720, 450, 267],
+                    backgroundColor: ['#06b6d4', '#10b981', '#f59e0b', '#ee1919', '#6366f1', '#ec4899']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        var ctxTaxa = document.getElementById('graficoTaxaTime');
+        new Chart(ctxTaxa, {
+            type: 'radar',
+            data: {
+                labels: ['Corinthians', 'São Paulo', 'Palmeiras', 'Santos', 'Red Bull', 'Portuguesa'],
+                datasets: [{
+                    label: 'Taxa (%)',
+                    data: [14, 11, 13, 9, 16, 8],
+                    borderColor: '#ee1919',
+                    backgroundColor: 'rgba(238, 25, 25, 0.15)'
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
