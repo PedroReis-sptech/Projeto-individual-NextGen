@@ -1,90 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>NextGen - Login</title>
-    <link rel="stylesheet" href="../Site/css/styleLogin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextGen · Entrar</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
+
+    /* fundo animado */
+    .bg-grid {
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image:
+        linear-gradient(rgba(238,25,25,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(238,25,25,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .bg-glow {
+      position:fixed; width:600px; height:600px; border-radius:50%;
+      background: radial-gradient(circle, rgba(238,25,25,.12) 0%, transparent 70%);
+      top:-200px; left:-200px; pointer-events:none; z-index:0;
+    }
+
+    .card {
+      position:relative; z-index:1;
+      width:420px; max-width:96vw;
+      background:var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 44px 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo-wrap { text-align:center; margin-bottom:32px; }
+    .logo-wrap img { width:90px; }
+
+    .tabs { display:flex; background:#070d13; border-radius: var(--r); padding:4px; margin-bottom:28px; gap:4px; }
+    .tab-btn {
+      flex:1; padding:9px; border:none; border-radius: calc(var(--r) - 2px);
+      background:transparent; color:var(--grey); font-family:var(--font-display);
+      font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+      cursor:pointer; transition:all .2s;
+    }
+    .tab-btn.active { background:var(--bg-2); color:var(--white); box-shadow:var(--shadow); }
+
+    .form-section { display:none; }
+    .form-section.visible { display:block; }
+
+    h2 { font-family:var(--font-display); font-size:26px; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
+    .sub { color:var(--grey); font-size:13px; margin-bottom:24px; }
+
+    .form-group { margin-bottom:16px; }
+
+    .btn-primary { width:100%; justify-content:center; margin-top:8px; font-size:16px; padding:14px; }
+
+    .msg { margin-top:14px; text-align:center; font-size:13px; font-weight:600; }
+    .msg.success { color:#10b981; }
+    .msg.error   { color:var(--red); }
+
+    /* grade de campos cadastro */
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .grid2 .full { grid-column:1/-1; }
+  </style>
 </head>
 <body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
 
-    <div class="container">
-        <div class="cartao">
-            <div class="botoes-troca">
-                <button id="btn-login" class="ativo" onclick="mostrarLogin()">Entrar</button>
-                <button id="btn-cadastro" onclick="mostrarCadastro()">Cadastrar</button>
-            </div>
-
-            <form id="form-login" onsubmit="event.preventDefault()">
-                <h2>Bem-vindo de volta</h2>
-                <p>Entre para ver as peneiras abertas.</p>
-
-                <p>E-mail</p>
-                <input type="email" id="input_email" placeholder="seu@email.com">
-
-                <p>Senha</p>
-                <input type="password" id="input_senha" placeholder="********">
-
-                <button type="submit" class="btn-verm" onclick="logar()">Entrar</button>
-                
-                <div id="div_mensagem"></div>
-            </form>
-
-            <form id="form-cadastro" style="display: none;">
-                <h2>Crie sua conta</h2>
-                <p>Em 30 segundos você está dentro.</p>
-
-                <p>Nome</p>
-                <input type="text" placeholder="Seu nome">
-
-                <p>E-mail</p>
-                <input type="email" placeholder="seu@email.com">
-
-                <p>Senha</p>
-                <input type="password" placeholder="Crie uma senha">
-
-                <button type="submit" class="btn-verm">Criar conta</button>
-            </form>
-        </div>
+  <div class="card">
+    <div class="logo-wrap">
+      <img src="../Logo/Next-removebg-preview.png" alt="NextGen" onerror="this.style.display='none'">
     </div>
 
-    <script>
-        var formLogin = document.getElementById("form-login");
-        var formCadastro = document.getElementById("form-cadastro");
-        var btnLogin = document.getElementById("btn-login");
-        var btnCadastro = document.getElementById("btn-cadastro");
+    <div class="tabs">
+      <button class="tab-btn active" id="btnLogin"    onclick="switchTab('login')">Entrar</button>
+      <button class="tab-btn"        id="btnCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
+    </div>
 
-        function mostrarLogin() {
-            formLogin.style.display = "block";
-            formCadastro.style.display = "none";
-            btnLogin.classList.add("ativo");
-            btnCadastro.classList.remove("ativo");
-            div_mensagem.innerHTML = "";
-        }
+    <!-- LOGIN -->
+    <div class="form-section visible" id="secLogin">
+      <h2>Bem-vindo de volta</h2>
+      <p class="sub">Entre para ver as peneiras abertas.</p>
+      <div class="form-group"><label>E-mail</label><input id="inEmail" type="email" placeholder="seu@email.com" required></div>
+      <div class="form-group"><label>Senha</label><input id="inSenha" type="password" placeholder="••••••••" required></div>
+      <button class="btn btn-primary" onclick="logar()">Entrar →</button>
+      <div class="msg" id="msgLogin"></div>
+    </div>
 
-        function mostrarCadastro() {
-            formLogin.style.display = "none";
-            formCadastro.style.display = "block";
-            btnCadastro.classList.add("ativo");
-            btnLogin.classList.remove("ativo");
-        }
+    <!-- CADASTRO -->
+    <div class="form-section" id="secCadastro">
+      <h2>Crie sua conta</h2>
+      <p class="sub">Em 30 segundos você está dentro.</p>
+      <div class="grid2">
+        <div class="form-group full"><label>Nome completo *</label><input id="cNome" type="text" placeholder="Seu nome" required></div>
+        <div class="form-group full"><label>E-mail *</label><input id="cEmail" type="email" placeholder="seu@email.com" required></div>
+        <div class="form-group"><label>Senha *</label><input id="cSenha" type="password" placeholder="Mínimo 6 caracteres" required></div>
+        <div class="form-group"><label>Data de nascimento</label><input id="cNasc" type="date"></div>
+        <div class="form-group">
+          <label>Posição *</label>
+          <select id="cPosicao" required>
+            <option value="">Selecione</option>
+            <option>Goleiro</option><option>Zagueiro</option><option>Lateral</option>
+            <option>Volante</option><option>Meia</option><option>Atacante</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Categoria *</label>
+          <select id="cCategoria" required>
+            <option value="">Selecione</option>
+            <option>Sub-11</option><option>Sub-13</option><option>Sub-15</option>
+            <option>Sub-17</option><option>Sub-20</option><option>Profissional</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Time do coração</label><input id="cTime" type="text" placeholder="Ex: Corinthians"></div>
+        <div class="form-group"><label>Altura (cm)</label><input id="cAltura" type="number" placeholder="Ex: 175"></div>
+        <div class="form-group"><label>Peso (kg)</label><input id="cPeso" type="number" placeholder="Ex: 68"></div>
+        <div class="form-group full"><label>Cidade</label><input id="cCidade" type="text" placeholder="Ex: São Paulo"></div>
+      </div>
+      <button class="btn btn-primary" onclick="cadastrar()">Criar conta →</button>
+      <div class="msg" id="msgCadastro"></div>
+    </div>
+  </div>
 
-        function logar() {
-            let email = input_email.value;
-            let senhaInserida = input_senha.value;
+  <script src="js/utils.js"></script>
+  <script>
+    // Lê parâmetro ?aba=cadastro
+    if (new URLSearchParams(location.search).get('aba') === 'cadastro') switchTab('cadastro');
 
-            let emailCorreto = "pedro.dreis@sptech.school";
-            let senhaCorreta = "123";
+    function switchTab(tab) {
+      document.getElementById('secLogin').classList.toggle('visible', tab === 'login');
+      document.getElementById('secCadastro').classList.toggle('visible', tab === 'cadastro');
+      document.getElementById('btnLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('btnCadastro').classList.toggle('active', tab === 'cadastro');
+    }
 
-            if (email == emailCorreto && senhaInserida == senhaCorreta) {
-                div_mensagem.innerHTML = `<p class="exibir sucesso">Login confirmado! Redirecionando...</p>`;
-                
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1500);
-            } else {
-                div_mensagem.innerHTML = `<p class="exibir erro">E-mail ou senha incorretos.</p>`;
-            }
-        }
-    </script>
+    function logar() {
+      const email = document.getElementById('inEmail').value.trim();
+      const senha = document.getElementById('inSenha').value.trim();
+      const msg   = document.getElementById('msgLogin');
+
+      // --- mock de usuários ---
+      const usuarios = [
+        { id:1, nome:'Admin NextGen',     email:'admin@nextgen.com',           senha:'123', tipo:'time' },
+        { id:2, nome:'Pedro Reis',        email:'pedro.dreis@sptech.school',   senha:'123', tipo:'aluno', posicao:'Atacante', categoria:'Sub-17', time_coracao:'Corinthians' },
+        { id:3, nome:'Prof. Costa',       email:'prof@nextgen.com',            senha:'123', tipo:'professor' },
+      ];
+
+      const user = usuarios.find(u => u.email === email && u.senha === senha);
+      if (!user) { msg.textContent = 'E-mail ou senha inválidos.'; msg.className='msg error'; return; }
+
+      Auth.login(user);
+      msg.textContent = 'Redirecionando…'; msg.className='msg success';
+      setTimeout(() => {
+        window.location.href = user.tipo === 'aluno' ? 'dashboard-aluno.html' : 'dashboard-admin.html';
+      }, 800);
+    }
+
+    function cadastrar() {
+      const nome     = document.getElementById('cNome').value.trim();
+      const email    = document.getElementById('cEmail').value.trim();
+      const senha    = document.getElementById('cSenha').value.trim();
+      const posicao  = document.getElementById('cPosicao').value;
+      const categoria= document.getElementById('cCategoria').value;
+      const msg      = document.getElementById('msgCadastro');
+
+      if (!nome || !email || !senha || !posicao || !categoria) {
+        msg.textContent='Preencha todos os campos obrigatórios.'; msg.className='msg error'; return;
+      }
+      if (senha.length < 6) { msg.textContent='Senha deve ter ao menos 6 caracteres.'; msg.className='msg error'; return; }
+
+      // Simula cadastro (em produção: POST /usuarios/cadastrar)
+      const novo = {
+        id: Date.now(), nome, email, senha, tipo:'aluno',
+        posicao, categoria,
+        time_coracao: document.getElementById('cTime').value,
+        altura: document.getElementById('cAltura').value,
+        peso:   document.getElementById('cPeso').value,
+        cidade: document.getElementById('cCidade').value,
+        data_nascimento: document.getElementById('cNasc').value,
+      };
+      Auth.login(novo);
+      msg.textContent='Conta criada!'; msg.className='msg success';
+    }
+  </script>
 </body>
 </html>

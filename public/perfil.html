@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextGen · Meu Perfil</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    .layout { display:flex; }
+
+    /* ── avatar hero ── */
+    .profile-hero {
+      background: linear-gradient(135deg, #0e1822 0%, #0b1218 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      padding: 36px 32px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-hero::before {
+      content:'';
+      position:absolute; right:-60px; top:-60px;
+      width:240px; height:240px; border-radius:50%;
+      background: radial-gradient(circle, rgba(238,25,25,.12) 0%, transparent 70%);
+    }
+
+    .avatar-wrap { position: relative; flex-shrink:0; }
+    .avatar-img {
+      width:110px; height:110px; border-radius:50%;
+      object-fit:cover;
+      border: 3px solid var(--red);
+      background: var(--bg-3);
+    }
+    .avatar-edit-btn {
+      position:absolute; bottom:4px; right:4px;
+      width:30px; height:30px;
+      background:var(--red); border:none; border-radius:50%;
+      color:#fff; font-size:14px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:.2s;
+    }
+    .avatar-edit-btn:hover { background:var(--red-dark); transform:scale(1.1); }
+    #avatarInput { display:none; }
+
+    .hero-info h2 { font-family:var(--font-display); font-size:30px; font-weight:800; text-transform:uppercase; }
+    .hero-info p  { color:var(--grey); font-size:14px; margin-top:4px; }
+    .hero-badges  { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+
+    /* ── tabs ── */
+    .tabs-nav {
+      display:flex; gap:4px;
+      background:var(--bg-2); border:1px solid var(--border);
+      border-radius:var(--r); padding:4px;
+      margin-bottom:24px; width:fit-content;
+    }
+    .tab-btn {
+      padding:8px 20px; border:none; border-radius:calc(var(--r) - 2px);
+      background:transparent; color:var(--grey);
+      font-family:var(--font-display); font-size:13px;
+      font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+      cursor:pointer; transition:.2s;
+    }
+    .tab-btn.active { background:var(--red); color:#fff; }
+
+    .tab-panel { display:none; }
+    .tab-panel.visible { display:block; }
+
+    /* ── form ── */
+    .section-title {
+      font-family:var(--font-display); font-size:15px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em; color:var(--grey);
+      margin: 24px 0 14px; border-bottom:1px solid var(--border); padding-bottom:10px;
+    }
+
+    .btn-row { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
+
+    /* ── stats pessoais ── */
+    .my-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:24px; }
+    .my-stat { background:var(--bg-3); border:1px solid var(--border); border-radius:var(--r); padding:18px 16px; }
+    .my-stat p { font-size:11px; color:var(--grey); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .my-stat h3 { font-family:var(--font-display); font-size:28px; font-weight:800; color:var(--red); }
+    .my-stat small { font-size:11px; color:var(--grey-dark); }
+
+    /* ── histórico peneiras ── */
+    .peneira-item {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px; background:var(--bg-3);
+      border:1px solid var(--border); border-radius:var(--r);
+      margin-bottom:10px;
+    }
+    .peneira-item h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
+    .peneira-item p  { font-size:12px; color:var(--grey); }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar"></nav>
+
+  <main class="main-content">
+
+    <!-- Hero do perfil -->
+    <div class="profile-hero">
+      <div class="avatar-wrap">
+        <img id="avatarPreview" class="avatar-img"
+             src="https://ui-avatars.com/api/?name=Atleta&background=ee1919&color=fff&size=110" alt="Avatar">
+        <button class="avatar-edit-btn" title="Trocar foto" onclick="document.getElementById('avatarInput').click()">✎</button>
+        <input type="file" id="avatarInput" accept="image/*">
+      </div>
+      <div class="hero-info">
+        <h2 id="heroNome">Carregando…</h2>
+        <p id="heroEmail"></p>
+        <div class="hero-badges" id="heroBadges"></div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('dados')">Meus Dados</button>
+      <button class="tab-btn"        onclick="switchTab('stats')">Estatísticas</button>
+      <button class="tab-btn"        onclick="switchTab('historico')">Histórico</button>
+    </div>
+
+    <!-- Aba: Dados -->
+    <div class="tab-panel visible" id="tab-dados">
+      <div class="card">
+        <div class="section-title">Informações Pessoais</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Nome *</label><input id="fNome" required></div>
+          <div class="form-group"><label>Login (e-mail) *</label><input id="fEmail" type="email" required></div>
+          <div class="form-group"><label>Nova senha</label><input id="fSenha" type="password" placeholder="Deixe em branco para manter"></div>
+          <div class="form-group"><label>Confirmar senha</label><input id="fSenha2" type="password" placeholder="Repita a senha"></div>
+          <div class="form-group"><label>Data de nascimento</label><input id="fNasc" type="date"></div>
+          <div class="form-group"><label>Cidade</label><input id="fCidade" placeholder="Ex: São Paulo"></div>
+        </div>
+
+        <div class="section-title">Informações Esportivas</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Posição *</label>
+            <select id="fPosicao" required>
+              <option value="">Selecione</option>
+              <option>Goleiro</option><option>Zagueiro</option><option>Lateral</option>
+              <option>Volante</option><option>Meia</option><option>Atacante</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Categoria *</label>
+            <select id="fCategoria" required>
+              <option value="">Selecione</option>
+              <option>Sub-11</option><option>Sub-13</option><option>Sub-15</option>
+              <option>Sub-17</option><option>Sub-20</option><option>Profissional</option>
+            </select>
+          </div>
+          <div class="form-group full"><label>Time do coração</label><input id="fTime" placeholder="Ex: Corinthians"></div>
+          <div class="form-group"><label>Altura (cm)</label><input id="fAltura" type="number" placeholder="175"></div>
+          <div class="form-group"><label>Peso (kg)</label><input id="fPeso"   type="number" placeholder="68"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-ghost" onclick="cancelar()">Cancelar</button>
+          <button class="btn btn-primary" onclick="salvar()">Salvar alterações</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aba: Estatísticas -->
+    <div class="tab-panel" id="tab-stats">
+      <div class="my-stats" id="myStats"></div>
+      <div class="charts-row">
+        <div class="chart-box wide"><h3>Presença nos treinos (últimas 12 semanas)</h3><canvas id="chartPresenca"></canvas></div>
+        <div class="chart-box"><h3>Desempenho por habilidade</h3><canvas id="chartHabilidade"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Aba: Histórico -->
+    <div class="tab-panel" id="tab-historico">
+      <h3 style="font-family:var(--font-display);font-size:18px;margin-bottom:16px;">Peneiras inscritas</h3>
+      <div id="listaPeneiras"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/utils.js"></script>
+<script>
+// ── Sidebar dinâmica ─────────────────────────────────────────
+function buildSidebar(tipo) {
+  const links = tipo === 'aluno' ? [
+    {href:'dashboard-aluno.html', icon:'', label:'Dashboard'},
+    {href:'perfil.html',          icon:'', label:'Atleta', active:true},
+    {href:'peneiras.html',        icon:'', label:'Peneiras'},
+    {href:'login.html',           icon:'', label:'Sair'},
+  ] : [
+    {href:'dashboard-admin.html', icon:'', label:'Dashboard'},
+    {href:'perfil.html',          icon:'', label:'Atleta', active:true},
+    {href:'peneiras.html',        icon:'', label:'Peneiras'},
+    {href:'criar-peneira.html',   icon:'', label:'Criar Peneira'},
+    {href:'login.html',           icon:'', label:'Sair'},
+  ];
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = `<img class="logo" src="../Logo/Next-removebg-preview.png" onerror="this.outerHTML='<div style=\\"font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\\"></div>`
+    + links.map(l => `<a href="${l.href}" class="sidebar-link${l.active?' active':''}">${l.icon} ${l.label}</a>`).join('');
+}
+
+// ── Init ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.current();
+  if (!user) { window.location.href='login.html'; return; }
+
+  buildSidebar(user.tipo);
+  initAvatarUpload('avatarInput','avatarPreview');
+
+  // Hero
+  document.getElementById('heroNome').textContent  = user.nome  || '—';
+  document.getElementById('heroEmail').textContent = user.email || '—';
+
+  if (user.foto_perfil) document.getElementById('avatarPreview').src = user.foto_perfil;
+  else document.getElementById('avatarPreview').src =
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome||'A')}&background=ee1919&color=fff&size=110`;
+
+  const badges = document.getElementById('heroBadges');
+  if (user.posicao)   badges.innerHTML += `<span class="badge badge-red">${user.posicao}</span>`;
+  if (user.categoria) badges.innerHTML += `<span class="badge badge-blue">${user.categoria}</span>`;
+  if (user.time_coracao) badges.innerHTML += `<span class="badge badge-yellow">❤ ${user.time_coracao}</span>`;
+
+  // Preenche form
+  const set = (id, val) => { if(document.getElementById(id) && val) document.getElementById(id).value = val; };
+  set('fNome', user.nome); set('fEmail', user.email);
+  set('fNasc', user.data_nascimento); set('fCidade', user.cidade);
+  set('fPosicao', user.posicao); set('fCategoria', user.categoria);
+  set('fTime', user.time_coracao); set('fAltura', user.altura); set('fPeso', user.peso);
+
+  // Stats
+  const stats = [
+    { label:'Treinos', val: 24,  sub:'neste mês' },
+    { label:'Presença', val:'87%', sub:'nos treinos' },
+    { label:'Peneiras', val: 2,   sub:'inscritas' },
+    { label:'Aprovações', val: 1, sub:'confirmadas' },
+  ];
+  document.getElementById('myStats').innerHTML = stats
+    .map(s => `<div class="my-stat"><p>${s.label}</p><h3>${s.val}</h3><small>${s.sub}</small></div>`).join('');
+
+  // Gráfico presença
+  new Chart(document.getElementById('chartPresenca'), {
+    type:'bar',
+    data:{
+      labels:['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12'],
+      datasets:[{
+        label:'Presença',
+        data:[3,2,3,3,2,3,2,3,3,3,2,3],
+        backgroundColor:'rgba(238,25,25,.7)',
+        borderRadius:6,
+      }]
+    },
+    options:{ responsive:true, plugins:{ legend:{labels:{color:'#a0a0a0'}} }, scales:{ x:{ticks:{color:'#a0a0a0'}}, y:{ticks:{color:'#a0a0a0'},max:4} } }
+  });
+
+  // Gráfico habilidade
+  new Chart(document.getElementById('chartHabilidade'), {
+    type:'radar',
+    data:{
+      labels:['Velocidade','Técnica','Finalização','Passe','Drible','Posicionamento'],
+      datasets:[{
+        label:'Desempenho',
+        data:[78,82,90,74,85,70],
+        borderColor:'#ee1919',
+        backgroundColor:'rgba(238,25,25,.15)',
+        pointBackgroundColor:'#ee1919',
+      }]
+    },
+    options:{ responsive:true, scales:{ r:{ticks:{color:'#555',display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{color:'#a0a0a0'}} }, plugins:{legend:{labels:{color:'#a0a0a0'}}} }
+  });
+
+  // Histórico peneiras
+  const peneiras = [
+    { nome:'Peneira Sub-17 Corinthians', data:'10/05/2026', status:'aprovado' },
+    { nome:'Peneira Sub-15 Palmeiras',   data:'17/05/2026', status:'pendente' },
+  ];
+  document.getElementById('listaPeneiras').innerHTML = peneiras.map(p => `
+    <div class="peneira-item">
+      <div><h4>${p.nome}</h4><p> ${p.data}</p></div>
+      <span class="badge ${p.status==='aprovado'?'badge-green':'badge-yellow'}">${p.status}</span>
+    </div>`).join('');
+});
+
+// ── Tabs ──────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('visible'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('visible');
+  event.target.classList.add('active');
+}
+
+// ── Salvar perfil ─────────────────────────────────────────────
+function salvar() {
+  const senha  = document.getElementById('fSenha').value;
+  const senha2 = document.getElementById('fSenha2').value;
+  if (senha && senha !== senha2) { toast('As senhas não coincidem.','error'); return; }
+
+  const user = Auth.current();
+  user.nome          = document.getElementById('fNome').value    || user.nome;
+  user.email         = document.getElementById('fEmail').value   || user.email;
+  user.data_nascimento = document.getElementById('fNasc').value;
+  user.cidade        = document.getElementById('fCidade').value;
+  user.posicao       = document.getElementById('fPosicao').value;
+  user.categoria     = document.getElementById('fCategoria').value;
+  user.time_coracao  = document.getElementById('fTime').value;
+  user.altura        = document.getElementById('fAltura').value;
+  user.peso          = document.getElementById('fPeso').value;
+  if (senha) user.senha = senha;
+
+  // salva foto
+  const img = document.getElementById('avatarPreview');
+  if (img.src && !img.src.includes('ui-avatars')) user.foto_perfil = img.src;
+
+  Auth.login(user);
+  toast('Perfil atualizado com sucesso!');
+
+  // Atualiza hero
+  document.getElementById('heroNome').textContent  = user.nome;
+  document.getElementById('heroEmail').textContent = user.email;
+}
+
+function cancelar() {
+  // Reload simples para reverter
+  location.reload();
+}
+</script>
+</body>
+</html>

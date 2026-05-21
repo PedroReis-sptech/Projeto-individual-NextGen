@@ -1,28 +1,65 @@
-var database = require("../database/config")
+var database = require("../database/config");
 
+/**
+ * Autentica usuário e retorna tipo + dados completos
+ */
 function autenticar(email, senha) {
-    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
     var instrucaoSql = `
-        SELECT id, nome, email, fk_empresa as empresaId FROM usuario WHERE email = '${email}' AND senha = '${senha}';
+        SELECT 
+            id, nome, email, tipo,
+            foto_perfil, posicao, categoria, time_coracao,
+            data_nascimento, cidade, altura_cm, peso_kg,
+            fk_empresa
+        FROM usuario 
+        WHERE email = '${email}' AND senha = '${senha}';
     `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
-// Coloque os mesmos parâmetros aqui. Vá para a var instrucaoSql
-function cadastrar(nome, email, senha, fkEmpresa) {
-    console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():", nome, email, senha, fkEmpresa);
-    
-    // Insira exatamente a query do banco aqui, lembrando da nomenclatura exata nos valores
-    //  e na ordem de inserção dos dados.
+/**
+ * Cadastra novo usuário — tipo sempre 'aluno' por padrão
+ */
+function cadastrar(nome, email, senha, posicao, categoria, timeCoracao, dataNascimento, cidade, alturaCm, pesoKg) {
     var instrucaoSql = `
-        INSERT INTO usuario (nome, email, senha, fk_empresa) VALUES ('${nome}', '${email}', '${senha}', '${fkEmpresa}');
+        INSERT INTO usuario 
+            (nome, email, senha, tipo, posicao, categoria, time_coracao, data_nascimento, cidade, altura_cm, peso_kg)
+        VALUES 
+            ('${nome}', '${email}', '${senha}', 'aluno',
+             '${posicao || ''}', '${categoria || ''}', '${timeCoracao || ''}',
+             ${dataNascimento ? `'${dataNascimento}'` : 'NULL'},
+             '${cidade || ''}',
+             ${alturaCm || 'NULL'},
+             ${pesoKg   || 'NULL'});
     `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 
-module.exports = {
-    autenticar,
-    cadastrar
-};
+/**
+ * Atualiza dados do perfil
+ */
+function atualizarPerfil(id, dados) {
+    const sets = Object.entries(dados)
+        .filter(([_, v]) => v !== undefined && v !== '')
+        .map(([k, v]) => `${k} = '${v}'`)
+        .join(', ');
+
+    if (!sets) return Promise.resolve({ affectedRows: 0 });
+
+    var instrucaoSql = `UPDATE usuario SET ${sets} WHERE id = ${id};`;
+    return database.executar(instrucaoSql);
+}
+
+/**
+ * Listar todos os alunos (para admin)
+ */
+function listarAlunos() {
+    var instrucaoSql = `
+        SELECT id, nome, email, tipo, posicao, categoria, time_coracao, dt_cadastro
+        FROM usuario
+        WHERE tipo = 'aluno'
+        ORDER BY dt_cadastro DESC;
+    `;
+    return database.executar(instrucaoSql);
+}
+
+module.exports = { autenticar, cadastrar, atualizarPerfil, listarAlunos };

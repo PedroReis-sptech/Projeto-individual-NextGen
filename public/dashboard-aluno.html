@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextGen · Dashboard Atleta</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    /* mini avatar topo */
+    .user-chip {
+      display:flex; align-items:center; gap:10px;
+      background:var(--bg-3); border:1px solid var(--border);
+      border-radius:30px; padding:6px 14px 6px 6px;
+      margin-bottom:28px; width:fit-content;
+    }
+    .user-chip img { width:32px; height:32px; border-radius:50%; object-fit:cover; border:2px solid var(--red); }
+    .user-chip span { font-size:14px; font-weight:600; }
+    .user-chip small { font-size:11px; color:var(--grey); }
+
+    .welcome { font-family:var(--font-display); font-size:36px; font-weight:800; text-transform:uppercase; }
+    .welcome span { color:var(--red); }
+
+    /* próximas peneiras mini */
+    .peneira-mini {
+      display:flex; align-items:center; gap:14px;
+      padding:12px 16px; background:var(--bg-3);
+      border:1px solid var(--border); border-radius:var(--r);
+      margin-bottom:10px; cursor:pointer; transition:.2s;
+    }
+    .peneira-mini:hover { border-color:var(--red); }
+    .peneira-mini .dot {
+      width:42px; height:42px; border-radius:50%;
+      background:var(--red-glow); border:1px solid var(--border-red);
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; flex-shrink:0;
+    }
+    .peneira-mini h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
+    .peneira-mini p  { font-size:12px; color:var(--grey); }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <img class="logo" src="../Logo/Next-removebg-preview.png">
+    <a href="dashboard-aluno.html" class="sidebar-link active">Dashboard</a>
+    <a href="perfil.html"          class="sidebar-link">Atleta</a>
+    <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
+    <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
+  </nav>
+
+  <main class="main-content">
+
+    <div id="userChip" class="user-chip">
+      <img id="chipAvatar" src="" alt="">
+      <div><span id="chipNome">—</span><br><small id="chipCategoria">—</small></div>
+    </div>
+
+    <div class="welcome">Olá, <span id="firstName">Atleta</span>!</div>
+    <p class="page-sub">Sua temporada 2026 · <span id="chipPos">—</span></p>
+
+    <!-- Stats pessoais -->
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="charts-row">
+      <div class="chart-box wide">
+        <h3>Presença nos treinos — últimas 8 semanas</h3>
+        <canvas id="cPresenca"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Radar de habilidades</h3>
+        <canvas id="cRadar"></canvas>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <h3>Evolução de desempenho</h3>
+        <canvas id="cEvolucao"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Próximas peneiras</h3>
+        <div id="proximasPeneiras"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/utils.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.require('aluno');
+  if (!user) return;
+
+  // Chip
+  const avatar = user.foto_perfil ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome||'A')}&background=ee1919&color=fff&size=32`;
+  document.getElementById('chipAvatar').src     = avatar;
+  document.getElementById('chipNome').textContent     = user.nome || '—';
+  document.getElementById('chipCategoria').textContent = user.categoria || '—';
+
+  const first = (user.nome||'Atleta').split(' ')[0];
+  document.getElementById('firstName').textContent = first;
+  document.getElementById('chipPos').textContent   = user.posicao || '—';
+
+  // Stats
+  const stats = [
+    {label:'Treinos no mês',   val:18,   sub:'de 20 realizados'},
+    {label:'% Presença',       val:'90%', sub:'excelente'},
+    {label:'Peneiras inscritas',val:2,   sub:'nesta temporada'},
+    {label:'Aprovações',        val:1,   sub:'confirmada'},
+  ];
+  document.getElementById('statsGrid').innerHTML = stats
+    .map(s=>`<div class="stat-card"><p>${s.label}</p><h2>${s.val}</h2><small>${s.sub}</small></div>`).join('');
+
+  // Presença
+  new Chart(document.getElementById('cPresenca'),{
+    type:'bar',
+    data:{
+      labels:['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5','Sem 6','Sem 7','Sem 8'],
+      datasets:[
+        {label:'Presentes',data:[3,3,2,3,3,3,2,3],backgroundColor:'rgba(238,25,25,.8)',borderRadius:6},
+        {label:'Ausências',data:[0,0,1,0,0,0,1,0],backgroundColor:'rgba(255,255,255,.08)',borderRadius:6},
+      ]
+    },
+    options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}},scales:{x:{ticks:{color:'#a0a0a0'},stacked:true},y:{ticks:{color:'#a0a0a0'},stacked:true}}}
+  });
+
+  // Radar
+  new Chart(document.getElementById('cRadar'),{
+    type:'radar',
+    data:{
+      labels:['Velocidade','Técnica','Finalização','Passe','Drible','Posicionamento'],
+      datasets:[{
+        label:'Você', data:[78,82,90,74,85,70],
+        borderColor:'#ee1919', backgroundColor:'rgba(238,25,25,.15)', pointBackgroundColor:'#ee1919',
+      },{
+        label:'Média categoria', data:[70,70,70,70,70,70],
+        borderColor:'rgba(255,255,255,.2)', backgroundColor:'transparent',
+        borderDash:[4,4], pointRadius:0,
+      }]
+    },
+    options:{responsive:true,scales:{r:{ticks:{display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{color:'#a0a0a0'}}},plugins:{legend:{labels:{color:'#a0a0a0'}}}}
+  });
+
+  // Evolução
+  new Chart(document.getElementById('cEvolucao'),{
+    type:'line',
+    data:{
+      labels:['Jan','Fev','Mar','Abr','Mai'],
+      datasets:[{
+        label:'Nota geral', data:[65,70,72,80,85],
+        borderColor:'#ee1919', backgroundColor:'rgba(238,25,25,.1)', fill:true, tension:.4,
+        pointBackgroundColor:'#ee1919',
+      }]
+    },
+    options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'},min:0,max:100}}}
+  });
+
+  // Próximas peneiras
+  const ps = [
+    {nome:'Peneira Sub-17 Corinthians', data:'10/06/2026', status:'pendente'},
+    {nome:'Peneira Sub-17 Santos',       data:'20/06/2026', status:'aberta'},
+  ];
+  document.getElementById('proximasPeneiras').innerHTML = ps.map(p=>`
+    <div class="peneira-mini">
+      <div class="dot"></div>
+      <div><h4>${p.nome}</h4><p>${p.data}</p></div>
+      <span class="badge ${p.status==='pendente'?'badge-yellow':'badge-green'}" style="margin-left:auto">${p.status}</span>
+    </div>`).join('');
+});
+</script>
+</body>
+</html>

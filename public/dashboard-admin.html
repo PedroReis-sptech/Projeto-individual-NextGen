@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextGen · Dashboard Admin</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    .tag-tipo {
+      font-size:11px; font-weight:700; text-transform:uppercase;
+      background:rgba(238,25,25,.15); color:var(--red);
+      border:1px solid var(--border-red); border-radius:4px;
+      padding:2px 8px; margin-left:8px; vertical-align:middle;
+    }
+
+    /* lista de atletas */
+    .athlete-row {
+      display:flex; align-items:center; gap:14px;
+      padding:12px 16px; border-bottom:1px solid var(--border);
+      cursor:pointer; transition:.15s;
+    }
+    .athlete-row:hover { background:rgba(255,255,255,.03); }
+    .athlete-row:last-child { border-bottom:none; }
+    .ath-avatar {
+      width:38px; height:38px; border-radius:50%;
+      object-fit:cover; border:2px solid var(--border);
+      flex-shrink:0;
+    }
+    .ath-name { font-size:14px; font-weight:600; }
+    .ath-sub  { font-size:12px; color:var(--grey); }
+    .ath-right { margin-left:auto; display:flex; gap:8px; align-items:center; }
+
+    /* buscador */
+    .search-bar {
+      display:flex; gap:10px; align-items:center; margin-bottom:16px;
+    }
+    .search-bar input { max-width:320px; flex:1; }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="sidebar">
+    <img class="logo" src="../Logo/Next-removebg-preview.png"
+         onerror="this.outerHTML='<div style=\'font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\'>NG</div>'">
+    <a href="dashboard-admin.html" class="sidebar-link active">Dashboard</a>
+    <a href="perfil.html"          class="sidebar-link">Atleta</a>
+    <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
+    <a href="criar-peneira.html"   class="sidebar-link">Criar Peneira</a>
+    <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
+  </nav>
+
+  <main class="main-content">
+
+    <div class="page-title">Dashboard <span id="adminTag" class="tag-tipo">Time</span></div>
+    <p class="page-sub">Temporada 2026 · São Paulo</p>
+
+    <!-- Stats gerais -->
+    <div class="stats-grid">
+      <div class="stat-card"><p>Atletas cadastrados</p><h2>2.847</h2><small>+14 esta semana</small></div>
+      <div class="stat-card"><p>Peneiras ativas</p>   <h2>54</h2>  <small>6 novas</small></div>
+      <div class="stat-card"><p>Atletas aprovados</p> <h2>318</h2> <small>nesta temporada</small></div>
+      <div class="stat-card"><p>Taxa de aprovação</p> <h2>11,2%</h2><small>↑ 2% vs. mês passado</small></div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box wide">
+        <h3>Peneiras por dia (semana atual vs. anterior)</h3>
+        <canvas id="cPenDia"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Atletas por posição</h3>
+        <canvas id="cPosicoes"></canvas>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <h3>Times com mais peneiras</h3>
+        <canvas id="cTimes"></canvas>
+      </div>
+      <div class="chart-box wide">
+        <h3>Aprovados por categoria</h3>
+        <canvas id="cAprovados"></canvas>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <h3>Inscrições por mês</h3>
+        <canvas id="cInscricoes"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Atletas por categoria</h3>
+        <canvas id="cFaixa"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Taxa de aprovação por time</h3>
+        <canvas id="cTaxa"></canvas>
+      </div>
+    </div>
+
+    <!-- Lista de atletas -->
+    <div class="card" style="margin-top:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h3 style="font-family:var(--font-display);font-size:18px;text-transform:uppercase">Atletas cadastrados</h3>
+        <a href="criar-peneira.html" class="btn btn-primary" style="font-size:13px;padding:9px 18px">+ Nova peneira</a>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="searchAtleta" placeholder="Buscar atleta…" oninput="filtrarAtletas()">
+      </div>
+      <div id="listaAtletas"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/utils.js"></script>
+<script>
+const ATLETAS_MOCK = [
+  {id:1,nome:'Pedro Reis',      posicao:'Atacante', categoria:'Sub-17', status:'ativo'},
+  {id:2,nome:'Lucas Oliveira',  posicao:'Goleiro',  categoria:'Sub-15', status:'ativo'},
+  {id:3,nome:'Rafael Souza',    posicao:'Zagueiro', categoria:'Sub-13', status:'inativo'},
+  {id:4,nome:'Gabriel Silva',   posicao:'Meia',     categoria:'Sub-17', status:'ativo'},
+  {id:5,nome:'Matheus Costa',   posicao:'Lateral',  categoria:'Sub-20', status:'ativo'},
+  {id:6,nome:'João Ferreira',   posicao:'Volante',  categoria:'Sub-15', status:'ativo'},
+];
+
+function renderAtletas(list) {
+  document.getElementById('listaAtletas').innerHTML = list.map(a => `
+    <div class="athlete-row">
+      <img class="ath-avatar" src="https://ui-avatars.com/api/?name=${encodeURIComponent(a.nome)}&background=0b1218&color=ee1919&size=38" alt="">
+      <div><div class="ath-name">${a.nome}</div><div class="ath-sub">${a.posicao} · ${a.categoria}</div></div>
+      <div class="ath-right">
+        <span class="badge ${a.status==='ativo'?'badge-green':'badge-yellow'}">${a.status}</span>
+      </div>
+    </div>`).join('');
+}
+
+function filtrarAtletas() {
+  const q = document.getElementById('searchAtleta').value.toLowerCase();
+  renderAtletas(ATLETAS_MOCK.filter(a => a.nome.toLowerCase().includes(q) || a.posicao.toLowerCase().includes(q)));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.current();
+  if (!user || user.tipo === 'aluno') { window.location.href='dashboard-aluno.html'; return; }
+  document.getElementById('adminTag').textContent = user.tipo;
+
+  renderAtletas(ATLETAS_MOCK);
+
+  const C = (id, cfg) => new Chart(document.getElementById(id), cfg);
+  const COLORS = ['#ee1919','#f59e0b','#10b981','#6366f1','#06b6d4','#ec4899'];
+
+  C('cPenDia',{type:'bar',data:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],datasets:[
+    {label:'Semana passada',data:[3,5,4,6,8,5,2],backgroundColor:'#333'},
+    {label:'Semana atual',  data:[5,7,6,9,11,7,3],backgroundColor:'#ee1919'},
+  ]},options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+
+  C('cPosicoes',{type:'doughnut',data:{labels:['Goleiro','Zagueiro','Lateral','Volante','Meia','Atacante'],
+    datasets:[{data:[180,420,310,390,480,620],backgroundColor:COLORS}]},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}}}});
+
+  C('cTimes',{type:'bar',data:{labels:['Corinthians','São Paulo','Palmeiras','Santos','Red Bull','Portuguesa'],
+    datasets:[{label:'Peneiras',data:[22,19,17,15,12,9],backgroundColor:COLORS}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+
+  C('cAprovados',{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun'],datasets:[
+    {label:'Sub-13',data:[12,15,11,18,14,16],borderColor:'#10b981',fill:false,tension:.4},
+    {label:'Sub-15',data:[15,18,14,22,17,20],borderColor:'#f59e0b',fill:false,tension:.4},
+    {label:'Sub-17',data:[18,22,16,28,21,25],borderColor:'#ee1919',fill:false,tension:.4},
+    {label:'Sub-20',data:[10,13,9,15,12,14], borderColor:'#6366f1',fill:false,tension:.4},
+  ]},options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+
+  C('cInscricoes',{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'],
+    datasets:[{label:'Inscrições',data:[180,240,210,320,290,410,380,450,390,480,520],
+      borderColor:'#ee1919',backgroundColor:'rgba(238,25,25,.1)',fill:true,tension:.4}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+
+  C('cFaixa',{type:'bar',data:{labels:['Sub-11','Sub-13','Sub-15','Sub-17','Sub-20','Prof'],
+    datasets:[{label:'Atletas',data:[320,480,610,720,450,267],backgroundColor:COLORS}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+
+  C('cTaxa',{type:'radar',data:{labels:['Corinthians','São Paulo','Palmeiras','Santos','Red Bull','Portuguesa'],
+    datasets:[{label:'Taxa (%)',data:[14,11,13,9,16,8],borderColor:'#ee1919',backgroundColor:'rgba(238,25,25,.15)'}]},
+    options:{responsive:true,scales:{r:{ticks:{display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{color:'#a0a0a0'}}},plugins:{legend:{labels:{color:'#a0a0a0'}}}}});
+});
+</script>
+</body>
+</html>
