@@ -4,64 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Entrar</title>
+  <!-- tokens.css cuida de todo o estilo, sem CSS inline aqui -->
   <link rel="stylesheet" href="css/tokens.css">
-  <style>
-    body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
-
-    /* fundo animado */
-    .bg-grid {
-      position:fixed; inset:0; pointer-events:none; z-index:0;
-      background-image:
-        linear-gradient(rgba(238,25,25,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(238,25,25,.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-    .bg-glow {
-      position:fixed; width:600px; height:600px; border-radius:50%;
-      background: radial-gradient(circle, rgba(238,25,25,.12) 0%, transparent 70%);
-      top:-200px; left:-200px; pointer-events:none; z-index:0;
-    }
-
-    .card {
-      position:relative; z-index:1;
-      width:420px; max-width:96vw;
-      background:var(--bg-2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 44px 40px;
-      box-shadow: var(--shadow);
-    }
-
-    .logo-wrap { text-align:center; margin-bottom:32px; }
-    .logo-wrap img { width:90px; }
-
-    .tabs { display:flex; background:#070d13; border-radius: var(--r); padding:4px; margin-bottom:28px; gap:4px; }
-    .tab-btn {
-      flex:1; padding:9px; border:none; border-radius: calc(var(--r) - 2px);
-      background:transparent; color:var(--grey); font-family:var(--font-display);
-      font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
-      cursor:pointer; transition:all .2s;
-    }
-    .tab-btn.active { background:var(--bg-2); color:var(--white); box-shadow:var(--shadow); }
-
-    .form-section { display:none; }
-    .form-section.visible { display:block; }
-
-    h2 { font-family:var(--font-display); font-size:26px; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
-    .sub { color:var(--grey); font-size:13px; margin-bottom:24px; }
-
-    .form-group { margin-bottom:16px; }
-
-    .btn-primary { width:100%; justify-content:center; margin-top:8px; font-size:16px; padding:14px; }
-
-    .msg { margin-top:14px; text-align:center; font-size:13px; font-weight:600; }
-    .msg.success { color:#10b981; }
-    .msg.error   { color:var(--red); }
-
-    /* grade de campos cadastro */
-    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .grid2 .full { grid-column:1/-1; }
-  </style>
+  <link rel="stylesheet" href="css/styleLogin.css">
 </head>
 <body>
   <div class="bg-grid"></div>
@@ -72,51 +17,94 @@
       <img src="../Logo/Next-removebg-preview.png" alt="NextGen" onerror="this.style.display='none'">
     </div>
 
+    <!-- Botões para trocar entre as abas Login / Cadastro -->
     <div class="tabs">
       <button class="tab-btn active" id="btnLogin"    onclick="switchTab('login')">Entrar</button>
       <button class="tab-btn"        id="btnCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
     </div>
 
-    <!-- LOGIN -->
+    <!-- ===== ABA: LOGIN ===== -->
     <div class="form-section visible" id="secLogin">
       <h2>Bem-vindo de volta</h2>
       <p class="sub">Entre para ver as peneiras abertas.</p>
-      <div class="form-group"><label>E-mail</label><input id="inEmail" type="email" placeholder="seu@email.com" required></div>
-      <div class="form-group"><label>Senha</label><input id="inSenha" type="password" placeholder="••••••••" required></div>
+
+      <div class="form-group">
+        <label>E-mail</label>
+        <input id="inEmail" type="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input id="inSenha" type="password" placeholder="••••••••" required>
+      </div>
+
       <button class="btn btn-primary" onclick="logar()">Entrar →</button>
       <div class="msg" id="msgLogin"></div>
     </div>
 
-    <!-- CADASTRO -->
+    <!-- ===== ABA: CADASTRO ===== -->
     <div class="form-section" id="secCadastro">
       <h2>Crie sua conta</h2>
       <p class="sub">Em 30 segundos você está dentro.</p>
+
       <div class="grid2">
-        <div class="form-group full"><label>Nome completo *</label><input id="cNome" type="text" placeholder="Seu nome" required></div>
-        <div class="form-group full"><label>E-mail *</label><input id="cEmail" type="email" placeholder="seu@email.com" required></div>
-        <div class="form-group"><label>Senha *</label><input id="cSenha" type="password" placeholder="Mínimo 6 caracteres" required></div>
-        <div class="form-group"><label>Data de nascimento</label><input id="cNasc" type="date"></div>
+        <div class="form-group full">
+          <label>Nome completo *</label>
+          <input id="cNome" type="text" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group full">
+          <label>E-mail *</label>
+          <input id="cEmail" type="email" placeholder="seu@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Senha *</label>
+          <input id="cSenha" type="password" placeholder="Mínimo 6 caracteres" required>
+        </div>
+        <div class="form-group">
+          <label>Data de nascimento</label>
+          <input id="cNasc" type="date">
+        </div>
         <div class="form-group">
           <label>Posição *</label>
           <select id="cPosicao" required>
             <option value="">Selecione</option>
-            <option>Goleiro</option><option>Zagueiro</option><option>Lateral</option>
-            <option>Volante</option><option>Meia</option><option>Atacante</option>
+            <option>Goleiro</option>
+            <option>Zagueiro</option>
+            <option>Lateral</option>
+            <option>Volante</option>
+            <option>Meia</option>
+            <option>Atacante</option>
           </select>
         </div>
         <div class="form-group">
           <label>Categoria *</label>
           <select id="cCategoria" required>
             <option value="">Selecione</option>
-            <option>Sub-11</option><option>Sub-13</option><option>Sub-15</option>
-            <option>Sub-17</option><option>Sub-20</option><option>Profissional</option>
+            <option>Sub-11</option>
+            <option>Sub-13</option>
+            <option>Sub-15</option>
+            <option>Sub-17</option>
+            <option>Sub-20</option>
+            <option>Profissional</option>
           </select>
         </div>
-        <div class="form-group full"><label>Time do coração</label><input id="cTime" type="text" placeholder="Ex: Corinthians"></div>
-        <div class="form-group"><label>Altura (cm)</label><input id="cAltura" type="number" placeholder="Ex: 175"></div>
-        <div class="form-group"><label>Peso (kg)</label><input id="cPeso" type="number" placeholder="Ex: 68"></div>
-        <div class="form-group full"><label>Cidade</label><input id="cCidade" type="text" placeholder="Ex: São Paulo"></div>
+        <div class="form-group full">
+          <label>Time do coração</label>
+          <input id="cTime" type="text" placeholder="Ex: Corinthians">
+        </div>
+        <div class="form-group">
+          <label>Altura (cm)</label>
+          <input id="cAltura" type="number" placeholder="Ex: 175">
+        </div>
+        <div class="form-group">
+          <label>Peso (kg)</label>
+          <input id="cPeso" type="number" placeholder="Ex: 68">
+        </div>
+        <div class="form-group full">
+          <label>Cidade</label>
+          <input id="cCidade" type="text" placeholder="Ex: São Paulo">
+        </div>
       </div>
+
       <button class="btn btn-primary" onclick="cadastrar()">Criar conta →</button>
       <div class="msg" id="msgCadastro"></div>
     </div>
@@ -124,64 +112,166 @@
 
   <script src="js/utils.js"></script>
   <script>
-    // Lê parâmetro ?aba=cadastro
-    if (new URLSearchParams(location.search).get('aba') === 'cadastro') switchTab('cadastro');
 
-    function switchTab(tab) {
-      document.getElementById('secLogin').classList.toggle('visible', tab === 'login');
-      document.getElementById('secCadastro').classList.toggle('visible', tab === 'cadastro');
-      document.getElementById('btnLogin').classList.toggle('active', tab === 'login');
-      document.getElementById('btnCadastro').classList.toggle('active', tab === 'cadastro');
+    // ---------------------------------------------------
+    // Verifica se a URL tem ?aba=cadastro e abre a aba certa
+    // ---------------------------------------------------
+    var parametros = new URLSearchParams(location.search);
+    if (parametros.get('aba') === 'cadastro') {
+      switchTab('cadastro');
     }
 
+    // ---------------------------------------------------
+    // Troca de aba entre Login e Cadastro
+    // ---------------------------------------------------
+    function switchTab(aba) {
+      document.getElementById('secLogin').classList.toggle('visible',    aba === 'login');
+      document.getElementById('secCadastro').classList.toggle('visible', aba === 'cadastro');
+      document.getElementById('btnLogin').classList.toggle('active',     aba === 'login');
+      document.getElementById('btnCadastro').classList.toggle('active',  aba === 'cadastro');
+    }
+
+    // ---------------------------------------------------
+    // LOGIN — chama a rota POST /usuarios/autenticar
+    // ---------------------------------------------------
     function logar() {
-      const email = document.getElementById('inEmail').value.trim();
-      const senha = document.getElementById('inSenha').value.trim();
-      const msg   = document.getElementById('msgLogin');
+      var email = document.getElementById('inEmail').value.trim();
+      var senha = document.getElementById('inSenha').value.trim();
+      var msg   = document.getElementById('msgLogin');
 
-      // --- mock de usuários ---
-      const usuarios = [
-        { id:1, nome:'Admin NextGen',     email:'admin@nextgen.com',           senha:'123', tipo:'time' },
-        { id:2, nome:'Pedro Reis',        email:'pedro.dreis@sptech.school',   senha:'123', tipo:'aluno', posicao:'Atacante', categoria:'Sub-17', time_coracao:'Corinthians' },
-        { id:3, nome:'Prof. Costa',       email:'prof@nextgen.com',            senha:'123', tipo:'professor' },
-      ];
-
-      const user = usuarios.find(u => u.email === email && u.senha === senha);
-      if (!user) { msg.textContent = 'E-mail ou senha inválidos.'; msg.className='msg error'; return; }
-
-      Auth.login(user);
-      msg.textContent = 'Redirecionando…'; msg.className='msg success';
-      setTimeout(() => {
-        window.location.href = user.tipo === 'aluno' ? 'dashboard-aluno.html' : 'dashboard-admin.html';
-      }, 800);
-    }
-
-    function cadastrar() {
-      const nome     = document.getElementById('cNome').value.trim();
-      const email    = document.getElementById('cEmail').value.trim();
-      const senha    = document.getElementById('cSenha').value.trim();
-      const posicao  = document.getElementById('cPosicao').value;
-      const categoria= document.getElementById('cCategoria').value;
-      const msg      = document.getElementById('msgCadastro');
-
-      if (!nome || !email || !senha || !posicao || !categoria) {
-        msg.textContent='Preencha todos os campos obrigatórios.'; msg.className='msg error'; return;
+      // Validação básica no front
+      if (!email || !senha) {
+        msg.textContent = 'Preencha o e-mail e a senha.';
+        msg.className = 'msg error';
+        return;
       }
-      if (senha.length < 6) { msg.textContent='Senha deve ter ao menos 6 caracteres.'; msg.className='msg error'; return; }
 
-      // Simula cadastro (em produção: POST /usuarios/cadastrar)
-      const novo = {
-        id: Date.now(), nome, email, senha, tipo:'aluno',
-        posicao, categoria,
-        time_coracao: document.getElementById('cTime').value,
-        altura: document.getElementById('cAltura').value,
-        peso:   document.getElementById('cPeso').value,
-        cidade: document.getElementById('cCidade').value,
-        data_nascimento: document.getElementById('cNasc').value,
-      };
-      Auth.login(novo);
-      msg.textContent='Conta criada!'; msg.className='msg success';
+      msg.textContent = 'Verificando...';
+      msg.className = 'msg';
+
+      // Chama a API real no servidor Node.js
+      fetch('/usuarios/autenticar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emailServer: email,
+          senhaServer: senha
+        })
+      })
+      .then(function(resposta) {
+        return resposta.json();
+      })
+      .then(function(dados) {
+        // Se a API retornou um erro (ex: 403 - usuário não encontrado)
+        if (dados.mensagem) {
+          msg.textContent = dados.mensagem;
+          msg.className = 'msg error';
+          return;
+        }
+
+        // Login bem sucedido: salva o usuário e redireciona
+        Auth.login(dados);
+        msg.textContent = 'Redirecionando...';
+        msg.className = 'msg success';
+
+        setTimeout(function() {
+          if (dados.tipo === 'aluno') {
+            window.location.href = 'dashboard-aluno.html';
+          } else {
+            window.location.href = 'dashboard-admin.html';
+          }
+        }, 800);
+      })
+      .catch(function(erro) {
+        // Erro de conexão com o servidor
+        console.error('Erro ao conectar com o servidor:', erro);
+        msg.textContent = 'Erro ao conectar com o servidor. Verifique se ele está rodando.';
+        msg.className = 'msg error';
+      });
     }
+
+    // ---------------------------------------------------
+    // CADASTRO — chama a rota POST /usuarios/cadastrar
+    // ---------------------------------------------------
+    function cadastrar() {
+      var nome      = document.getElementById('cNome').value.trim();
+      var email     = document.getElementById('cEmail').value.trim();
+      var senha     = document.getElementById('cSenha').value.trim();
+      var posicao   = document.getElementById('cPosicao').value;
+      var categoria = document.getElementById('cCategoria').value;
+      var msg       = document.getElementById('msgCadastro');
+
+      // Validações antes de enviar para o servidor
+      if (!nome || !email || !senha || !posicao || !categoria) {
+        msg.textContent = 'Preencha todos os campos obrigatórios (marcados com *).';
+        msg.className = 'msg error';
+        return;
+      }
+      if (senha.length < 6) {
+        msg.textContent = 'A senha deve ter ao menos 6 caracteres.';
+        msg.className = 'msg error';
+        return;
+      }
+
+      msg.textContent = 'Cadastrando...';
+      msg.className = 'msg';
+
+      // Chama a API real no servidor Node.js
+      // O controller espera os campos com o sufixo "Server"
+      fetch('/usuarios/cadastrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nomeServer:      nome,
+          emailServer:     email,
+          senhaServer:     senha,
+          posicao:         posicao,
+          categoria:       categoria,
+          timeCoracao:     document.getElementById('cTime').value,
+          dataNascimento:  document.getElementById('cNasc').value,
+          cidade:          document.getElementById('cCidade').value,
+          alturaCm:        document.getElementById('cAltura').value,
+          pesoKg:          document.getElementById('cPeso').value
+        })
+      })
+      .then(function(resposta) {
+        return resposta.json();
+      })
+      .then(function(dados) {
+        // Se o servidor retornou uma mensagem de erro
+        if (dados.mensagem && dados.id === undefined) {
+          msg.textContent = dados.mensagem;
+          msg.className = 'msg error';
+          return;
+        }
+
+        // Cadastro feito com sucesso!
+        // Agora faz login automático para redirecionar o usuário
+        msg.textContent = 'Conta criada! Fazendo login...';
+        msg.className = 'msg success';
+
+        // Salva os dados básicos na sessão e redireciona
+        Auth.login({
+          id:           dados.id,
+          nome:         nome,
+          email:        email,
+          tipo:         'aluno',
+          posicao:      posicao,
+          categoria:    categoria,
+          time_coracao: document.getElementById('cTime').value
+        });
+
+        setTimeout(function() {
+          window.location.href = 'login.html';
+        }, 1000);
+      })
+      .catch(function(erro) {
+        console.error('Erro ao cadastrar:', erro);
+        msg.textContent = 'Erro ao conectar com o servidor. Verifique se ele está rodando.';
+        msg.className = 'msg error';
+      });
+    }
+
   </script>
 </body>
 </html>

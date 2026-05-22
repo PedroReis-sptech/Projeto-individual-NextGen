@@ -1,24 +1,27 @@
 var database = require("../database/config");
 
-/**
- * Autentica usuário e retorna tipo + dados completos
- */
+/*
+  Função: autenticar
+  Recebe: email e senha do usuário
+  Retorna: dados completos do usuário se encontrado
+*/
 function autenticar(email, senha) {
     var instrucaoSql = `
         SELECT 
             id, nome, email, tipo,
             foto_perfil, posicao, categoria, time_coracao,
-            data_nascimento, cidade, altura_cm, peso_kg,
-            fk_empresa
+            data_nascimento, cidade, altura_cm, peso_kg
         FROM usuario 
         WHERE email = '${email}' AND senha = '${senha}';
     `;
     return database.executar(instrucaoSql);
 }
 
-/**
- * Cadastra novo usuário — tipo sempre 'aluno' por padrão
- */
+/*
+  Função: cadastrar
+  Recebe: todos os campos do formulário de cadastro
+  Insere um novo usuário do tipo 'aluno' no banco
+*/
 function cadastrar(nome, email, senha, posicao, categoria, timeCoracao, dataNascimento, cidade, alturaCm, pesoKg) {
     var instrucaoSql = `
         INSERT INTO usuario 
@@ -34,24 +37,35 @@ function cadastrar(nome, email, senha, posicao, categoria, timeCoracao, dataNasc
     return database.executar(instrucaoSql);
 }
 
-/**
- * Atualiza dados do perfil
- */
+/*
+  Função: atualizarPerfil
+  Recebe: id do usuário e um objeto com os campos a atualizar
+  Atualiza somente os campos que foram enviados
+*/
 function atualizarPerfil(id, dados) {
-    const sets = Object.entries(dados)
-        .filter(([_, v]) => v !== undefined && v !== '')
-        .map(([k, v]) => `${k} = '${v}'`)
+    // Filtra os campos que não são vazios ou indefinidos
+    var sets = Object.entries(dados)
+        .filter(function(item) {
+            return item[1] !== undefined && item[1] !== '';
+        })
+        .map(function(item) {
+            return item[0] + " = '" + item[1] + "'";
+        })
         .join(', ');
 
-    if (!sets) return Promise.resolve({ affectedRows: 0 });
+    // Se não há nada para atualizar, encerra sem fazer query
+    if (!sets) {
+        return Promise.resolve({ affectedRows: 0 });
+    }
 
-    var instrucaoSql = `UPDATE usuario SET ${sets} WHERE id = ${id};`;
+    var instrucaoSql = "UPDATE usuario SET " + sets + " WHERE id = " + id + ";";
     return database.executar(instrucaoSql);
 }
 
-/**
- * Listar todos os alunos (para admin)
- */
+/*
+  Função: listarAlunos
+  Retorna: todos os usuários do tipo 'aluno' ordenados pelo mais recente
+*/
 function listarAlunos() {
     var instrucaoSql = `
         SELECT id, nome, email, tipo, posicao, categoria, time_coracao, dt_cadastro

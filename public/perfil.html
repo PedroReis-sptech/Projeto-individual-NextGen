@@ -4,139 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Meu Perfil</title>
+  <!-- tokens.css = estilos globais compartilhados -->
   <link rel="stylesheet" href="css/tokens.css">
-  <style>
-    .layout { display:flex; }
-
-    /* ── avatar hero ── */
-    .profile-hero {
-      background: linear-gradient(135deg, #0e1822 0%, #0b1218 100%);
-      border: 1px solid var(--border);
-      border-radius: var(--r2);
-      padding: 36px 32px;
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      margin-bottom: 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .profile-hero::before {
-      content:'';
-      position:absolute; right:-60px; top:-60px;
-      width:240px; height:240px; border-radius:50%;
-      background: radial-gradient(circle, rgba(238,25,25,.12) 0%, transparent 70%);
-    }
-
-    .avatar-wrap { position: relative; flex-shrink:0; }
-    .avatar-img {
-      width:110px; height:110px; border-radius:50%;
-      object-fit:cover;
-      border: 3px solid var(--red);
-      background: var(--bg-3);
-    }
-    .avatar-edit-btn {
-      position:absolute; bottom:4px; right:4px;
-      width:30px; height:30px;
-      background:var(--red); border:none; border-radius:50%;
-      color:#fff; font-size:14px; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      transition:.2s;
-    }
-    .avatar-edit-btn:hover { background:var(--red-dark); transform:scale(1.1); }
-    #avatarInput { display:none; }
-
-    .hero-info h2 { font-family:var(--font-display); font-size:30px; font-weight:800; text-transform:uppercase; }
-    .hero-info p  { color:var(--grey); font-size:14px; margin-top:4px; }
-    .hero-badges  { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
-
-    /* ── tabs ── */
-    .tabs-nav {
-      display:flex; gap:4px;
-      background:var(--bg-2); border:1px solid var(--border);
-      border-radius:var(--r); padding:4px;
-      margin-bottom:24px; width:fit-content;
-    }
-    .tab-btn {
-      padding:8px 20px; border:none; border-radius:calc(var(--r) - 2px);
-      background:transparent; color:var(--grey);
-      font-family:var(--font-display); font-size:13px;
-      font-weight:700; text-transform:uppercase; letter-spacing:.05em;
-      cursor:pointer; transition:.2s;
-    }
-    .tab-btn.active { background:var(--red); color:#fff; }
-
-    .tab-panel { display:none; }
-    .tab-panel.visible { display:block; }
-
-    /* ── form ── */
-    .section-title {
-      font-family:var(--font-display); font-size:15px; font-weight:700;
-      text-transform:uppercase; letter-spacing:.08em; color:var(--grey);
-      margin: 24px 0 14px; border-bottom:1px solid var(--border); padding-bottom:10px;
-    }
-
-    .btn-row { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
-
-    /* ── stats pessoais ── */
-    .my-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:24px; }
-    .my-stat { background:var(--bg-3); border:1px solid var(--border); border-radius:var(--r); padding:18px 16px; }
-    .my-stat p { font-size:11px; color:var(--grey); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
-    .my-stat h3 { font-family:var(--font-display); font-size:28px; font-weight:800; color:var(--red); }
-    .my-stat small { font-size:11px; color:var(--grey-dark); }
-
-    /* ── histórico peneiras ── */
-    .peneira-item {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 16px; background:var(--bg-3);
-      border:1px solid var(--border); border-radius:var(--r);
-      margin-bottom:10px;
-    }
-    .peneira-item h4 { font-size:14px; font-weight:600; margin-bottom:2px; }
-    .peneira-item p  { font-size:12px; color:var(--grey); }
-  </style>
+  <!-- stylePerfil.css = estilos específicos desta página -->
+  <link rel="stylesheet" href="css/stylePerfil.css">
 </head>
 <body>
 <div class="layout">
 
-  <!-- Sidebar -->
+  <!-- ===== MENU LATERAL ===== -->
+  <!-- Preenchido dinamicamente pelo JavaScript abaixo -->
   <nav class="sidebar" id="sidebar"></nav>
 
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <main class="main-content">
 
-    <!-- Hero do perfil -->
+    <!-- Herói do perfil: avatar + nome + badges -->
     <div class="profile-hero">
       <div class="avatar-wrap">
         <img id="avatarPreview" class="avatar-img"
-             src="https://ui-avatars.com/api/?name=Atleta&background=ee1919&color=fff&size=110" alt="Avatar">
+             src="https://ui-avatars.com/api/?name=Atleta&background=ee1919&color=fff&size=110"
+             alt="Foto de perfil">
+        <!-- Botão de lápis para trocar a foto -->
         <button class="avatar-edit-btn" title="Trocar foto" onclick="document.getElementById('avatarInput').click()">✎</button>
+        <!-- Input de arquivo oculto -->
         <input type="file" id="avatarInput" accept="image/*">
       </div>
       <div class="hero-info">
         <h2 id="heroNome">Carregando…</h2>
-        <p id="heroEmail"></p>
+        <p  id="heroEmail"></p>
         <div class="hero-badges" id="heroBadges"></div>
       </div>
     </div>
 
-    <!-- Tabs -->
+    <!-- Navegação por abas -->
     <div class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('dados')">Meus Dados</button>
-      <button class="tab-btn"        onclick="switchTab('stats')">Estatísticas</button>
-      <button class="tab-btn"        onclick="switchTab('historico')">Histórico</button>
+      <button class="tab-btn active" onclick="switchTab('dados',  this)">Meus Dados</button>
+      <button class="tab-btn"        onclick="switchTab('stats',  this)">Estatísticas</button>
+      <button class="tab-btn"        onclick="switchTab('historico', this)">Histórico</button>
     </div>
 
-    <!-- Aba: Dados -->
+    <!-- ===== ABA: MEUS DADOS ===== -->
     <div class="tab-panel visible" id="tab-dados">
       <div class="card">
+
         <div class="section-title">Informações Pessoais</div>
         <div class="form-grid">
-          <div class="form-group"><label>Nome *</label><input id="fNome" required></div>
-          <div class="form-group"><label>Login (e-mail) *</label><input id="fEmail" type="email" required></div>
-          <div class="form-group"><label>Nova senha</label><input id="fSenha" type="password" placeholder="Deixe em branco para manter"></div>
-          <div class="form-group"><label>Confirmar senha</label><input id="fSenha2" type="password" placeholder="Repita a senha"></div>
-          <div class="form-group"><label>Data de nascimento</label><input id="fNasc" type="date"></div>
-          <div class="form-group"><label>Cidade</label><input id="fCidade" placeholder="Ex: São Paulo"></div>
+          <div class="form-group"><label>Nome *</label>            <input id="fNome"  required></div>
+          <div class="form-group"><label>Login (e-mail) *</label>  <input id="fEmail" type="email" required></div>
+          <div class="form-group"><label>Nova senha</label>        <input id="fSenha"  type="password" placeholder="Deixe em branco para manter"></div>
+          <div class="form-group"><label>Confirmar senha</label>   <input id="fSenha2" type="password" placeholder="Repita a senha"></div>
+          <div class="form-group"><label>Data de nascimento</label><input id="fNasc"   type="date"></div>
+          <div class="form-group"><label>Cidade</label>            <input id="fCidade" placeholder="Ex: São Paulo"></div>
         </div>
 
         <div class="section-title">Informações Esportivas</div>
@@ -157,181 +76,303 @@
               <option>Sub-17</option><option>Sub-20</option><option>Profissional</option>
             </select>
           </div>
-          <div class="form-group full"><label>Time do coração</label><input id="fTime" placeholder="Ex: Corinthians"></div>
-          <div class="form-group"><label>Altura (cm)</label><input id="fAltura" type="number" placeholder="175"></div>
-          <div class="form-group"><label>Peso (kg)</label><input id="fPeso"   type="number" placeholder="68"></div>
+          <div class="form-group full"><label>Time do coração</label><input id="fTime"   placeholder="Ex: Corinthians"></div>
+          <div class="form-group">     <label>Altura (cm)</label>   <input id="fAltura" type="number" placeholder="175"></div>
+          <div class="form-group">     <label>Peso (kg)</label>     <input id="fPeso"   type="number" placeholder="68"></div>
         </div>
 
         <div class="btn-row">
-          <button class="btn btn-ghost" onclick="cancelar()">Cancelar</button>
+          <button class="btn btn-ghost"   onclick="cancelar()">Cancelar</button>
           <button class="btn btn-primary" onclick="salvar()">Salvar alterações</button>
         </div>
       </div>
     </div>
 
-    <!-- Aba: Estatísticas -->
+    <!-- ===== ABA: ESTATÍSTICAS ===== -->
     <div class="tab-panel" id="tab-stats">
+      <!-- Cards numéricos de desempenho -->
       <div class="my-stats" id="myStats"></div>
+      <!-- Gráficos de presença e habilidades -->
       <div class="charts-row">
         <div class="chart-box wide"><h3>Presença nos treinos (últimas 12 semanas)</h3><canvas id="chartPresenca"></canvas></div>
-        <div class="chart-box"><h3>Desempenho por habilidade</h3><canvas id="chartHabilidade"></canvas></div>
+        <div class="chart-box">     <h3>Desempenho por habilidade</h3>              <canvas id="chartHabilidade"></canvas></div>
       </div>
     </div>
 
-    <!-- Aba: Histórico -->
+    <!-- ===== ABA: HISTÓRICO ===== -->
     <div class="tab-panel" id="tab-historico">
-      <h3 style="font-family:var(--font-display);font-size:18px;margin-bottom:16px;">Peneiras inscritas</h3>
-      <div id="listaPeneiras"></div>
+      <h3 class="historico-titulo">Peneiras inscritas</h3>
+      <!-- Preenchido pela API via JavaScript -->
+      <div id="listaPeneiras">
+        <p style="color:var(--grey)">Carregando histórico...</p>
+      </div>
     </div>
 
   </main>
 </div>
 
+<!-- Chart.js para os gráficos -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- utils.js contém Auth, toast, initAvatarUpload, etc. -->
 <script src="js/utils.js"></script>
 <script>
-// ── Sidebar dinâmica ─────────────────────────────────────────
-function buildSidebar(tipo) {
-  const links = tipo === 'aluno' ? [
-    {href:'dashboard-aluno.html', icon:'', label:'Dashboard'},
-    {href:'perfil.html',          icon:'', label:'Atleta', active:true},
-    {href:'peneiras.html',        icon:'', label:'Peneiras'},
-    {href:'login.html',           icon:'', label:'Sair'},
-  ] : [
-    {href:'dashboard-admin.html', icon:'', label:'Dashboard'},
-    {href:'perfil.html',          icon:'', label:'Atleta', active:true},
-    {href:'peneiras.html',        icon:'', label:'Peneiras'},
-    {href:'criar-peneira.html',   icon:'', label:'Criar Peneira'},
-    {href:'login.html',           icon:'', label:'Sair'},
-  ];
-  const sidebar = document.getElementById('sidebar');
-  sidebar.innerHTML = `<img class="logo" src="../Logo/Next-removebg-preview.png" onerror="this.outerHTML='<div style=\\"font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\\"></div>`
-    + links.map(l => `<a href="${l.href}" class="sidebar-link${l.active?' active':''}">${l.icon} ${l.label}</a>`).join('');
-}
 
-// ── Init ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const user = Auth.current();
-  if (!user) { window.location.href='login.html'; return; }
+  // ============================================================
+  // Função: buildSidebar
+  // Monta o menu lateral de acordo com o tipo do usuário logado
+  // ============================================================
+  function buildSidebar(tipo) {
+    var links;
 
-  buildSidebar(user.tipo);
-  initAvatarUpload('avatarInput','avatarPreview');
+    if (tipo === 'aluno') {
+      links = [
+        { href: 'dashboard-aluno.html', label: 'Dashboard' },
+        { href: 'perfil.html',          label: 'Perfil',    ativo: true },
+        { href: 'peneiras.html',        label: 'Peneiras' },
+        { href: 'login.html',           label: 'Sair' }
+      ];
+    } else {
+      links = [
+        { href: 'dashboard-admin.html', label: 'Dashboard' },
+        { href: 'perfil.html',          label: 'Perfil',         ativo: true },
+        { href: 'peneiras.html',        label: 'Peneiras' },
+        { href: 'criar-peneira.html',   label: 'Criar Peneira' },
+        { href: 'login.html',           label: 'Sair' }
+      ];
+    }
 
-  // Hero
-  document.getElementById('heroNome').textContent  = user.nome  || '—';
-  document.getElementById('heroEmail').textContent = user.email || '—';
+    var sidebar = document.getElementById('sidebar');
+    var html = '<img class="logo" src="../Logo/Next-removebg-preview.png">';
+    for (var i = 0; i < links.length; i++) {
+      var l = links[i];
+      html += '<a href="' + l.href + '" class="sidebar-link' + (l.ativo ? ' active' : '') + '">' + l.label + '</a>';
+    }
+    sidebar.innerHTML = html;
+  }
 
-  if (user.foto_perfil) document.getElementById('avatarPreview').src = user.foto_perfil;
-  else document.getElementById('avatarPreview').src =
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome||'A')}&background=ee1919&color=fff&size=110`;
+  // ============================================================
+  // Função: carregarHistoricoPeneiras
+  // Busca as inscrições do aluno logado via API
+  // (Você precisará criar a rota GET /inscricoes/:idAtleta)
+  // ============================================================
+  function carregarHistoricoPeneiras(idAtleta) {
+    // Por enquanto mostra mensagem enquanto a rota não está criada
+    var container = document.getElementById('listaPeneiras');
+    container.innerHTML = '<p style="color:var(--grey)">Histórico de inscrições em desenvolvimento. Crie a rota GET /inscricoes/:idAtleta para ativar.</p>';
 
-  const badges = document.getElementById('heroBadges');
-  if (user.posicao)   badges.innerHTML += `<span class="badge badge-red">${user.posicao}</span>`;
-  if (user.categoria) badges.innerHTML += `<span class="badge badge-blue">${user.categoria}</span>`;
-  if (user.time_coracao) badges.innerHTML += `<span class="badge badge-yellow">❤ ${user.time_coracao}</span>`;
+    // Quando criar a rota, descomente o código abaixo:
+    /*
+    fetch('/inscricoes/' + idAtleta)
+      .then(function(resposta) { return resposta.json(); })
+      .then(function(inscricoes) {
+        var html = '';
+        for (var i = 0; i < inscricoes.length; i++) {
+          var ins = inscricoes[i];
+          html += '<div class="peneira-item">';
+          html +=   '<div><h4>' + ins.nome_peneira + '</h4><p>' + ins.data_realizacao + '</p></div>';
+          html +=   '<span class="badge badge-' + (ins.status === 'aprovado' ? 'green' : 'yellow') + '">' + ins.status + '</span>';
+          html += '</div>';
+        }
+        container.innerHTML = html || '<p style="color:var(--grey)">Nenhuma inscrição encontrada.</p>';
+      })
+      .catch(function(erro) { console.error(erro); });
+    */
+  }
 
-  // Preenche form
-  const set = (id, val) => { if(document.getElementById(id) && val) document.getElementById(id).value = val; };
-  set('fNome', user.nome); set('fEmail', user.email);
-  set('fNasc', user.data_nascimento); set('fCidade', user.cidade);
-  set('fPosicao', user.posicao); set('fCategoria', user.categoria);
-  set('fTime', user.time_coracao); set('fAltura', user.altura); set('fPeso', user.peso);
+  // ============================================================
+  // Quando a página termina de carregar, executa tudo
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function() {
 
-  // Stats
-  const stats = [
-    { label:'Treinos', val: 24,  sub:'neste mês' },
-    { label:'Presença', val:'87%', sub:'nos treinos' },
-    { label:'Peneiras', val: 2,   sub:'inscritas' },
-    { label:'Aprovações', val: 1, sub:'confirmadas' },
-  ];
-  document.getElementById('myStats').innerHTML = stats
-    .map(s => `<div class="my-stat"><p>${s.label}</p><h3>${s.val}</h3><small>${s.sub}</small></div>`).join('');
+    // Verifica se há usuário logado
+    var user = Auth.current();
+    if (!user) {
+      window.location.href = 'login.html';
+      return;
+    }
 
-  // Gráfico presença
-  new Chart(document.getElementById('chartPresenca'), {
-    type:'bar',
-    data:{
-      labels:['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12'],
-      datasets:[{
-        label:'Presença',
-        data:[3,2,3,3,2,3,2,3,3,3,2,3],
-        backgroundColor:'rgba(238,25,25,.7)',
-        borderRadius:6,
-      }]
-    },
-    options:{ responsive:true, plugins:{ legend:{labels:{color:'#a0a0a0'}} }, scales:{ x:{ticks:{color:'#a0a0a0'}}, y:{ticks:{color:'#a0a0a0'},max:4} } }
-  });
+    // Monta o menu lateral
+    buildSidebar(user.tipo);
 
-  // Gráfico habilidade
-  new Chart(document.getElementById('chartHabilidade'), {
-    type:'radar',
-    data:{
-      labels:['Velocidade','Técnica','Finalização','Passe','Drible','Posicionamento'],
-      datasets:[{
-        label:'Desempenho',
-        data:[78,82,90,74,85,70],
-        borderColor:'#ee1919',
-        backgroundColor:'rgba(238,25,25,.15)',
-        pointBackgroundColor:'#ee1919',
-      }]
-    },
-    options:{ responsive:true, scales:{ r:{ticks:{color:'#555',display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{color:'#a0a0a0'}} }, plugins:{legend:{labels:{color:'#a0a0a0'}}} }
-  });
+    // Ativa o preview de troca de foto
+    initAvatarUpload('avatarInput', 'avatarPreview');
 
-  // Histórico peneiras
-  const peneiras = [
-    { nome:'Peneira Sub-17 Corinthians', data:'10/05/2026', status:'aprovado' },
-    { nome:'Peneira Sub-15 Palmeiras',   data:'17/05/2026', status:'pendente' },
-  ];
-  document.getElementById('listaPeneiras').innerHTML = peneiras.map(p => `
-    <div class="peneira-item">
-      <div><h4>${p.nome}</h4><p> ${p.data}</p></div>
-      <span class="badge ${p.status==='aprovado'?'badge-green':'badge-yellow'}">${p.status}</span>
-    </div>`).join('');
-});
+    // ── Preenche o herói com dados do usuário ──
+    document.getElementById('heroNome').textContent  = user.nome  || '—';
+    document.getElementById('heroEmail').textContent = user.email || '—';
 
-// ── Tabs ──────────────────────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('visible'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('visible');
-  event.target.classList.add('active');
-}
+    if (user.foto_perfil) {
+      document.getElementById('avatarPreview').src = user.foto_perfil;
+    } else {
+      document.getElementById('avatarPreview').src =
+        'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.nome || 'A') + '&background=ee1919&color=fff&size=110';
+    }
 
-// ── Salvar perfil ─────────────────────────────────────────────
-function salvar() {
-  const senha  = document.getElementById('fSenha').value;
-  const senha2 = document.getElementById('fSenha2').value;
-  if (senha && senha !== senha2) { toast('As senhas não coincidem.','error'); return; }
+    // Adiciona badges de posição, categoria e time do coração
+    var badges = document.getElementById('heroBadges');
+    if (user.posicao)      badges.innerHTML += '<span class="badge badge-red">'    + user.posicao      + '</span>';
+    if (user.categoria)    badges.innerHTML += '<span class="badge badge-blue">'   + user.categoria    + '</span>';
+    if (user.time_coracao) badges.innerHTML += '<span class="badge badge-yellow">❤ ' + user.time_coracao + '</span>';
 
-  const user = Auth.current();
-  user.nome          = document.getElementById('fNome').value    || user.nome;
-  user.email         = document.getElementById('fEmail').value   || user.email;
-  user.data_nascimento = document.getElementById('fNasc').value;
-  user.cidade        = document.getElementById('fCidade').value;
-  user.posicao       = document.getElementById('fPosicao').value;
-  user.categoria     = document.getElementById('fCategoria').value;
-  user.time_coracao  = document.getElementById('fTime').value;
-  user.altura        = document.getElementById('fAltura').value;
-  user.peso          = document.getElementById('fPeso').value;
-  if (senha) user.senha = senha;
+    // ── Preenche os campos do formulário ──
+    function preencher(id, valor) {
+      var campo = document.getElementById(id);
+      if (campo && valor) campo.value = valor;
+    }
+    preencher('fNome',     user.nome);
+    preencher('fEmail',    user.email);
+    preencher('fNasc',     user.data_nascimento);
+    preencher('fCidade',   user.cidade);
+    preencher('fPosicao',  user.posicao);
+    preencher('fCategoria',user.categoria);
+    preencher('fTime',     user.time_coracao);
+    preencher('fAltura',   user.altura_cm);
+    preencher('fPeso',     user.peso_kg);
 
-  // salva foto
-  const img = document.getElementById('avatarPreview');
-  if (img.src && !img.src.includes('ui-avatars')) user.foto_perfil = img.src;
+    // ── Monta cards de estatísticas ──
+    var stats = [
+      { label: 'Treinos',    val: 24,   sub: 'neste mês' },
+      { label: 'Presença',   val: '87%', sub: 'nos treinos' },
+      { label: 'Peneiras',   val: 2,    sub: 'inscritas' },
+      { label: 'Aprovações', val: 1,    sub: 'confirmadas' }
+    ];
+    var htmlStats = '';
+    for (var i = 0; i < stats.length; i++) {
+      htmlStats += '<div class="my-stat"><p>' + stats[i].label + '</p><h3>' + stats[i].val + '</h3><small>' + stats[i].sub + '</small></div>';
+    }
+    document.getElementById('myStats').innerHTML = htmlStats;
 
-  Auth.login(user);
-  toast('Perfil atualizado com sucesso!');
+    // ── Gráfico de presença ──
+    new Chart(document.getElementById('chartPresenca'), {
+      type: 'bar',
+      data: {
+        labels: ['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12'],
+        datasets: [{
+          label: 'Presença',
+          data: [3, 2, 3, 3, 2, 3, 2, 3, 3, 3, 2, 3],
+          backgroundColor: 'rgba(238,25,25,.7)',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#a0a0a0' } } },
+        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' }, max: 4 } }
+      }
+    });
 
-  // Atualiza hero
-  document.getElementById('heroNome').textContent  = user.nome;
-  document.getElementById('heroEmail').textContent = user.email;
-}
+    // ── Gráfico radar de habilidades ──
+    new Chart(document.getElementById('chartHabilidade'), {
+      type: 'radar',
+      data: {
+        labels: ['Velocidade', 'Técnica', 'Finalização', 'Passe', 'Drible', 'Posicionamento'],
+        datasets: [{
+          label: 'Desempenho',
+          data: [78, 82, 90, 74, 85, 70],
+          borderColor: '#ee1919',
+          backgroundColor: 'rgba(238,25,25,.15)',
+          pointBackgroundColor: '#ee1919'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            ticks: { color: '#555', display: false },
+            grid: { color: 'rgba(255,255,255,.08)' },
+            pointLabels: { color: '#a0a0a0' }
+          }
+        },
+        plugins: { legend: { labels: { color: '#a0a0a0' } } }
+      }
+    });
 
-function cancelar() {
-  // Reload simples para reverter
-  location.reload();
-}
+    // ── Carrega histórico de peneiras ──
+    carregarHistoricoPeneiras(user.id);
+
+  }); // fim DOMContentLoaded
+
+  // ============================================================
+  // Função: switchTab
+  // Troca a aba visível quando o usuário clica nos botões
+  // ============================================================
+  function switchTab(nome, botaoClicado) {
+    // Esconde todos os painéis e desativa todos os botões
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('visible'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b)   { b.classList.remove('active');  });
+    // Mostra o painel e ativa o botão clicado
+    document.getElementById('tab-' + nome).classList.add('visible');
+    botaoClicado.classList.add('active');
+  }
+
+  // ============================================================
+  // Função: salvar
+  // Salva as alterações do perfil via PUT /usuarios/:id/perfil
+  // ============================================================
+  function salvar() {
+    var senha  = document.getElementById('fSenha').value;
+    var senha2 = document.getElementById('fSenha2').value;
+
+    // Valida senhas iguais antes de enviar
+    if (senha && senha !== senha2) {
+      toast('As senhas não coincidem.', 'error');
+      return;
+    }
+
+    var user = Auth.current();
+
+    // Monta o objeto com os novos dados
+    var dadosAtualizados = {
+      nome:            document.getElementById('fNome').value    || user.nome,
+      email:           document.getElementById('fEmail').value   || user.email,
+      data_nascimento: document.getElementById('fNasc').value,
+      cidade:          document.getElementById('fCidade').value,
+      posicao:         document.getElementById('fPosicao').value,
+      categoria:       document.getElementById('fCategoria').value,
+      time_coracao:    document.getElementById('fTime').value,
+      altura_cm:       document.getElementById('fAltura').value,
+      peso_kg:         document.getElementById('fPeso').value
+    };
+    if (senha) dadosAtualizados.senha = senha;
+
+    // Chama a API real para persistir no banco
+    fetch('/usuarios/' + user.id + '/perfil', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dadosAtualizados)
+    })
+    .then(function(resposta) { return resposta.json(); })
+    .then(function(resultado) {
+      // Atualiza também a sessão local
+      Object.assign(user, dadosAtualizados);
+
+      // Salva foto de perfil se foi trocada
+      var img = document.getElementById('avatarPreview');
+      if (img.src && !img.src.includes('ui-avatars')) {
+        user.foto_perfil = img.src;
+      }
+
+      Auth.login(user);
+      toast('Perfil atualizado com sucesso!');
+
+      // Atualiza o herói
+      document.getElementById('heroNome').textContent  = user.nome;
+      document.getElementById('heroEmail').textContent = user.email;
+    })
+    .catch(function(erro) {
+      console.error('Erro ao salvar perfil:', erro);
+      toast('Erro ao salvar. Verifique o servidor.', 'error');
+    });
+  }
+
+  // ============================================================
+  // Função: cancelar
+  // Recarrega a página para descartar alterações não salvas
+  // ============================================================
+  function cancelar() {
+    location.reload();
+  }
+
 </script>
 </body>
 </html>

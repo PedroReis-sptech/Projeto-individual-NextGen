@@ -4,65 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Dashboard Admin</title>
+  <!-- tokens.css = estilos globais compartilhados -->
   <link rel="stylesheet" href="css/tokens.css">
-  <style>
-    .tag-tipo {
-      font-size:11px; font-weight:700; text-transform:uppercase;
-      background:rgba(238,25,25,.15); color:var(--red);
-      border:1px solid var(--border-red); border-radius:4px;
-      padding:2px 8px; margin-left:8px; vertical-align:middle;
-    }
-
-    /* lista de atletas */
-    .athlete-row {
-      display:flex; align-items:center; gap:14px;
-      padding:12px 16px; border-bottom:1px solid var(--border);
-      cursor:pointer; transition:.15s;
-    }
-    .athlete-row:hover { background:rgba(255,255,255,.03); }
-    .athlete-row:last-child { border-bottom:none; }
-    .ath-avatar {
-      width:38px; height:38px; border-radius:50%;
-      object-fit:cover; border:2px solid var(--border);
-      flex-shrink:0;
-    }
-    .ath-name { font-size:14px; font-weight:600; }
-    .ath-sub  { font-size:12px; color:var(--grey); }
-    .ath-right { margin-left:auto; display:flex; gap:8px; align-items:center; }
-
-    /* buscador */
-    .search-bar {
-      display:flex; gap:10px; align-items:center; margin-bottom:16px;
-    }
-    .search-bar input { max-width:320px; flex:1; }
-  </style>
+  <!-- styleDashboardAdmin.css = estilos específicos desta página -->
+  <link rel="stylesheet" href="css/styleDashboardAdmin.css">
 </head>
 <body>
 <div class="layout">
 
+  <!-- ===== MENU LATERAL ===== -->
   <nav class="sidebar">
     <img class="logo" src="../Logo/Next-removebg-preview.png"
          onerror="this.outerHTML='<div style=\'font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\'>NG</div>'">
     <a href="dashboard-admin.html" class="sidebar-link active">Dashboard</a>
-    <a href="perfil.html"          class="sidebar-link">Atleta</a>
+    <a href="perfil.html"          class="sidebar-link">Perfil</a>
     <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
     <a href="criar-peneira.html"   class="sidebar-link">Criar Peneira</a>
     <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
   </nav>
 
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <main class="main-content">
 
-    <div class="page-title">Dashboard <span id="adminTag" class="tag-tipo">Time</span></div>
+    <!-- Título da página com a tag de tipo do usuário logado -->
+    <div class="page-title">
+      Dashboard <span id="adminTag" class="tag-tipo">Time</span>
+    </div>
     <p class="page-sub">Temporada 2026 · São Paulo</p>
 
-    <!-- Stats gerais -->
-    <div class="stats-grid">
-      <div class="stat-card"><p>Atletas cadastrados</p><h2>2.847</h2><small>+14 esta semana</small></div>
-      <div class="stat-card"><p>Peneiras ativas</p>   <h2>54</h2>  <small>6 novas</small></div>
-      <div class="stat-card"><p>Atletas aprovados</p> <h2>318</h2> <small>nesta temporada</small></div>
-      <div class="stat-card"><p>Taxa de aprovação</p> <h2>11,2%</h2><small>↑ 2% vs. mês passado</small></div>
+    <!-- ── Cards de resumo geral ── -->
+    <div class="stats-grid" id="statsGrid">
+      <!-- Preenchido pela API via JavaScript -->
+      <div class="stat-card"><p>Atletas cadastrados</p><h2 id="totalAtletas">...</h2><small id="subAtletas"></small></div>
+      <div class="stat-card"><p>Peneiras ativas</p>   <h2 id="totalPeneiras">...</h2><small id="subPeneiras"></small></div>
+      <div class="stat-card"><p>Atletas aprovados</p> <h2 id="totalAprovados">...</h2><small id="subAprovados"></small></div>
+      <div class="stat-card"><p>Taxa de aprovação</p> <h2 id="taxaAprovacao">...</h2><small id="subTaxa"></small></div>
     </div>
 
+    <!-- ── Linha 1 de gráficos ── -->
     <div class="charts-row">
       <div class="chart-box wide">
         <h3>Peneiras por dia (semana atual vs. anterior)</h3>
@@ -74,6 +53,7 @@
       </div>
     </div>
 
+    <!-- ── Linha 2 de gráficos ── -->
     <div class="charts-row">
       <div class="chart-box">
         <h3>Times com mais peneiras</h3>
@@ -85,6 +65,7 @@
       </div>
     </div>
 
+    <!-- ── Linha 3 de gráficos ── -->
     <div class="charts-row">
       <div class="chart-box">
         <h3>Inscrições por mês</h3>
@@ -100,92 +81,279 @@
       </div>
     </div>
 
-    <!-- Lista de atletas -->
+    <!-- ── Lista de atletas cadastrados ── -->
     <div class="card" style="margin-top:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <h3 style="font-family:var(--font-display);font-size:18px;text-transform:uppercase">Atletas cadastrados</h3>
-        <a href="criar-peneira.html" class="btn btn-primary" style="font-size:13px;padding:9px 18px">+ Nova peneira</a>
+      <div class="search-bar-header">
+        <h3 class="lista-titulo">Atletas cadastrados</h3>
+        <a href="criar-peneira.html" class="btn btn-primary">+ Nova peneira</a>
       </div>
       <div class="search-bar">
-        <input type="text" id="searchAtleta" placeholder="Buscar atleta…" oninput="filtrarAtletas()">
+        <input type="text" id="searchAtleta" placeholder="Buscar atleta por nome ou posição…" oninput="filtrarAtletas()">
       </div>
-      <div id="listaAtletas"></div>
+      <!-- Preenchido pela API via JavaScript -->
+      <div id="listaAtletas">
+        <p style="color:var(--grey);text-align:center;padding:24px">Carregando atletas...</p>
+      </div>
     </div>
 
   </main>
 </div>
 
+<!-- Chart.js para os gráficos -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- utils.js contém Auth, toast, etc. -->
 <script src="js/utils.js"></script>
 <script>
-const ATLETAS_MOCK = [
-  {id:1,nome:'Pedro Reis',      posicao:'Atacante', categoria:'Sub-17', status:'ativo'},
-  {id:2,nome:'Lucas Oliveira',  posicao:'Goleiro',  categoria:'Sub-15', status:'ativo'},
-  {id:3,nome:'Rafael Souza',    posicao:'Zagueiro', categoria:'Sub-13', status:'inativo'},
-  {id:4,nome:'Gabriel Silva',   posicao:'Meia',     categoria:'Sub-17', status:'ativo'},
-  {id:5,nome:'Matheus Costa',   posicao:'Lateral',  categoria:'Sub-20', status:'ativo'},
-  {id:6,nome:'João Ferreira',   posicao:'Volante',  categoria:'Sub-15', status:'ativo'},
-];
 
-function renderAtletas(list) {
-  document.getElementById('listaAtletas').innerHTML = list.map(a => `
-    <div class="athlete-row">
-      <img class="ath-avatar" src="https://ui-avatars.com/api/?name=${encodeURIComponent(a.nome)}&background=0b1218&color=ee1919&size=38" alt="">
-      <div><div class="ath-name">${a.nome}</div><div class="ath-sub">${a.posicao} · ${a.categoria}</div></div>
-      <div class="ath-right">
-        <span class="badge ${a.status==='ativo'?'badge-green':'badge-yellow'}">${a.status}</span>
-      </div>
-    </div>`).join('');
-}
+  // ============================================================
+  // Variável global para guardar todos os atletas carregados
+  // (usada na busca/filtro sem chamar a API novamente)
+  // ============================================================
+  var todosAtletas = [];
 
-function filtrarAtletas() {
-  const q = document.getElementById('searchAtleta').value.toLowerCase();
-  renderAtletas(ATLETAS_MOCK.filter(a => a.nome.toLowerCase().includes(q) || a.posicao.toLowerCase().includes(q)));
-}
+  // ============================================================
+  // Função: renderAtletas
+  // Recebe uma lista de atletas e monta o HTML da lista
+  // ============================================================
+  function renderAtletas(lista) {
+    var container = document.getElementById('listaAtletas');
 
-document.addEventListener('DOMContentLoaded', () => {
-  const user = Auth.current();
-  if (!user || user.tipo === 'aluno') { window.location.href='dashboard-aluno.html'; return; }
-  document.getElementById('adminTag').textContent = user.tipo;
+    // Se não há atletas, mostra mensagem
+    if (lista.length === 0) {
+      container.innerHTML = '<p style="color:var(--grey);text-align:center;padding:24px">Nenhum atleta encontrado.</p>';
+      return;
+    }
 
-  renderAtletas(ATLETAS_MOCK);
+    // Monta uma linha para cada atleta
+    var html = '';
+    for (var i = 0; i < lista.length; i++) {
+      var a = lista[i];
+      var nomeEncoded = encodeURIComponent(a.nome || 'A');
+      html += '<div class="athlete-row">';
+      html +=   '<img class="ath-avatar" src="https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=0b1218&color=ee1919&size=38" alt="">';
+      html +=   '<div>';
+      html +=     '<div class="ath-name">' + (a.nome || '—') + '</div>';
+      html +=     '<div class="ath-sub">' + (a.posicao || '—') + ' · ' + (a.categoria || '—') + '</div>';
+      html +=   '</div>';
+      html +=   '<div class="ath-right">';
+      html +=     '<span class="badge ' + (a.tipo === 'aluno' ? 'badge-green' : 'badge-yellow') + '">' + (a.tipo || '—') + '</span>';
+      html +=   '</div>';
+      html += '</div>';
+    }
+    container.innerHTML = html;
+  }
 
-  const C = (id, cfg) => new Chart(document.getElementById(id), cfg);
-  const COLORS = ['#ee1919','#f59e0b','#10b981','#6366f1','#06b6d4','#ec4899'];
+  // ============================================================
+  // Função: filtrarAtletas
+  // Filtra a lista já carregada pelo texto digitado na busca
+  // ============================================================
+  function filtrarAtletas() {
+    var busca = document.getElementById('searchAtleta').value.toLowerCase();
+    var filtrados = todosAtletas.filter(function(a) {
+      return (a.nome    && a.nome.toLowerCase().includes(busca))
+          || (a.posicao && a.posicao.toLowerCase().includes(busca));
+    });
+    renderAtletas(filtrados);
+  }
 
-  C('cPenDia',{type:'bar',data:{labels:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],datasets:[
-    {label:'Semana passada',data:[3,5,4,6,8,5,2],backgroundColor:'#333'},
-    {label:'Semana atual',  data:[5,7,6,9,11,7,3],backgroundColor:'#ee1919'},
-  ]},options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+  // ============================================================
+  // Função: carregarAtletas
+  // Busca a lista de alunos da API GET /usuarios/alunos
+  // ============================================================
+  function carregarAtletas() {
+    fetch('/usuarios/alunos')
+      .then(function(resposta) { return resposta.json(); })
+      .then(function(dados) {
+        todosAtletas = dados;
+        renderAtletas(dados);
+      })
+      .catch(function(erro) {
+        console.error('Erro ao carregar atletas:', erro);
+        document.getElementById('listaAtletas').innerHTML =
+          '<p style="color:var(--red);text-align:center;padding:24px">Erro ao carregar atletas. Verifique o servidor.</p>';
+      });
+  }
 
-  C('cPosicoes',{type:'doughnut',data:{labels:['Goleiro','Zagueiro','Lateral','Volante','Meia','Atacante'],
-    datasets:[{data:[180,420,310,390,480,620],backgroundColor:COLORS}]},
-    options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}}}});
+  // ============================================================
+  // Função: carregarEstatisticas
+  // Busca dados reais de peneiras e inscrições para preencher
+  // os cards de resumo no topo da página
+  // ============================================================
+  function carregarEstatisticas() {
+    // Busca peneiras ativas
+    fetch('/peneiras')
+      .then(function(resposta) { return resposta.json(); })
+      .then(function(peneiras) {
+        document.getElementById('totalPeneiras').textContent = peneiras.length;
+        document.getElementById('subPeneiras').textContent  = 'ativas agora';
+      })
+      .catch(function() {
+        document.getElementById('totalPeneiras').textContent = '—';
+      });
 
-  C('cTimes',{type:'bar',data:{labels:['Corinthians','São Paulo','Palmeiras','Santos','Red Bull','Portuguesa'],
-    datasets:[{label:'Peneiras',data:[22,19,17,15,12,9],backgroundColor:COLORS}]},
-    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+    // Busca atletas cadastrados (já vem da função carregarAtletas)
+    // O total é atualizado depois que todosAtletas é preenchido
+  }
 
-  C('cAprovados',{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun'],datasets:[
-    {label:'Sub-13',data:[12,15,11,18,14,16],borderColor:'#10b981',fill:false,tension:.4},
-    {label:'Sub-15',data:[15,18,14,22,17,20],borderColor:'#f59e0b',fill:false,tension:.4},
-    {label:'Sub-17',data:[18,22,16,28,21,25],borderColor:'#ee1919',fill:false,tension:.4},
-    {label:'Sub-20',data:[10,13,9,15,12,14], borderColor:'#6366f1',fill:false,tension:.4},
-  ]},options:{responsive:true,plugins:{legend:{labels:{color:'#a0a0a0'}}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+  // ============================================================
+  // Quando a página termina de carregar, executa tudo
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function() {
 
-  C('cInscricoes',{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'],
-    datasets:[{label:'Inscrições',data:[180,240,210,320,290,410,380,450,390,480,520],
-      borderColor:'#ee1919',backgroundColor:'rgba(238,25,25,.1)',fill:true,tension:.4}]},
-    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+    // Verifica se o usuário está logado e é admin/time/professor
+    var user = Auth.current();
+    if (!user || user.tipo === 'aluno') {
+      window.location.href = 'dashboard-aluno.html';
+      return;
+    }
 
-  C('cFaixa',{type:'bar',data:{labels:['Sub-11','Sub-13','Sub-15','Sub-17','Sub-20','Prof'],
-    datasets:[{label:'Atletas',data:[320,480,610,720,450,267],backgroundColor:COLORS}]},
-    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#a0a0a0'}},y:{ticks:{color:'#a0a0a0'}}}}});
+    // Mostra o tipo do usuário na tag do título
+    document.getElementById('adminTag').textContent = user.tipo;
 
-  C('cTaxa',{type:'radar',data:{labels:['Corinthians','São Paulo','Palmeiras','Santos','Red Bull','Portuguesa'],
-    datasets:[{label:'Taxa (%)',data:[14,11,13,9,16,8],borderColor:'#ee1919',backgroundColor:'rgba(238,25,25,.15)'}]},
-    options:{responsive:true,scales:{r:{ticks:{display:false},grid:{color:'rgba(255,255,255,.08)'},pointLabels:{color:'#a0a0a0'}}},plugins:{legend:{labels:{color:'#a0a0a0'}}}}});
-});
+    // Carrega a lista de atletas da API
+    carregarAtletas();
+
+    // Carrega estatísticas
+    carregarEstatisticas();
+
+    // ── Após carregar atletas, atualiza o card de total ──
+    setTimeout(function() {
+      document.getElementById('totalAtletas').textContent = todosAtletas.length || '—';
+      document.getElementById('subAtletas').textContent = 'cadastrados';
+    }, 1000);
+
+    // ──────────────────────────────────────────────────────────
+    // GRÁFICOS
+    // Nota: enquanto não há rotas específicas de estatísticas,
+    // os gráficos usam dados reais de peneiras e inscrições.
+    // Os dados abaixo são exemplos visuais — substitua pelas
+    // suas rotas quando criar os endpoints de estatísticas.
+    // ──────────────────────────────────────────────────────────
+    var COLORS = ['#ee1919', '#f59e0b', '#10b981', '#6366f1', '#06b6d4', '#ec4899'];
+
+    // Gráfico: Peneiras por dia
+    new Chart(document.getElementById('cPenDia'), {
+      type: 'bar',
+      data: {
+        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        datasets: [
+          { label: 'Semana passada', data: [3, 5, 4, 6, 8, 5, 2], backgroundColor: '#333' },
+          { label: 'Semana atual',   data: [5, 7, 6, 9, 11, 7, 3], backgroundColor: '#ee1919' }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#a0a0a0' } } },
+        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
+      }
+    });
+
+    // Gráfico: Atletas por posição
+    new Chart(document.getElementById('cPosicoes'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Goleiro', 'Zagueiro', 'Lateral', 'Volante', 'Meia', 'Atacante'],
+        datasets: [{ data: [180, 420, 310, 390, 480, 620], backgroundColor: COLORS }]
+      },
+      options: { responsive: true, plugins: { legend: { labels: { color: '#a0a0a0' } } } }
+    });
+
+    // Gráfico: Times com mais peneiras
+    new Chart(document.getElementById('cTimes'), {
+      type: 'bar',
+      data: {
+        labels: ['Corinthians', 'São Paulo', 'Palmeiras', 'Santos', 'Red Bull', 'Portuguesa'],
+        datasets: [{ label: 'Peneiras', data: [22, 19, 17, 15, 12, 9], backgroundColor: COLORS }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
+      }
+    });
+
+    // Gráfico: Aprovados por categoria ao longo dos meses
+    new Chart(document.getElementById('cAprovados'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+        datasets: [
+          { label: 'Sub-13', data: [12, 15, 11, 18, 14, 16], borderColor: '#10b981', fill: false, tension: .4 },
+          { label: 'Sub-15', data: [15, 18, 14, 22, 17, 20], borderColor: '#f59e0b', fill: false, tension: .4 },
+          { label: 'Sub-17', data: [18, 22, 16, 28, 21, 25], borderColor: '#ee1919', fill: false, tension: .4 },
+          { label: 'Sub-20', data: [10, 13,  9, 15, 12, 14], borderColor: '#6366f1', fill: false, tension: .4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#a0a0a0' } } },
+        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
+      }
+    });
+
+    // Gráfico: Inscrições por mês
+    new Chart(document.getElementById('cInscricoes'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov'],
+        datasets: [{
+          label: 'Inscrições',
+          data: [180, 240, 210, 320, 290, 410, 380, 450, 390, 480, 520],
+          borderColor: '#ee1919',
+          backgroundColor: 'rgba(238,25,25,.1)',
+          fill: true,
+          tension: .4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
+      }
+    });
+
+    // Gráfico: Atletas por categoria (faixa etária)
+    new Chart(document.getElementById('cFaixa'), {
+      type: 'bar',
+      data: {
+        labels: ['Sub-11', 'Sub-13', 'Sub-15', 'Sub-17', 'Sub-20', 'Prof'],
+        datasets: [{ label: 'Atletas', data: [320, 480, 610, 720, 450, 267], backgroundColor: COLORS }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
+      }
+    });
+
+    // Gráfico: Taxa de aprovação por time (radar)
+    new Chart(document.getElementById('cTaxa'), {
+      type: 'radar',
+      data: {
+        labels: ['Corinthians', 'São Paulo', 'Palmeiras', 'Santos', 'Red Bull', 'Portuguesa'],
+        datasets: [{
+          label: 'Taxa (%)',
+          data: [14, 11, 13, 9, 16, 8],
+          borderColor: '#ee1919',
+          backgroundColor: 'rgba(238,25,25,.15)'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            ticks: { display: false },
+            grid: { color: 'rgba(255,255,255,.08)' },
+            pointLabels: { color: '#a0a0a0' }
+          }
+        },
+        plugins: { legend: { labels: { color: '#a0a0a0' } } }
+      }
+    });
+
+  }); // fim DOMContentLoaded
+
 </script>
 </body>
 </html>

@@ -4,69 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Criar Peneira</title>
+  <!-- tokens.css = estilos globais compartilhados -->
   <link rel="stylesheet" href="css/tokens.css">
-  <style>
-    /* card de peneira criada */
-    .peneira-card {
-      background:var(--bg-3); border:1px solid var(--border);
-      border-radius:var(--r); padding:16px 20px;
-      display:flex; align-items:flex-start; justify-content:space-between;
-      gap:16px; margin-bottom:12px; transition:.2s;
-    }
-    .peneira-card:hover { border-color:var(--border-red); }
-    .peneira-card h4 { font-size:15px; font-weight:600; margin-bottom:4px; }
-    .peneira-card p  { font-size:13px; color:var(--grey); margin-bottom:2px; }
-    .peneira-card .actions { display:flex; gap:8px; flex-shrink:0; }
-    .btn-icon {
-      width:34px; height:34px; border-radius:var(--r);
-      border:1px solid var(--border); background:transparent;
-      color:var(--grey); cursor:pointer; font-size:15px;
-      display:flex; align-items:center; justify-content:center;
-      transition:.2s;
-    }
-    .btn-icon:hover { color:var(--red); border-color:var(--border-red); }
-
-    .empty-state {
-      text-align:center; padding:48px; color:var(--grey);
-      border:1px dashed var(--border); border-radius:var(--r2);
-    }
-    .empty-state div { font-size:40px; margin-bottom:12px; }
-
-    /* form panel */
-    .form-panel {
-      background:var(--bg-2); border:1px solid var(--border);
-      border-radius:var(--r2); padding:28px;
-      margin-bottom:28px;
-    }
-    .form-panel h2 {
-      font-family:var(--font-display); font-size:22px;
-      font-weight:800; text-transform:uppercase;
-      margin-bottom:22px;
-    }
-    .btn-row { display:flex; gap:12px; justify-content:flex-end; margin-top:20px; }
-  </style>
+  <!-- styleCriarPeneira.css = estilos específicos desta página -->
+  <link rel="stylesheet" href="css/styleCriarPeneira.css">
 </head>
 <body>
 <div class="layout">
 
+  <!-- ===== MENU LATERAL ===== -->
   <nav class="sidebar">
     <img class="logo" src="../Logo/Next-removebg-preview.png"
          onerror="this.outerHTML='<div style=\'font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\'>NG</div>'">
     <a href="dashboard-admin.html" class="sidebar-link">Dashboard</a>
-    <a href="perfil.html"          class="sidebar-link">Atleta</a>
+    <a href="perfil.html"          class="sidebar-link">Perfil</a>
     <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
     <a href="criar-peneira.html"   class="sidebar-link active">Criar Peneira</a>
     <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
   </nav>
 
+  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <main class="main-content">
     <div class="page-title">Criar Peneira</div>
     <p class="page-sub">Cadastre uma nova peneira para os atletas se inscreverem.</p>
 
-    <!-- Formulário -->
+    <!-- ===== FORMULÁRIO DE CRIAÇÃO ===== -->
     <div class="form-panel">
       <h2>Nova peneira</h2>
       <div class="form-grid">
+
         <div class="form-group full">
           <label>Nome da peneira *</label>
           <input id="pNome" required placeholder="Ex: Peneira Sub-17 · Corinthians">
@@ -96,11 +62,16 @@
           <input id="pLocal" required placeholder="Ex: CT Joaquim Grava, São Paulo">
         </div>
         <div class="form-group full">
+          <label>Cidade</label>
+          <input id="pCidade" placeholder="Ex: São Paulo">
+        </div>
+        <div class="form-group full">
           <label>Clube</label>
           <select id="pClube">
             <option value="">Selecione um clube (opcional)</option>
-            <option>Corinthians</option><option>Palmeiras</option><option>São Paulo FC</option>
-            <option>Santos</option><option>Portuguesa</option><option>São Caetano</option>
+            <option>Corinthians</option><option>Palmeiras</option>
+            <option>São Paulo FC</option><option>Santos</option>
+            <option>Portuguesa</option><option>São Caetano</option>
             <option>Red Bull Bragantino</option><option>Outro</option>
           </select>
         </div>
@@ -108,112 +79,193 @@
           <label>Descrição</label>
           <textarea id="pDesc" rows="4" placeholder="Descreva os requisitos, o que o atleta deve levar, etc."></textarea>
         </div>
+
       </div>
       <div class="btn-row">
-        <button class="btn btn-ghost" onclick="limparForm()">Limpar</button>
+        <button class="btn btn-ghost"   onclick="limparForm()">Limpar</button>
         <button class="btn btn-primary" onclick="criarPeneira()">Criar Peneira →</button>
       </div>
     </div>
 
-    <!-- Lista das peneiras criadas -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <h3 style="font-family:var(--font-display);font-size:18px;text-transform:uppercase">Peneiras criadas</h3>
+    <!-- ===== LISTA DE PENEIRAS JÁ CRIADAS ===== -->
+    <div class="lista-header">
+      <h3 class="lista-titulo">Peneiras criadas</h3>
       <span class="badge badge-red" id="totalBadge">0 peneiras</span>
     </div>
-    <div id="listaCriadas"></div>
+    <!-- Preenchido pela API via JavaScript -->
+    <div id="listaCriadas">
+      <p style="color:var(--grey)">Carregando peneiras...</p>
+    </div>
+
   </main>
 </div>
 
+<!-- utils.js contém Auth, toast, etc. -->
 <script src="js/utils.js"></script>
 <script>
-// Persistência simples em sessionStorage (reset ao fechar aba)
-const STORAGE_KEY = 'ng_peneiras_admin';
 
-function loadPeneiras() {
-  try { return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-function savePeneiras(list) {
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
+  // ============================================================
+  // Função: renderPeneiras
+  // Recebe uma lista de peneiras e monta o HTML da lista
+  // ============================================================
+  function renderPeneiras(lista) {
+    var container = document.getElementById('listaCriadas');
+    var badge     = document.getElementById('totalBadge');
 
-function renderPeneiras() {
-  const list = loadPeneiras();
-  document.getElementById('totalBadge').textContent = `${list.length} peneira${list.length !== 1 ? 's' : ''}`;
-  const el = document.getElementById('listaCriadas');
-  if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div>📋</div><p>Nenhuma peneira criada ainda.</p></div>`;
-    return;
-  }
-  el.innerHTML = list.map(p => `
-    <div class="peneira-card" id="pen-${p.id}">
-      <div>
-        <h4>${p.nome}</h4>
-        <p>📅 ${formatDate(p.data)} às ${p.horario} &nbsp;|&nbsp; 📍 ${p.local}</p>
-        <p>🏷 ${p.categoria} &nbsp;${p.clube ? '· 🏟 ' + p.clube : ''} &nbsp;${p.vagas ? '· 👥 ' + p.vagas + ' vagas' : ''}</p>
-        ${p.descricao ? `<p style="margin-top:6px;font-size:12px;color:#666">${p.descricao}</p>` : ''}
-      </div>
-      <div class="actions">
-        <span class="badge badge-green">ativa</span>
-        <button class="btn-icon" title="Excluir" onclick="excluirPeneira(${p.id})">🗑</button>
-      </div>
-    </div>`).join('');
-}
+    badge.textContent = lista.length + ' peneira' + (lista.length !== 1 ? 's' : '');
 
-function formatDate(d) {
-  if (!d) return '—';
-  const [y,m,dia] = d.split('-');
-  return `${dia}/${m}/${y}`;
-}
+    if (!lista || lista.length === 0) {
+      container.innerHTML =
+        '<div class="empty-state"><div>📋</div><p>Nenhuma peneira criada ainda.</p></div>';
+      return;
+    }
 
-function criarPeneira() {
-  const nome     = document.getElementById('pNome').value.trim();
-  const data     = document.getElementById('pData').value;
-  const horario  = document.getElementById('pHorario').value;
-  const categoria= document.getElementById('pCategoria').value;
-  const local    = document.getElementById('pLocal').value.trim();
+    var html = '';
+    for (var i = 0; i < lista.length; i++) {
+      var p = lista[i];
+      // Formata a data de YYYY-MM-DD para DD/MM/AAAA
+      var dataFormatada = p.data_realizacao
+        ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
+        : '—';
 
-  if (!nome || !data || !horario || !categoria || !local) {
-    toast('Preencha todos os campos obrigatórios.', 'error');
-    return;
+      html += '<div class="peneira-card" id="pen-' + p.id + '">';
+      html +=   '<div>';
+      html +=     '<h4>' + (p.nome || '—') + '</h4>';
+      html +=     '<p>📅 ' + dataFormatada + (p.horario ? ' às ' + p.horario : '') + '</p>';
+      html +=     '<p>📍 ' + (p.local_endereco || p.cidade || '—') + '</p>';
+      html +=     '<p>🏷 ' + (p.categoria || '—') + (p.vagas ? ' · 👥 ' + p.vagas + ' vagas' : '') + '</p>';
+      if (p.descricao) {
+        html +=   '<p class="desc-peneira">' + p.descricao + '</p>';
+      }
+      html +=   '</div>';
+      html +=   '<div class="actions">';
+      html +=     '<span class="badge badge-green">ativa</span>';
+      html +=     '<button class="btn-icon" title="Desativar" onclick="desativarPeneira(' + p.id + ')">🗑</button>';
+      html +=   '</div>';
+      html += '</div>';
+    }
+    container.innerHTML = html;
   }
 
-  const nova = {
-    id:       Date.now(),
-    nome, data, horario, categoria, local,
-    vagas:    document.getElementById('pVagas').value,
-    clube:    document.getElementById('pClube').value,
-    descricao:document.getElementById('pDesc').value.trim(),
-  };
+  // ============================================================
+  // Função: carregarPeneiras
+  // Busca as peneiras criadas pelo usuário logado via API
+  // GET /peneiras/criador/:idCriador
+  // ============================================================
+  function carregarPeneiras() {
+    var user = Auth.current();
+    if (!user) return;
 
-  const list = loadPeneiras();
-  list.unshift(nova);
-  savePeneiras(list);
-  renderPeneiras();
-  limparForm();
-  toast('Peneira criada com sucesso!');
-}
+    fetch('/peneiras/criador/' + user.id)
+      .then(function(resposta) { return resposta.json(); })
+      .then(function(dados) {
+        renderPeneiras(dados);
+      })
+      .catch(function(erro) {
+        console.error('Erro ao carregar peneiras:', erro);
+        document.getElementById('listaCriadas').innerHTML =
+          '<p style="color:var(--red)">Erro ao carregar. Verifique o servidor.</p>';
+      });
+  }
 
-function excluirPeneira(id) {
-  if (!confirm('Excluir esta peneira?')) return;
-  savePeneiras(loadPeneiras().filter(p => p.id !== id));
-  renderPeneiras();
-  toast('Peneira removida.');
-}
+  // ============================================================
+  // Função: criarPeneira
+  // Envia os dados do formulário para POST /peneiras/criar
+  // ============================================================
+  function criarPeneira() {
+    var nome      = document.getElementById('pNome').value.trim();
+    var data      = document.getElementById('pData').value;
+    var horario   = document.getElementById('pHorario').value;
+    var categoria = document.getElementById('pCategoria').value;
+    var local     = document.getElementById('pLocal').value.trim();
 
-function limparForm() {
-  ['pNome','pData','pHorario','pVagas','pLocal','pDesc'].forEach(id => {
-    document.getElementById(id).value = '';
+    // Validação dos campos obrigatórios
+    if (!nome || !data || !horario || !categoria || !local) {
+      toast('Preencha todos os campos obrigatórios.', 'error');
+      return;
+    }
+
+    var user = Auth.current();
+    if (!user) return;
+
+    // Chama a API real do servidor Node.js
+    fetch('/peneiras/criar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome:            nome,
+        dataRealizacao:  data,
+        horario:         horario,
+        categoria:       categoria,
+        localEndereco:   local,
+        cidade:          document.getElementById('pCidade').value,
+        vagas:           document.getElementById('pVagas').value,
+        descricao:       document.getElementById('pDesc').value.trim(),
+        fkCriador:       user.id
+      })
+    })
+    .then(function(resposta) { return resposta.json(); })
+    .then(function(resultado) {
+      if (resultado.mensagem && !resultado.id) {
+        toast(resultado.mensagem, 'error');
+        return;
+      }
+      toast('Peneira criada com sucesso!');
+      limparForm();
+      carregarPeneiras(); // Recarrega a lista
+    })
+    .catch(function(erro) {
+      console.error('Erro ao criar peneira:', erro);
+      toast('Erro ao conectar com o servidor.', 'error');
+    });
+  }
+
+  // ============================================================
+  // Função: desativarPeneira
+  // Chama DELETE /peneiras/desativar/:id para desativar
+  // ============================================================
+  function desativarPeneira(id) {
+    if (!confirm('Desativar esta peneira?')) return;
+
+    fetch('/peneiras/desativar/' + id, { method: 'DELETE' })
+      .then(function(resposta) { return resposta.json(); })
+      .then(function() {
+        toast('Peneira desativada.');
+        carregarPeneiras(); // Recarrega a lista
+      })
+      .catch(function(erro) {
+        console.error('Erro ao desativar:', erro);
+        toast('Erro ao desativar a peneira.', 'error');
+      });
+  }
+
+  // ============================================================
+  // Função: limparForm
+  // Limpa todos os campos do formulário
+  // ============================================================
+  function limparForm() {
+    var campos = ['pNome', 'pData', 'pHorario', 'pVagas', 'pLocal', 'pCidade', 'pDesc'];
+    for (var i = 0; i < campos.length; i++) {
+      document.getElementById(campos[i]).value = '';
+    }
+    document.getElementById('pCategoria').value = '';
+    document.getElementById('pClube').value     = '';
+  }
+
+  // ============================================================
+  // Quando a página termina de carregar, executa tudo
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function() {
+    var user = Auth.current();
+    // Redireciona alunos de volta para o dashboard deles
+    if (!user || user.tipo === 'aluno') {
+      window.location.href = 'dashboard-aluno.html';
+      return;
+    }
+    // Carrega as peneiras do criador logado
+    carregarPeneiras();
   });
-  document.getElementById('pCategoria').value = '';
-  document.getElementById('pClube').value = '';
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const user = Auth.current();
-  if (!user || user.tipo === 'aluno') { window.location.href='dashboard-aluno.html'; return; }
-  renderPeneiras();
-});
 </script>
 </body>
 </html>
