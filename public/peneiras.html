@@ -1,199 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextGen - Peneiras SP</title>
+    <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/stylePeneiras.css">
-    <link rel="icon" type="image/png" href="../Logo/Next-removebg-preview.png">
 </head>
-
 <body>
 
     <div class="container">
-        <header>
-            <h1>Próximas Peneiras</h1>
-            <p>Oportunidades reais nos grandes clubes de São Paulo.</p>
+
+        <!-- ── Cabeçalho ── -->
+        <header class="cabecalho">
+            <div class="cabecalho-texto">
+                <h1>Próximas Peneiras</h1>
+                <p>Oportunidades reais nos grandes clubes de São Paulo.</p>
+            </div>
+            <!-- Campo de busca por nome ou categoria -->
+            <div class="busca-wrap">
+                <span class="material-icons">search</span>
+                <input
+                    type="text"
+                    id="campoBusca"
+                    placeholder="Buscar por nome ou categoria..."
+                    oninput="filtrarPeneiras()"
+                >
+            </div>
         </header>
 
-        <div class="grid-peneiras">
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png" alt=""
-                        class="logo-time">
-                    <div class="badge-clube">Corinthians</div>
-                </div>
-                <h3>Peneira Pq. São Jorge</h3>
-                <p><strong>Requisito:</strong> ECG + Atestado Médico</p>
-                <p><strong>Categorias:</strong> Sub-11 ao Sub-17</p>
-                <div class="info-footer">
-                    <span>Custo: Gratuito</span>
-                    <a href="https://www.corinthians.com.br/futebol-base/avaliacoes" target="_blank"
-                        class="btn-detalhes">Inscrever</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/10/Palmeiras_logo.svg" alt=""
-                        class="logo-time">
-                    <div class="badge-clube">Palmeiras</div>
-                </div>
-                <h3>Avaliação de Futsal/Campo</h3>
-                <p><strong>Status:</strong> Inscrições via Cadastro</p>
-                <p><strong>Categorias:</strong> Sub-7 ao Sub-15</p>
-                <div class="info-footer">
-                    <span>Site Oficial</span>
-                    <a href="https://www.palmeiras.com.br/tag/peneira/" target="_blank" class="btn-detalhes">Ver
-                        Vagas</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Brasao_do_Sao_Paulo_Futebol_Clube.svg/3840px-Brasao_do_Sao_Paulo_Futebol_Clube.svg.png"
-                        alt="" class="logo-time">
-                    <div class="badge-clube">São Paulo FC</div>
-                </div>
-                <h3>Seletiva Cotia</h3>
-                <p><strong>Local:</strong> CT de Cotia</p>
-                <p><strong>Categorias:</strong> Sub-11 ao Sub-20</p>
-                <div class="info-footer">
-                    <span>E-mail/Ficha</span>
-                    <a href="http://www.saopaulofc.net/equipe/formacao-de-atletas/testes-e-inscricoes/" target="_blank"
-                        class="btn-detalhes">Baixar Ficha</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Santos_logo.svg" alt=""
-                        class="logo-time">
-                    <div class="badge-clube">Santos FC</div>
-                </div>
-                <h3>Meninos da Vila</h3>
-                <p><strong>Vagas:</strong> Limitadas p/ Posição</p>
-                <p><strong>Categorias:</strong> Sub-11 ao Sub-17</p>
-                <div class="info-footer">
-                    <span>Online</span>
-                    <a href="https://www.santosfc.com.br/futeboldebase/" target="_blank"
-                        class="btn-detalhes">Inscrever</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/pt/9/9e/RedBullBragantino.png"
-                        alt="" class="logo-time">
-                    <div class="badge-clube">Bragantino</div>
-                </div>
-                <h3>Avaliação NAR</h3>
-                <p><strong>Data:</strong> Julho de 2026</p>
-                <p><strong>Categorias:</strong> Sub-9 ao Sub-13</p>
-                <div class="info-footer">
-                    <span>Portal do Clube</span>
-                    <a href="https://www.redbullbragantino.com.br/" target="_blank" class="btn-detalhes">Acessar</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/CA_Juventus_logo.svg/1280px-CA_Juventus_logo.svg.png"
-                        alt="" class="logo-time">
-                    <div class="badge-clube">Juventus-SP</div>
-                </div>
-                <h3>Peneira da Mooca</h3>
-                <p><strong>Local:</strong> CT Alltec Sports</p>
-                <p><strong>Categorias:</strong> Sub-15 ao Sub-20</p>
-                <div class="info-footer">
-                    <span>Inscrição: WhatsApp</span>
-                    <a href="https://www.juventus.com.br/" target="_blank" class="btn-detalhes">Informações</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://a.espncdn.com/i/teamlogos/soccer/500/3459.png"
-                        alt="" class="logo-time">
-                    <div class="badge-clube">Ponte Preta</div>
-                </div>
-                <h3>Avaliações em Campinas</h3>
-                <p><strong>Foco:</strong> Seleção para categorias de base</p>
-                <p><strong>Categorias:</strong> Sub-13 ao Sub-17</p>
-                <div class="info-footer">
-                    <span>Site Oficial</span>
-                    <a href="https://pontepreta.com.br/base/" target="_blank" class="btn-detalhes">Ver Testes</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Guarani_Futebol_Clube_logo.svg/250px-Guarani_Futebol_Clube_logo.svg.png"
-                        alt="" class="logo-time">
-                    <div class="badge-clube">Guarani FC</div>
-                </div>
-                <h3>Bugre - Seletivas</h3>
-                <p><strong>Local:</strong> CT de Treinamento</p>
-                <p><strong>Categorias:</strong> Sub-11, Sub-13 e Sub-15</p>
-                <div class="info-footer">
-                    <span>Inscrição Online</span>
-                    <a href="https://guaranifc.com.br/futebol/base/" target="_blank" class="btn-detalhes">Inscrever</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/88/S%C3%A3o_Bernardo_FC_2020_crest.png"
-                        alt="" class="logo-time">
-                    <div class="badge-clube">São Bernardo</div>
-                </div>
-                <h3>Peneira no ABC</h3>
-                <p><strong>Status:</strong> Avaliações Mensais</p>
-                <p><strong>Categorias:</strong> Sub-15 ao Sub-20</p>
-                <div class="info-footer">
-                    <span>Redes Sociais</span>
-                    <a href="https://www.saobernardofc.com.br/" target="_blank" class="btn-detalhes">Informações</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/500/4774.png" alt=""
-                        class="logo-time">
-                    <div class="badge-clube">Ituano FC</div>
-                </div>
-                <h3>Base de Itu</h3>
-                <p><strong>Local:</strong> CT Tatizão</p>
-                <p><strong>Categorias:</strong> Sub-15 e Sub-17</p>
-                <div class="info-footer">
-                    <span>Ficha no Site</span>
-                    <a href="https://ituanofc.com/base/" target="_blank" class="btn-detalhes">Ver Vagas</a>
-                </div>
-            </div>
-
-            <div class="card-peneira">
-                <div class="card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Botafogo_Ribeirao_Preto_SP.png" alt=""
-                        class="logo-time">
-                    <div class="badge-clube">Botafogo-SP</div>
-                </div>
-                <h3>Pantera - Avaliação</h3>
-                <p><strong>Local:</strong> Ribeirão Preto</p>
-                <p><strong>Categorias:</strong> Sub-13 ao Sub-17</p>
-                <div class="info-footer">
-                    <span>Inscrição Online</span>
-                    <a href="https://botafogofutebolclube.com.br/base/" target="_blank"
-                        class="btn-detalhes">Inscrição</a>
-                </div>
-            </div>
+        <!-- ── Grid de cards (preenchido pelo JavaScript) ── -->
+        <div class="grid-peneiras" id="gridPeneiras">
+            <!-- Mensagem de carregando -->
+            <p class="msg-carregando">
+                <span class="material-icons">hourglass_empty</span>
+                Carregando peneiras...
+            </p>
         </div>
 
+        <!-- ── Botão de voltar ── -->
         <div class="acoes-finais">
-            <a href="dashboard-aluno.html" class="btn-voltar">Voltar para a Dashboard</a>
+            <a href="dashboard-aluno.html" class="btn-voltar">
+                <span class="material-icons">arrow_back</span>
+                Voltar para a Dashboard
+            </a>
         </div>
+
     </div>
 
-</body>
+    <script>
 
+        // ─────────────────────────────────────────────
+        // Guarda todas as peneiras carregadas
+        // (para filtrar sem chamar a API de novo)
+        // ─────────────────────────────────────────────
+        var todasPeneiras = [];
+
+        // ─────────────────────────────────────────────
+        // Função: carregarPeneiras
+        // Busca as peneiras na API e exibe os cards
+        // ─────────────────────────────────────────────
+        function carregarPeneiras() {
+            fetch('/peneiras')
+                .then(function(resposta) {
+                    return resposta.json();
+                })
+                .then(function(peneiras) {
+                    todasPeneiras = peneiras;
+                    renderizarCards(peneiras);
+                })
+                .catch(function(erro) {
+                    console.error('Erro ao carregar peneiras:', erro);
+                    document.getElementById('gridPeneiras').innerHTML =
+                        '<p class="msg-erro"><span class="material-icons">error</span> Erro ao carregar. Verifique se o servidor está rodando.</p>';
+                });
+        }
+
+        // ─────────────────────────────────────────────
+        // Função: renderizarCards
+        // Recebe a lista e monta os cards no HTML
+        // ─────────────────────────────────────────────
+        function renderizarCards(lista) {
+            var grid = document.getElementById('gridPeneiras');
+
+            // Se não há peneiras, mostra mensagem
+            if (!lista || lista.length === 0) {
+                grid.innerHTML = '<p class="msg-vazio"><span class="material-icons">sports_soccer</span> Nenhuma peneira disponível no momento.</p>';
+                return;
+            }
+
+            var html = '';
+
+            for (var i = 0; i < lista.length; i++) {
+                var p = lista[i];
+
+                // Formata a data de YYYY-MM-DD para DD/MM/AAAA
+                var dataFormatada = '—';
+                if (p.data_realizacao) {
+                    dataFormatada = p.data_realizacao.split('T')[0].split('-').reverse().join('/');
+                }
+
+                // Escolhe imagem do clube ou placeholder
+                var imgSrc = p.escudo_url || '';
+                var imgHtml = imgSrc
+                    ? '<img src="' + imgSrc + '" alt="' + p.nome_clube + '" class="logo-time">'
+                    : '<span class="material-icons logo-icone">sports_soccer</span>';
+
+                html += '<div class="card-peneira">';
+
+                // Cabeçalho do card: logo + nome do clube
+                html +=   '<div class="card-header">';
+                html +=     imgHtml;
+                html +=     '<span class="badge-clube">' + (p.nome_clube || 'Sem clube') + '</span>';
+                html +=   '</div>';
+
+                // Nome da peneira
+                html +=   '<h3>' + (p.nome || '—') + '</h3>';
+
+                // Informações em lista com ícones
+                html +=   '<div class="card-infos">';
+
+                html +=     '<div class="card-info-item">';
+                html +=       '<span class="material-icons">calendar_today</span>';
+                html +=       '<span>' + dataFormatada + (p.horario ? ' às ' + p.horario : '') + '</span>';
+                html +=     '</div>';
+
+                html +=     '<div class="card-info-item">';
+                html +=       '<span class="material-icons">location_on</span>';
+                html +=       '<span>' + (p.cidade || p.local_endereco || '—') + '</span>';
+                html +=     '</div>';
+
+                html +=     '<div class="card-info-item">';
+                html +=       '<span class="material-icons">label</span>';
+                html +=       '<span>' + (p.categoria || '—') + '</span>';
+                html +=     '</div>';
+
+                if (p.vagas) {
+                    html +=   '<div class="card-info-item">';
+                    html +=     '<span class="material-icons">people</span>';
+                    html +=     '<span>' + p.vagas + ' vagas</span>';
+                    html +=   '</div>';
+                }
+
+                html +=   '</div>';
+
+                // Rodapé do card
+                html +=   '<div class="info-footer">';
+                html +=     '<span class="badge badge-green">aberta</span>';
+                // Link para a página de detalhes passando o id na URL
+                html +=     '<a href="detalhe-peneira.html?id=' + p.id + '" class="btn-detalhes">';
+                html +=       '<span class="material-icons">arrow_forward</span> Ver detalhes';
+                html +=     '</a>';
+                html +=   '</div>';
+
+                html += '</div>';
+            }
+
+            grid.innerHTML = html;
+        }
+
+        // ─────────────────────────────────────────────
+        // Função: filtrarPeneiras
+        // Filtra os cards já carregados sem chamar a API
+        // ─────────────────────────────────────────────
+        function filtrarPeneiras() {
+            var busca = document.getElementById('campoBusca').value.toLowerCase();
+
+            var filtradas = todasPeneiras.filter(function(p) {
+                return (p.nome      && p.nome.toLowerCase().includes(busca))
+                    || (p.categoria && p.categoria.toLowerCase().includes(busca))
+                    || (p.nome_clube && p.nome_clube.toLowerCase().includes(busca));
+            });
+
+            renderizarCards(filtradas);
+        }
+
+        // ─────────────────────────────────────────────
+        // Quando a página carrega, busca as peneiras
+        // ─────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarPeneiras();
+        });
+
+    </script>
+
+</body>
 </html>

@@ -1,36 +1,44 @@
 /* ============================================================
-   NextGen · tokens.css  — design tokens compartilhados
+   NextGen · tokens.css  — estilos globais compartilhados
    ============================================================ */
+
+/* Fontes do Google: tipografia do projeto + ícones Material */
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 :root {
-  /* cores */
-  --bg:        #050a0e;
-  --bg-2:      #0b1218;
-  --bg-3:      #0e1822;
-  --border:    rgba(255,255,255,0.08);
-  --border-red:rgba(238,25,25,0.4);
-  --red:       #ee1919;
-  --red-dark:  #b91212;
-  --red-glow:  rgba(238,25,25,0.18);
-  --white:     #ffffff;
-  --grey:      #a0a0a0;
-  --grey-dark: #555;
+  /* ── Cores ── */
+  --bg:         #050a0e;
+  --bg-2:       #0b1218;
+  --bg-3:       #0e1822;
+  --border:     rgba(255,255,255,0.08);
+  --border-red: rgba(238,25,25,0.4);
+  --red:        #ee1919;
+  --red-dark:   #b91212;
+  --red-glow:   rgba(238,25,25,0.18);
+  --white:      #ffffff;
+  --grey:       #a0a0a0;
+  --grey-dark:  #555;
 
-  /* tipografia */
+  /* ── Tipografia ── */
   --font-display: 'Barlow Condensed', sans-serif;
   --font-body:    'Barlow', sans-serif;
 
-  /* sombra */
+  /* ── Sombras ── */
   --shadow-red: 0 8px 32px rgba(238,25,25,0.18);
   --shadow:     0 4px 24px rgba(0,0,0,0.4);
 
-  /* raio */
+  /* ── Bordas arredondadas ── */
   --r:  10px;
   --r2: 16px;
 }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+/* ── Reset básico ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html { scroll-behavior: smooth; }
 
@@ -45,6 +53,20 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+/* ── Ícones Material (tamanho padrão e cor vermelha) ── */
+.material-icons {
+  font-size: 20px;
+  color: var(--red);
+  vertical-align: middle;
+  user-select: none;
+}
+
+/* Ícone cinza (para botões neutros) */
+.material-icons.cinza {
+  color: var(--grey);
+}
+
+/* ── Campos de formulário ── */
 input, select, textarea {
   width: 100%;
   background: #070d13;
@@ -73,6 +95,7 @@ label {
   margin-bottom: 6px;
 }
 
+/* ── Botões ── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -88,13 +111,18 @@ label {
   border: none;
   transition: all .2s;
 }
-.btn-primary   { background: var(--red); color: #fff; }
-.btn-primary:hover { background: var(--red-dark); box-shadow: var(--shadow-red); transform: translateY(-1px); }
-.btn-ghost     { background: transparent; color: var(--grey); border: 1px solid var(--border); }
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:hover {
+  background: var(--red-dark);
+  box-shadow: var(--shadow-red);
+  transform: translateY(-1px);
+}
+.btn-ghost { background: transparent; color: var(--grey); border: 1px solid var(--border); }
 .btn-ghost:hover { color: var(--white); border-color: var(--grey-dark); }
-.btn-danger    { background: rgba(238,25,25,.15); color: var(--red); border: 1px solid var(--border-red); }
+.btn-danger { background: rgba(238,25,25,.15); color: var(--red); border: 1px solid var(--border-red); }
 .btn-danger:hover { background: var(--red); color: #fff; }
 
+/* ── Card genérico ── */
 .card {
   background: var(--bg-2);
   border: 1px solid var(--border);
@@ -102,6 +130,7 @@ label {
   padding: 24px;
 }
 
+/* ── Badges (etiquetas coloridas) ── */
 .badge {
   display: inline-block;
   padding: 3px 10px;
@@ -116,7 +145,7 @@ label {
 .badge-yellow { background: rgba(245,158,11,.15); color: #f59e0b; }
 .badge-blue   { background: rgba(99,102,241,.15);  color: #818cf8; }
 
-/* toast */
+/* ── Toast (mensagens flutuantes) ── */
 .toast-container {
   position: fixed; bottom: 24px; right: 24px;
   display: flex; flex-direction: column; gap: 10px; z-index: 9999;
@@ -131,11 +160,11 @@ label {
   box-shadow: var(--shadow);
 }
 .toast-success { background: #0f2a1e; border: 1px solid #10b981; color: #10b981; }
-.toast-error   { background: #2a0f0f; border: 1px solid var(--red);  color: var(--red);  }
+.toast-error   { background: #2a0f0f; border: 1px solid var(--red); color: var(--red); }
 @keyframes slideIn { from { transform: translateX(120%); opacity:0; } to { transform: translateX(0); opacity:1; } }
 @keyframes fadeOut { to { opacity:0; transform: translateX(120%); } }
 
-/* layout com sidebar */
+/* ── Layout com sidebar ── */
 .layout { display: flex; min-height: 100vh; }
 
 .sidebar {
@@ -165,13 +194,12 @@ label {
 }
 .sidebar-link:hover { background: rgba(255,255,255,.05); color: var(--white); }
 .sidebar-link.active { background: var(--red); color: #fff; }
-.sidebar-link svg { width:18px; height:18px; flex-shrink:0; }
+/* Ícone dentro do link da sidebar fica branco quando ativo */
+.sidebar-link.active .material-icons { color: #fff; }
+.sidebar-link:hover .material-icons  { color: var(--white); }
+.sidebar-link .material-icons        { color: var(--grey); font-size: 18px; }
 
-.sidebar-sep {
-  height: 1px;
-  background: var(--border);
-  margin: 10px 0;
-}
+.sidebar-sep { height: 1px; background: var(--border); margin: 10px 0; }
 
 .main-content {
   margin-left: 220px;
@@ -180,6 +208,7 @@ label {
   max-width: calc(100vw - 220px);
 }
 
+/* ── Títulos de página ── */
 .page-title {
   font-family: var(--font-display);
   font-size: 32px;
@@ -194,7 +223,7 @@ label {
   margin-bottom: 28px;
 }
 
-/* grid de stats */
+/* ── Grade de KPIs ── */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
@@ -207,11 +236,11 @@ label {
   border-radius: var(--r2);
   padding: 20px;
 }
-.stat-card p { font-size: 12px; color: var(--grey); text-transform: uppercase; letter-spacing:.06em; margin-bottom:8px; }
-.stat-card h2 { font-family: var(--font-display); font-size: 34px; font-weight:800; color: var(--red); }
+.stat-card p     { font-size: 12px; color: var(--grey); text-transform: uppercase; letter-spacing:.06em; margin-bottom:8px; }
+.stat-card h2    { font-family: var(--font-display); font-size: 34px; font-weight:800; color: var(--red); }
 .stat-card small { font-size: 12px; color: var(--grey-dark); }
 
-/* grid de gráficos */
+/* ── Linha de gráficos ── */
 .charts-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
 .chart-box {
   background: var(--bg-2);
@@ -222,24 +251,28 @@ label {
   min-width: 260px;
 }
 .chart-box.wide { flex: 2; }
-.chart-box h3 { font-size: 13px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--grey); margin-bottom:16px; }
+.chart-box h3   { font-size: 13px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--grey); margin-bottom:16px; }
 
-/* form grid */
+/* ── Formulário em grid de 2 colunas ── */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-grid .full { grid-column: 1 / -1; }
 .form-group { display: flex; flex-direction: column; }
 
-/* tabela */
+/* ── Tabela genérica ── */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
 th { font-size: 11px; text-transform: uppercase; letter-spacing:.06em; color: var(--grey); font-weight:600; }
 tr:hover td { background: rgba(255,255,255,.03); }
 
+/* ── Responsivo para telas pequenas ── */
 @media (max-width: 768px) {
-  .sidebar { width: 100%; min-height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 14px; }
-  .sidebar .logo { width: 60px; margin: 0 auto 0 0; }
-  .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
-  .form-grid { grid-template-columns: 1fr; }
-  .charts-row { flex-direction: column; }
+  .sidebar {
+    width: 100%; min-height: auto; position: static;
+    flex-direction: row; flex-wrap: wrap; padding: 14px;
+  }
+  .sidebar .logo    { width: 60px; margin: 0 auto 0 0; }
+  .main-content     { margin-left: 0; padding: 20px; max-width: 100%; }
+  .form-grid        { grid-template-columns: 1fr; }
+  .charts-row       { flex-direction: column; }
 }

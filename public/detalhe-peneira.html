@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen · Detalhes da Peneira</title>
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/styleDetalhePeneira.css">
+</head>
+<body>
+
+    <div class="detalhe-container">
+
+        <!-- ── Mensagem enquanto carrega ── -->
+        <div id="estadoCarregando" class="estado-mensagem">
+            <span class="material-icons">hourglass_empty</span>
+            <p>Carregando detalhes...</p>
+        </div>
+
+        <!-- ── Mensagem de erro ── -->
+        <div id="estadoErro" class="estado-mensagem escondido">
+            <span class="material-icons">error</span>
+            <p id="textoErro">Peneira não encontrada.</p>
+            <a href="peneiras.html" class="btn btn-ghost">
+                <span class="material-icons">arrow_back</span>
+                Voltar
+            </a>
+        </div>
+
+        <!-- ── Conteúdo da peneira (aparece após carregar) ── -->
+        <div id="conteudo" class="escondido">
+
+            <!-- Cabeçalho com logo e título -->
+            <div class="detalhe-hero">
+                <div class="hero-logo">
+                    <img id="logoClube" src="" alt="Escudo do clube" class="escondido">
+                    <span id="iconeClube" class="material-icons logo-placeholder">sports_soccer</span>
+                </div>
+                <div class="hero-info">
+                    <span id="nomeClube" class="clube-nome">—</span>
+                    <h1 id="nomePeneira">—</h1>
+                    <span id="categoriaBadge" class="badge badge-red">—</span>
+                </div>
+            </div>
+
+            <!-- Grade de informações principais -->
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <span class="material-icons">calendar_today</span>
+                    <div>
+                        <small>Data</small>
+                        <strong id="dataRealizacao">—</strong>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <span class="material-icons">schedule</span>
+                    <div>
+                        <small>Horário</small>
+                        <strong id="horario">—</strong>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <span class="material-icons">location_on</span>
+                    <div>
+                        <small>Local</small>
+                        <strong id="localEndereco">—</strong>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <span class="material-icons">place</span>
+                    <div>
+                        <small>Cidade</small>
+                        <strong id="cidade">—</strong>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <span class="material-icons">people</span>
+                    <div>
+                        <small>Vagas disponíveis</small>
+                        <strong id="vagas">—</strong>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <span class="material-icons">person</span>
+                    <div>
+                        <small>Organizada por</small>
+                        <strong id="criadorNome">—</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Descrição (aparece só se houver texto) -->
+            <div id="blocoDescricao" class="detalhe-descricao escondido">
+                <h3>
+                    <span class="material-icons">info</span>
+                    Descrição
+                </h3>
+                <p id="descricao">—</p>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="detalhe-acoes">
+                <a href="peneiras.html" class="btn btn-ghost">
+                    <span class="material-icons">arrow_back</span>
+                    Voltar
+                </a>
+                <!-- Botão de inscrição (só aparece para alunos) -->
+                <button id="btnInscrever" class="btn btn-primary escondido" onclick="inscrever()">
+                    <span class="material-icons">how_to_reg</span>
+                    Inscrever-se
+                </button>
+                <!-- Mensagem após inscrição -->
+                <span id="msgInscricao" class="msg-inscricao escondido"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+
+        // Guarda o id da peneira atual (pego da URL)
+        var idPeneira = null;
+
+        // ─────────────────────────────────────────────
+        // Função: carregarPeneira
+        // Lê o ?id=X da URL e busca os dados na API
+        // ─────────────────────────────────────────────
+        function carregarPeneira() {
+            // Pega o parâmetro 'id' da URL
+            var params = new URLSearchParams(window.location.search);
+            idPeneira = params.get('id');
+
+            // Se não tem id na URL, mostra erro
+            if (!idPeneira) {
+                mostrarErro('Nenhuma peneira foi selecionada.');
+                return;
+            }
+
+            // Busca os detalhes na API
+            fetch('/peneiras/' + idPeneira)
+                .then(function(resposta) {
+                    return resposta.json();
+                })
+                .then(function(peneira) {
+                    // Se a API retornou mensagem de erro
+                    if (peneira.mensagem) {
+                        mostrarErro(peneira.mensagem);
+                        return;
+                    }
+                    preencherPagina(peneira);
+                })
+                .catch(function(erro) {
+                    console.error('Erro ao buscar peneira:', erro);
+                    mostrarErro('Erro ao conectar com o servidor.');
+                });
+        }
+
+        // ─────────────────────────────────────────────
+        // Função: preencherPagina
+        // Recebe o objeto peneira e preenche o HTML
+        // ─────────────────────────────────────────────
+        function preencherPagina(p) {
+
+            // Formata a data
+            var dataFormatada = '—';
+            if (p.data_realizacao) {
+                dataFormatada = p.data_realizacao.split('T')[0].split('-').reverse().join('/');
+            }
+
+            // Preenche cada campo pelo id do elemento
+            document.getElementById('nomePeneira').textContent    = p.nome            || '—';
+            document.getElementById('nomeClube').textContent      = p.nome_clube      || 'Sem clube';
+            document.getElementById('categoriaBadge').textContent = p.categoria       || '—';
+            document.getElementById('dataRealizacao').textContent = dataFormatada;
+            document.getElementById('horario').textContent        = p.horario         || '—';
+            document.getElementById('localEndereco').textContent  = p.local_endereco  || '—';
+            document.getElementById('cidade').textContent         = p.cidade          || '—';
+            document.getElementById('vagas').textContent          = p.vagas ? p.vagas + ' vagas' : 'Sem limite';
+            document.getElementById('criadorNome').textContent    = p.criador_nome    || '—';
+
+            // Atualiza o título da aba do navegador
+            document.title = 'NextGen · ' + (p.nome || 'Peneira');
+
+            // Mostra o escudo do clube se tiver URL
+            if (p.escudo_url) {
+                var img = document.getElementById('logoClube');
+                img.src = p.escudo_url;
+                img.classList.remove('escondido');
+                document.getElementById('iconeClube').classList.add('escondido');
+            }
+
+            // Mostra a descrição só se tiver texto
+            if (p.descricao && p.descricao.trim() !== '') {
+                document.getElementById('descricao').textContent = p.descricao;
+                document.getElementById('blocoDescricao').classList.remove('escondido');
+            }
+
+            // Mostra o botão de inscrição só para alunos logados
+            var user = Auth.current();
+            if (user && user.tipo === 'aluno') {
+                document.getElementById('btnInscrever').classList.remove('escondido');
+            }
+
+            // Esconde o "carregando" e mostra o conteúdo
+            document.getElementById('estadoCarregando').classList.add('escondido');
+            document.getElementById('conteudo').classList.remove('escondido');
+        }
+
+        // ─────────────────────────────────────────────
+        // Função: inscrever
+        // Chama a API para inscrever o aluno na peneira
+        // ─────────────────────────────────────────────
+        function inscrever() {
+            var user = Auth.current();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            var btn = document.getElementById('btnInscrever');
+            btn.disabled = true;
+            btn.textContent = 'Inscrevendo...';
+
+            fetch('/inscricoes/inscrever', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    idAtleta: user.id,
+                    idPeneira: idPeneira
+                })
+            })
+            .then(function(resposta) {
+                return resposta.json();
+            })
+            .then(function(resultado) {
+                var msgEl = document.getElementById('msgInscricao');
+                msgEl.textContent = resultado.mensagem;
+                msgEl.classList.remove('escondido');
+
+                // Se foi bem sucedido
+                if (resultado.mensagem === 'Inscrição realizada com sucesso!') {
+                    msgEl.classList.add('sucesso');
+                    btn.classList.add('escondido');
+                } else {
+                    // Erro (ex: já inscrito)
+                    msgEl.classList.add('erro');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-icons">how_to_reg</span> Inscrever-se';
+                }
+            })
+            .catch(function(erro) {
+                console.error('Erro ao inscrever:', erro);
+                var msgEl = document.getElementById('msgInscricao');
+                msgEl.textContent = 'Erro ao conectar com o servidor.';
+                msgEl.classList.remove('escondido');
+                msgEl.classList.add('erro');
+                btn.disabled = false;
+            });
+        }
+
+        // ─────────────────────────────────────────────
+        // Função auxiliar: mostrarErro
+        // ─────────────────────────────────────────────
+        function mostrarErro(mensagem) {
+            document.getElementById('estadoCarregando').classList.add('escondido');
+            document.getElementById('textoErro').textContent = mensagem;
+            document.getElementById('estadoErro').classList.remove('escondido');
+        }
+
+        // Executa ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarPeneira();
+        });
+
+    </script>
+
+</body>
+</html>
