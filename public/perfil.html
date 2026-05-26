@@ -38,7 +38,6 @@
     <!-- Navegação por abas -->
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab('dados',  this)">Meus Dados</button>
-      <button class="tab-btn"        onclick="switchTab('historico', this)">Histórico</button>
     </div>
 
     <!-- ===== ABA: MEUS DADOS ===== -->
@@ -84,22 +83,12 @@
         </div>
       </div>
     </div>
-
-
-    <!-- ===== ABA: HISTÓRICO ===== -->
-    <div class="tab-panel" id="tab-historico">
-      <h3 class="historico-titulo">Peneiras inscritas</h3>
-      <!-- Preenchido pela API via JavaScript -->
-      <div id="listaPeneiras">
-        <p style="color:var(--grey)">Carregando histórico...</p>
-      </div>
+      <div id="historicoPeneiras">
     </div>
 
   </main>
 </div>
 
-<!-- Chart.js para os gráficos -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- utils.js contém Auth, toast, initAvatarUpload, etc. -->
 <script src="js/utils.js"></script>
 <script>
@@ -137,40 +126,9 @@
     sidebar.innerHTML = html;
   }
 
-  // ============================================================
-  // Função: carregarHistoricoPeneiras
-  // Busca as inscrições do aluno logado via API
-  // (Você precisará criar a rota GET /inscricoes/:idAtleta)
-  // ============================================================
-  function carregarHistoricoPeneiras(idAtleta) {
-    // Por enquanto mostra mensagem enquanto a rota não está criada
-    var container = document.getElementById('listaPeneiras');
-    container.innerHTML = '<p style="color:var(--grey)">Histórico de inscrições em desenvolvimento. Crie a rota GET /inscricoes/:idAtleta para ativar.</p>';
-
-    // Quando criar a rota, descomente o código abaixo:
-
-    fetch('/inscricoes/' + idAtleta)
-      .then(function(resposta) { return resposta.json(); })
-      .then(function(inscricoes) {
-        var html = '';
-        for (var i = 0; i < inscricoes.length; i++) {
-          var ins = inscricoes[i];
-          html += '<div class="peneira-item">';
-          html +=   '<div><h4>' + ins.nome_peneira + '</h4><p>' + ins.data_realizacao + '</p></div>';
-          html +=   '<span class="badge badge-' + (ins.status === 'aprovado' ? 'green' : 'yellow') + '">' + ins.status + '</span>';
-          html += '</div>';
-        }
-        container.innerHTML = html || '<p style="color:var(--grey)">Nenhuma inscrição encontrada.</p>';
-      })
-      .catch(function(erro) { console.error(erro); });
-
-  }
-
-  // ============================================================
-  // Quando a página termina de carregar, executa tudo
-  // ============================================================
   document.addEventListener('DOMContentLoaded', function() {
-
+var container = document.getElementById('historicoPeneiras'); 
+if (!container) return;
     // Verifica se há usuário logado
     var user = Auth.current();
     if (!user) {
@@ -215,54 +173,6 @@
     preencher('fAltura',   user.altura_cm);
     preencher('fPeso',     user.peso_kg);
 
-
-    // ── Gráfico de presença ──
-    new Chart(document.getElementById('chartPresenca'), {
-      type: 'bar',
-      data: {
-        labels: ['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12'],
-        datasets: [{
-          label: 'Presença',
-          data: [3, 2, 3, 3, 2, 3, 2, 3, 3, 3, 2, 3],
-          backgroundColor: 'rgba(238,25,25,.7)',
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { labels: { color: '#a0a0a0' } } },
-        scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' }, max: 4 } }
-      }
-    });
-
-    // ── Gráfico radar de habilidades ──
-    new Chart(document.getElementById('chartHabilidade'), {
-      type: 'radar',
-      data: {
-        labels: ['Velocidade', 'Técnica', 'Finalização', 'Passe', 'Drible', 'Posicionamento'],
-        datasets: [{
-          label: 'Desempenho',
-          data: [78, 82, 90, 74, 85, 70],
-          borderColor: '#ee1919',
-          backgroundColor: 'rgba(238,25,25,.15)',
-          pointBackgroundColor: '#ee1919'
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          r: {
-            ticks: { color: '#555', display: false },
-            grid: { color: 'rgba(255,255,255,.08)' },
-            pointLabels: { color: '#a0a0a0' }
-          }
-        },
-        plugins: { legend: { labels: { color: '#a0a0a0' } } }
-      }
-    });
-
-    // ── Carrega histórico de peneiras ──
-    carregarHistoricoPeneiras(user.id);
 
   }); // fim DOMContentLoaded
 

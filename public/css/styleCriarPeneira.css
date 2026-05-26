@@ -1,24 +1,18 @@
-/* ============================================================
-   NextGen · styleCriarPeneira.css
-   Estilos específicos da página de Criar Peneira
-   ============================================================ */
-
-/* ── Card de uma peneira já criada (na lista abaixo do formulário) ── */
 .peneira-card {
-    background: var(--bg-3);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
+    background: #0e1822;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
     padding: 16px 20px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 12px;
-    transition: border-color .2s;
+    transition: border-color 0.2s;
 }
 
 .peneira-card:hover {
-    border-color: var(--border-red);
+    border-color: rgba(238, 25, 25, 0.4);
 }
 
 .peneira-card h4 {
@@ -29,45 +23,42 @@
 
 .peneira-card p {
     font-size: 13px;
-    color: var(--grey);
+    color: #a0a0a0;
     margin-bottom: 2px;
 }
 
-/* Grupo de botões de ação (excluir, editar) */
 .peneira-card .actions {
     display: flex;
     gap: 8px;
     flex-shrink: 0;
 }
 
-/* ── Botão de ícone (lixeira, lápis) ── */
 .btn-icon {
     width: 34px;
     height: 34px;
-    border-radius: var(--r);
-    border: 1px solid var(--border);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     background: transparent;
-    color: var(--grey);
+    color: #a0a0a0;
     cursor: pointer;
     font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: .2s;
+    transition: 0.2s;
 }
 
 .btn-icon:hover {
-    color: var(--red);
-    border-color: var(--border-red);
+    color: #ee1919;
+    border-color: rgba(238, 25, 25, 0.4);
 }
 
-/* ── Estado vazio (quando não há peneiras criadas ainda) ── */
 .empty-state {
     text-align: center;
     padding: 48px;
-    color: var(--grey);
-    border: 1px dashed var(--border);
-    border-radius: var(--r2);
+    color: #a0a0a0;
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
 }
 
 .empty-state div {
@@ -75,24 +66,22 @@
     margin-bottom: 12px;
 }
 
-/* ── Painel do formulário de criação ── */
 .form-panel {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: var(--r2);
+    background: #0b1218;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
     padding: 28px;
     margin-bottom: 28px;
 }
 
 .form-panel h2 {
-    font-family: var(--font-display);
+    font-family: 'Barlow Condensed', sans-serif;
     font-size: 22px;
     font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 22px;
 }
 
-/* Botões no final do formulário */
 .btn-row {
     display: flex;
     gap: 12px;
@@ -100,7 +89,6 @@
     margin-top: 20px;
 }
 
-/* ── Cabeçalho da lista com título e badge de contagem ── */
 .lista-header {
     display: flex;
     align-items: center;
@@ -109,15 +97,21 @@
 }
 
 .lista-titulo {
-    font-family: var(--font-display);
+    font-family: 'Barlow Condensed', sans-serif;
     font-size: 18px;
     font-weight: 800;
     text-transform: uppercase;
 }
 
-/* Descrição curta da peneira */
 .desc-peneira {
     margin-top: 6px;
     font-size: 12px;
     color: #666;
+}
+
+.status-desativado {
+    color: #ee1919;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
 }

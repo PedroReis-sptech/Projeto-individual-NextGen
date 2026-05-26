@@ -1,0 +1,153 @@
+body {
+    background: #050a0e;
+    color: #ffffff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+}
+
+.detalhe-container {
+    max-width: 700px;
+    margin: 40px auto;
+}
+
+/* Estado de Carregamento e Erros */
+.estado-mensagem {
+    padding: 60px 20px;
+    color: #a0a0a0;
+    font-size: 16px;
+    text-align: center;
+}
+
+.escondido {
+    display: none;
+}
+
+/* Botão Voltar no Topo */
+.topo-acoes {
+    margin-bottom: 20px;
+}
+
+.btn-voltar-topo {
+    color: #a0a0a0;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color 0.2s;
+}
+
+.btn-voltar-topo:hover {
+    color: #ee1919;
+}
+
+/* Card Principal Superior (Hero) */
+.detalhe-hero {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #0b1218;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.circulo-time-detalhe {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #141f29;
+    border: 2px solid #ee1919;
+}
+
+.hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.clube-nome {
+    font-size: 14px;
+    color: #a0a0a0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-info h1 {
+    font-size: 24px;
+    margin: 0;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.badge-red {
+    background: #ee1919;
+    color: #ffffff;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    width: fit-content;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+/* Card de Conteúdo Principal */
+.card-detalhe-principal {
+    background: #0b1218;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.secao-info h2 {
+    font-size: 18px;
+    color: #ee1919;
+    margin-top: 0;
+    margin-bottom: 16px;
+    border-left: 4px solid #ee1919;
+    padding-left: 10px;
+}
+
+/* Linhas de Informação */
+.info-linhas p {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #e0e0e0;
+}
+
+.info-linhas strong {
+    color: #a0a0a0;
+    display: inline-block;
+    width: 90px;
+}
+
+/* Linha Divisória */
+.divisor-linha {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 25px 0;
+}
+
+/* Texto de Descrição */
+#descricaoPeneira {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #d1d5db;
+    margin: 0;
+}
+
+/* Caixa de Alerta/Aviso */
+.aviso-caixa {
+    background: rgba(238, 25, 25, 0.05);
+    border: 1px solid rgba(238, 25, 25, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+.aviso-caixa p {
+    margin: 0;
+    font-size: 13.5px;
+    color: #ff8080;
+    line-height: 1.5;
+}

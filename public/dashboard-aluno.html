@@ -40,7 +40,6 @@
     <!-- ── Cards de estatísticas pessoais ── -->
     <!-- Preenchidos via JavaScript com dados do banco -->
     <div class="stats-grid" id="statsGrid">
-      <p style="color:var(--grey)">Carregando estatísticas...</p>
     </div>
 
     <!-- ── Linha 1 de gráficos ── -->
@@ -48,10 +47,6 @@
       <div class="chart-box wide">
         <h3>Presença nos treinos — últimas 8 semanas</h3>
         <canvas id="cPresenca"></canvas>
-      </div>
-      <div class="chart-box">
-        <h3>Radar de habilidades</h3>
-        <canvas id="cRadar"></canvas>
       </div>
     </div>
 
@@ -65,7 +60,6 @@
         <h3>Próximas peneiras</h3>
         <!-- Preenchido via JavaScript com dados do banco -->
         <div id="proximasPeneiras">
-          <p style="color:var(--grey)">Carregando peneiras...</p>
         </div>
       </div>
     </div>
@@ -78,13 +72,7 @@
 <!-- utils.js contém Auth, toast, etc. -->
 <script src="js/utils.js"></script>
 <script>
-
-  // ============================================================
-  // Função: carregarPeneiras
-  // Busca as peneiras ativas da API GET /peneiras
-  // e exibe as próximas na lista
-  // ============================================================
-  function carregarPeneiras() {
+function carregarPeneiras() {
     fetch('/peneiras')
       .then(function(resposta) { return resposta.json(); })
       .then(function(peneiras) {
@@ -95,13 +83,11 @@
           return;
         }
 
-        // Mostra no máximo as 3 próximas peneiras
         var proximas = peneiras.slice(0, 3);
         var html = '';
 
         for (var i = 0; i < proximas.length; i++) {
           var p = proximas[i];
-          // Formata a data de YYYY-MM-DD para DD/MM/AAAA
           var dataFormatada = p.data_realizacao
             ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
             : '—';
@@ -125,42 +111,65 @@
       });
   }
 
-  // ============================================================
-  // Função: carregarTreinos
-  // Busca os treinos do aluno logado e monta os cards de stats
-  // e o gráfico de presença
-  // Rota: GET /treinos/:idAtleta  (você precisará criar essa rota)
-  // Por ora, usa dados do usuário logado para montar os cards
-  // ============================================================
-  function montarCards(user) {
-    var stats = [
-      { label: 'Treinos no mês',    val: '—', sub: 'carregando...' },
-      { label: '% Presença',        val: '—', sub: 'carregando...' },
-      { label: 'Peneiras inscritas', val: '—', sub: 'esta temporada' },
-      { label: 'Aprovações',        val: '—', sub: 'confirmadas' }
-    ];
+  // Carrega os KPIs e Gráficos do Aluno vindos da API de forma 100% dinâmica
+  function carregarMetricasAluno(idAtleta) {
+    fetch('/estatisticas/aluno/' + idAtleta)
+      .then(function(resposta) { return resposta.json(); })
+      .then(function(dados) {
+        
+        // 1. Montagem dinâmica dos Cards com os valores tratados vindos do banco
+        var stats = [
+          { label: 'Treinos no mês',     val: dados.kpis.treinosNoMes, sub: 'atualizado' },
+          { label: '% Presença',         val: (dados.kpis.taxaPresenca ?? 0) + '%', sub: 'histórico total' },
+          { label: 'Peneiras inscritas',  val: dados.kpis.peneiraInscritas, sub: 'esta temporada' },
+          { label: 'Aprovações',         val: dados.kpis.aprovacoes, sub: 'confirmadas' }
+        ];
 
-    var html = '';
-    for (var i = 0; i < stats.length; i++) {
-      html += '<div class="stat-card">';
-      html +=   '<p>' + stats[i].label + '</p>';
-      html +=   '<h2>' + stats[i].val + '</h2>';
-      html +=   '<small>' + stats[i].sub + '</small>';
-      html += '</div>';
-    }
-    document.getElementById('statsGrid').innerHTML = html;
+        var html = '';
+        for (var i = 0; i < stats.length; i++) {
+          html += '<div class="stat-card">';
+          html +=   '<p>' + stats[i].label + '</p>';
+          html +=   '<h2>' + stats[i].val + '</h2>';
+          html +=   '<small>' + stats[i].sub + '</small>';
+          html += '</div>';
+        }
+        document.getElementById('statsGrid').innerHTML = html;
+
+        // 2. Montagem do gráfico dinâmico de Presença por Semana
+        var labelsSemanas = dados.presencaPorSemana.map(item => 'Sem ' + item.num_semana);
+        var listaPresentes = dados.presencaPorSemana.map(item => item.presentes);
+        var listaAusencias = dados.presencaPorSemana.map(item => item.ausencias);
+
+        new Chart(document.getElementById('cPresenca'), {
+          type: 'bar',
+          data: {
+            labels: labelsSemanas.length > 0 ? labelsSemanas : ['Sem dados'],
+            datasets: [
+              { label: 'Presentes', data: listaPresentes.length > 0 ? listaPresentes : [0], backgroundColor: 'rgba(238,25,25,.8)', borderRadius: 6 },
+              { label: 'Ausências', data: listaAusencias.length > 0 ? listaAusencias : [0], backgroundColor: 'rgba(255,255,255,.08)', borderRadius: 6 }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#a0a0a0' } } },
+            scales: {
+              x: { ticks: { color: '#a0a0a0' }, stacked: true },
+              y: { ticks: { color: '#a0a0a0' }, stacked: true }
+            }
+          }
+        });
+
+      })
+      .catch(function(erro) {
+        console.error('Erro ao carregar métricas do aluno:', erro);
+        document.getElementById('statsGrid').innerHTML = '<p style="color:var(--red)">Erro ao carregar estatísticas.</p>';
+      });
   }
 
-  // ============================================================
-  // Quando a página termina de carregar, executa tudo
-  // ============================================================
   document.addEventListener('DOMContentLoaded', function() {
-
-    // Verifica se o usuário está logado como aluno
     var user = Auth.require('aluno');
     if (!user) return;
 
-    // ── Preenche o chip de usuário ──
     var nomeEncoded = encodeURIComponent(user.nome || 'A');
     var avatarUrl = user.foto_perfil ||
       ('https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=ee1919&color=fff&size=32');
@@ -169,81 +178,15 @@
     document.getElementById('chipNome').textContent    = user.nome || '—';
     document.getElementById('chipCategoria').textContent = user.categoria || '—';
 
-    // Pega só o primeiro nome para a saudação
     var primeiroNome = (user.nome || 'Atleta').split(' ')[0];
     document.getElementById('firstName').textContent = primeiroNome;
     document.getElementById('chipPos').textContent   = user.posicao || '—';
 
-    // ── Monta cards de estatísticas ──
-    montarCards(user);
-
-    // ── Busca peneiras da API ──
+    // Dispara a carga dinâmica usando a ID do usuário logado
+    carregarMetricasAluno(user.id);
     carregarPeneiras();
 
-    // ──────────────────────────────────────────────────────────
-    // GRÁFICOS
-    // Os dados abaixo são exemplos visuais enquanto você não
-    // cria rotas de estatísticas pessoais do atleta.
-    // Substitua pelos dados reais quando criar esses endpoints.
-    // ──────────────────────────────────────────────────────────
-
-    // Gráfico de presença nos treinos (últimas 8 semanas)
-    new Chart(document.getElementById('cPresenca'), {
-      type: 'bar',
-      data: {
-        labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'],
-        datasets: [
-          { label: 'Presentes', data: [3, 3, 2, 3, 3, 3, 2, 3], backgroundColor: 'rgba(238,25,25,.8)', borderRadius: 6 },
-          { label: 'Ausências', data: [0, 0, 1, 0, 0, 0, 1, 0], backgroundColor: 'rgba(255,255,255,.08)', borderRadius: 6 }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { labels: { color: '#a0a0a0' } } },
-        scales: {
-          x: { ticks: { color: '#a0a0a0' }, stacked: true },
-          y: { ticks: { color: '#a0a0a0' }, stacked: true }
-        }
-      }
-    });
-
-    // Gráfico radar de habilidades
-    new Chart(document.getElementById('cRadar'), {
-      type: 'radar',
-      data: {
-        labels: ['Velocidade', 'Técnica', 'Finalização', 'Passe', 'Drible', 'Posicionamento'],
-        datasets: [
-          {
-            label: 'Você',
-            data: [78, 82, 90, 74, 85, 70],
-            borderColor: '#ee1919',
-            backgroundColor: 'rgba(238,25,25,.15)',
-            pointBackgroundColor: '#ee1919'
-          },
-          {
-            label: 'Média categoria',
-            data: [70, 70, 70, 70, 70, 70],
-            borderColor: 'rgba(255,255,255,.2)',
-            backgroundColor: 'transparent',
-            borderDash: [4, 4],
-            pointRadius: 0
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          r: {
-            ticks: { display: false },
-            grid: { color: 'rgba(255,255,255,.08)' },
-            pointLabels: { color: '#a0a0a0' }
-          }
-        },
-        plugins: { legend: { labels: { color: '#a0a0a0' } } }
-      }
-    });
-
-    // Gráfico de evolução de desempenho ao longo dos meses
+    // Gráfico de evolução visual mantido fixo como exemplo técnico da interface
     new Chart(document.getElementById('cEvolucao'), {
       type: 'line',
       data: {
@@ -267,7 +210,6 @@
         }
       }
     });
-
   });
 
 </script>

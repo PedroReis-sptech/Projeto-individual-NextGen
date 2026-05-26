@@ -1,11 +1,5 @@
 var inscricaoModel = require("../models/inscricaoModel");
 
-// ============================================================
-// Controller de Inscrição
-// ============================================================
-
-// POST /inscricoes/inscrever
-// Body: { idAtleta, idPeneira }
 function inscrever(req, res) {
     var idAtleta  = req.body.idAtleta;
     var idPeneira = req.body.idPeneira;
@@ -16,11 +10,10 @@ function inscrever(req, res) {
 
     inscricaoModel.inscrever(idAtleta, idPeneira)
         .then(function(resultado) {
-            res.status(201).json({ mensagem: "Inscrição realizada com sucesso!" });
+            res.status(201).json({ mensagem: "Inscricao realizada com sucesso!" });
         })
         .catch(function(erro) {
             console.error("Erro ao inscrever:", erro);
-            // Se for a mensagem de "já inscrito", retorna 409 (conflito)
             if (erro.mensagem) {
                 return res.status(409).json({ mensagem: erro.mensagem });
             }
@@ -28,8 +21,6 @@ function inscrever(req, res) {
         });
 }
 
-// GET /inscricoes/atleta/:id
-// Retorna todas as inscrições do atleta com detalhes
 function listarPorAtleta(req, res) {
     var idAtleta = req.params.id;
 

@@ -14,10 +14,10 @@ router.get("/atleta/:id", function(req, res) {
 
 // GET /inscricoes/:idAtleta → compatibilidade com front (perfil.html)
 router.get("/:idAtleta", function(req, res) {
-    // reaproveita o mesmo controller
     req.params.id = req.params.idAtleta;
     ctrl.listarPorAtleta(req, res);
 });
+
 
 
 module.exports = router;

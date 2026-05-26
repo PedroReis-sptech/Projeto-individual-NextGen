@@ -1,10 +1,5 @@
 var peneiraModel = require("../models/peneiraModel");
 
-// ============================================================
-// Controller de Peneira
-// ============================================================
-
-// GET /peneiras → lista todas as peneiras ativas
 function listar(req, res) {
     peneiraModel.listar()
         .then(function(resultado) {
@@ -16,7 +11,6 @@ function listar(req, res) {
         });
 }
 
-// GET /peneiras/criador/:idCriador → peneiras criadas por um usuário
 function listarPorCriador(req, res) {
     peneiraModel.listarPorCriador(req.params.idCriador)
         .then(function(resultado) {
@@ -28,7 +22,6 @@ function listarPorCriador(req, res) {
         });
 }
 
-// GET /peneiras/:id → detalhes de uma peneira específica
 function buscarPorId(req, res) {
     peneiraModel.buscarPorId(req.params.id)
         .then(function(resultado) {
@@ -43,7 +36,6 @@ function buscarPorId(req, res) {
         });
 }
 
-// POST /peneiras/criar → cria nova peneira
 function criar(req, res) {
     var { nome, dataRealizacao, localEndereco, categoria, fkCriador } = req.body;
 
@@ -61,7 +53,6 @@ function criar(req, res) {
         });
 }
 
-// DELETE /peneiras/desativar/:id → desativa uma peneira
 function desativar(req, res) {
     peneiraModel.desativar(req.params.id)
         .then(function() {

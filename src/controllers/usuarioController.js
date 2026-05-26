@@ -1,10 +1,5 @@
 var usuarioModel = require("../models/usuarioModel");
 
-/**
- * POST /usuarios/autenticar
- * Body: { emailServer, senhaServer }
- * Retorna dados do usuário incluindo tipo (aluno | time | professor)
- */
 function autenticar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
@@ -20,8 +15,7 @@ function autenticar(req, res) {
             if (resultado.length > 1) {
                 return res.status(500).json({ mensagem: "Mais de um usuário com o mesmo login." });
             }
-            const user = resultado[0];
-            res.status(200).json(user);
+            res.status(200).json(resultado[0]);
         })
         .catch(function (erro) {
             console.error("Erro ao autenticar:", erro);
@@ -29,21 +23,17 @@ function autenticar(req, res) {
         });
 }
 
-/**
- * POST /usuarios/cadastrar
- * Body: { nomeServer, emailServer, senhaServer, posicao, categoria, timeCoracao, ... }
- */
 function cadastrar(req, res) {
-    var nome          = req.body.nomeServer;
-    var email         = req.body.emailServer;
-    var senha         = req.body.senhaServer;
-    var posicao       = req.body.posicao       || '';
-    var categoria     = req.body.categoria     || '';
-    var timeCoracao   = req.body.timeCoracao   || '';
-    var dataNasc      = req.body.dataNascimento || null;
-    var cidade        = req.body.cidade        || '';
-    var altura        = req.body.alturaCm      || null;
-    var peso          = req.body.pesoKg        || null;
+    var nome = req.body.nomeServer;
+    var email = req.body.emailServer;
+    var senha = req.body.senhaServer;
+    var posicao = req.body.posicao;
+    var categoria = req.body.categoria;
+    var timeCoracao = req.body.timeCoracao;
+    var dataNasc = req.body.dataNascimento;
+    var cidade = req.body.cidade;
+    var altura = req.body.alturaCm;
+    var peso = req.body.pesoKg;
 
     if (!nome)  return res.status(400).json({ mensagem: "Nome não informado." });
     if (!email) return res.status(400).json({ mensagem: "E-mail não informado." });
@@ -62,10 +52,6 @@ function cadastrar(req, res) {
         });
 }
 
-/**
- * PUT /usuarios/:id/perfil
- * Body: campos opcionais a atualizar
- */
 function atualizarPerfil(req, res) {
     var id = req.params.id;
     var {
@@ -85,9 +71,6 @@ function atualizarPerfil(req, res) {
         });
 }
 
-/**
- * GET /usuarios/alunos  (admin)
- */
 function listarAlunos(req, res) {
     usuarioModel.listarAlunos()
         .then(resultado => res.status(200).json(resultado))

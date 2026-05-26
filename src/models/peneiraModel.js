@@ -1,10 +1,5 @@
 var database = require("../database/config");
 
-// ============================================================
-// Model de Peneira
-// ============================================================
-
-// Lista todas as peneiras ativas com nome do clube e criador
 function listar() {
     return database.executar(`
         SELECT
@@ -20,7 +15,6 @@ function listar() {
     `);
 }
 
-// Lista peneiras criadas por um usuário específico
 function listarPorCriador(idCriador) {
     return database.executar(`
         SELECT
@@ -34,7 +28,6 @@ function listarPorCriador(idCriador) {
     `);
 }
 
-// Busca uma peneira pelo ID com todos os detalhes
 function buscarPorId(id) {
     return database.executar(`
         SELECT
@@ -49,12 +42,14 @@ function buscarPorId(id) {
     `);
 }
 
-// Cria uma nova peneira
 function criar(dados) {
     var { nome, descricao, dataRealizacao, horario, localEndereco, cidade, categoria, vagas, fkClube, fkCriador } = dados;
+    var clubeId = fkClube ? fkClube : 'NULL';
+    var qtdVagas = vagas ? vagas : 'NULL';
+
     return database.executar(`
         INSERT INTO peneira
-            (nome, descricao, data_realizacao, horario, local_endereco, cidade, categoria, vagas, fk_clube, fk_criador)
+            (nome, descricao, data_realizacao, horario, local_endereco, cidade, categoria, vagas, fk_clube, fk_criador, ativa)
         VALUES (
             '${nome}',
             '${descricao || ''}',
@@ -62,15 +57,15 @@ function criar(dados) {
             '${horario || '00:00'}',
             '${localEndereco || ''}',
             '${cidade || ''}',
-            '${categoria || ''}',
-            ${vagas || 'NULL'},
-            ${fkClube || 'NULL'},
-            ${fkCriador}
-        )
+            '${categoria}',
+            ${qtdVagas},
+            ${clubeId},
+            ${fkCriador},
+            1
+        );
     `);
 }
 
-// Desativa uma peneira (não apaga, só marca como inativa)
 function desativar(id) {
     return database.executar(`UPDATE peneira SET ativa = 0 WHERE id = ${id}`);
 }
