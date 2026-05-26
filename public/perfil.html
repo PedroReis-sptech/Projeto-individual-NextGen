@@ -25,13 +25,11 @@
         <img id="avatarPreview" class="avatar-img"
              src="https://ui-avatars.com/api/?name=Atleta&background=ee1919&color=fff&size=110"
              alt="Foto de perfil">
-        <!-- Botão de lápis para trocar a foto -->
-        <button class="avatar-edit-btn" title="Trocar foto" onclick="document.getElementById('avatarInput').click()">✎</button>
         <!-- Input de arquivo oculto -->
         <input type="file" id="avatarInput" accept="image/*">
       </div>
       <div class="hero-info">
-        <h2 id="heroNome">Carregando…</h2>
+        <h2 id="heroNome"></h2>
         <p  id="heroEmail"></p>
         <div class="hero-badges" id="heroBadges"></div>
       </div>
@@ -40,7 +38,6 @@
     <!-- Navegação por abas -->
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab('dados',  this)">Meus Dados</button>
-      <button class="tab-btn"        onclick="switchTab('stats',  this)">Estatísticas</button>
       <button class="tab-btn"        onclick="switchTab('historico', this)">Histórico</button>
     </div>
 
@@ -88,16 +85,6 @@
       </div>
     </div>
 
-    <!-- ===== ABA: ESTATÍSTICAS ===== -->
-    <div class="tab-panel" id="tab-stats">
-      <!-- Cards numéricos de desempenho -->
-      <div class="my-stats" id="myStats"></div>
-      <!-- Gráficos de presença e habilidades -->
-      <div class="charts-row">
-        <div class="chart-box wide"><h3>Presença nos treinos (últimas 12 semanas)</h3><canvas id="chartPresenca"></canvas></div>
-        <div class="chart-box">     <h3>Desempenho por habilidade</h3>              <canvas id="chartHabilidade"></canvas></div>
-      </div>
-    </div>
 
     <!-- ===== ABA: HISTÓRICO ===== -->
     <div class="tab-panel" id="tab-historico">
@@ -208,7 +195,6 @@
         'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.nome || 'A') + '&background=ee1919&color=fff&size=110';
     }
 
-    // Adiciona badges de posição, categoria e time do coração
     var badges = document.getElementById('heroBadges');
     if (user.posicao)      badges.innerHTML += '<span class="badge badge-red">'    + user.posicao      + '</span>';
     if (user.categoria)    badges.innerHTML += '<span class="badge badge-blue">'   + user.categoria    + '</span>';
@@ -229,18 +215,6 @@
     preencher('fAltura',   user.altura_cm);
     preencher('fPeso',     user.peso_kg);
 
-    // ── Monta cards de estatísticas ──
-    var stats = [
-      { label: 'Treinos',    val: 24,   sub: 'neste mês' },
-      { label: 'Presença',   val: '87%', sub: 'nos treinos' },
-      { label: 'Peneiras',   val: 2,    sub: 'inscritas' },
-      { label: 'Aprovações', val: 1,    sub: 'confirmadas' }
-    ];
-    var htmlStats = '';
-    for (var i = 0; i < stats.length; i++) {
-      htmlStats += '<div class="my-stat"><p>' + stats[i].label + '</p><h3>' + stats[i].val + '</h3><small>' + stats[i].sub + '</small></div>';
-    }
-    document.getElementById('myStats').innerHTML = htmlStats;
 
     // ── Gráfico de presença ──
     new Chart(document.getElementById('chartPresenca'), {
