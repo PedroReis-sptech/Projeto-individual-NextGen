@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Entrar</title>
-  <!-- tokens.css cuida de todo o estilo, sem CSS inline aqui -->
+  <!-- sem CSS inline -->
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styleLogin.css">
 </head>
@@ -17,13 +17,13 @@
       <img src="../Logo/Next-removebg-preview.png" alt="NextGen" onerror="this.style.display='none'">
     </div>
 
-    <!-- Botões para trocar entre as abas Login / Cadastro -->
+    <!-- Abas -->
     <div class="tabs">
       <button class="tab-btn active" id="btnLogin"    onclick="switchTab('login')">Entrar</button>
       <button class="tab-btn"        id="btnCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
     </div>
 
-    <!-- ===== ABA: LOGIN ===== -->
+    <!-- Login -->
     <div class="form-section visible" id="secLogin">
       <h2>Bem-vindo de volta</h2>
       <p class="sub">Entre para ver as peneiras abertas.</p>
@@ -37,14 +37,13 @@
         <input id="inSenha" type="password" placeholder="••••••••" required>
       </div>
 
-      <button class="btn btn-primary" onclick="logar()">Entrar →</button>
+      <button class="btn btn-primary" onclick="logar()">Entrar</button>
       <div class="msg" id="msgLogin"></div>
     </div>
 
-    <!-- ===== ABA: CADASTRO ===== -->
+    <!-- Cadastro -->
     <div class="form-section" id="secCadastro">
       <h2>Crie sua conta</h2>
-      <p class="sub">Em 30 segundos você está dentro.</p>
 
       <div class="grid2">
         <div class="form-group full">
@@ -105,7 +104,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="cadastrar()">Criar conta →</button>
+      <button class="btn btn-primary" onclick="cadastrar()">Criar conta</button>
       <div class="msg" id="msgCadastro"></div>
     </div>
   </div>
@@ -113,17 +112,13 @@
   <script src="js/utils.js"></script>
   <script>
 
-    // ---------------------------------------------------
-    // Verifica se a URL tem ?aba=cadastro e abre a aba certa
-    // ---------------------------------------------------
+    // Verifica ?aba=cadastro
     var parametros = new URLSearchParams(location.search);
     if (parametros.get('aba') === 'cadastro') {
       switchTab('cadastro');
     }
 
-    // ---------------------------------------------------
-    // Troca de aba entre Login e Cadastro
-    // ---------------------------------------------------
+    // Troca abas
     function switchTab(aba) {
       document.getElementById('secLogin').classList.toggle('visible',    aba === 'login');
       document.getElementById('secCadastro').classList.toggle('visible', aba === 'cadastro');
@@ -131,9 +126,7 @@
       document.getElementById('btnCadastro').classList.toggle('active',  aba === 'cadastro');
     }
 
-    // ---------------------------------------------------
-    // LOGIN — chama a rota POST /usuarios/autenticar
-    // ---------------------------------------------------
+    // LOGIN
     function logar() {
       var email = document.getElementById('inEmail').value.trim();
       var senha = document.getElementById('inSenha').value.trim();
@@ -190,9 +183,7 @@
       });
     }
 
-    // ---------------------------------------------------
-    // CADASTRO — chama a rota POST /usuarios/cadastrar
-    // ---------------------------------------------------
+    // CADASTRO
     function cadastrar() {
       var nome      = document.getElementById('cNome').value.trim();
       var email     = document.getElementById('cEmail').value.trim();
