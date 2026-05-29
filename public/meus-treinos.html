@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextGen · Meus Treinos</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800&family=Barlow:wght@400;500;600&display=swap');
+
+    /* Card de treino pendente */
+    .treino-pendente {
+      background: linear-gradient(135deg, #0e1822 0%, #0b1218 100%);
+      border: 1px solid rgba(238, 25, 25, 0.3);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .treino-pendente:hover {
+      border-color: rgba(238, 25, 25, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .treino-pendente h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .treino-pendente p {
+      font-size: 13px;
+      color: #a0a0a0;
+      margin-bottom: 4px;
+    }
+
+    .treino-acoes {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Card concluído (feedback visual) */
+    .treino-concluido {
+      background: rgba(16, 185, 129, 0.07);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 14px;
+      padding: 18px 24px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .treino-concluido span {
+      font-size: 13px;
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    .treino-vazio {
+      text-align: center;
+      padding: 48px;
+      color: #555;
+      border: 1px dashed rgba(255,255,255,0.07);
+      border-radius: 12px;
+    }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a0a0a0;
+      margin-bottom: 14px;
+    }
+
+    .btn-concluir {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-concluir:hover {
+      background: #10b981;
+      color: #fff;
+    }
+    .btn-concluir:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Menu lateral -->
+  <nav class="sidebar">
+    <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo NextGen">
+    <a href="dashboard-aluno.html" class="sidebar-link">Dashboard</a>
+    <a href="perfil.html"          class="sidebar-link">Perfil</a>
+    <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
+    <a href="meus-treinos.html"    class="sidebar-link active">Meus Treinos</a>
+    <a href="login.html"           class="sidebar-link" onclick="Auth.logout()">Sair</a>
+  </nav>
+
+  <main class="main-content">
+
+    <div class="page-title">Meus Treinos</div>
+    <p class="page-sub">Treinos pendentes passados pelo seu professor.</p>
+
+    <!-- Contador -->
+    <div style="margin-bottom:20px">
+      <span class="badge badge-red" id="contadorPendentes">carregando...</span>
+    </div>
+
+    <!-- Treinos pendentes -->
+    <div class="section-label">⏳ Pendentes</div>
+    <div id="listaPendentes">
+      <div class="treino-vazio"><p>Carregando...</p></div>
+    </div>
+
+    <!-- Treinos concluídos nesta sessão -->
+    <div id="secaoConcluidos" style="display:none; margin-top:28px">
+      <div class="section-label">✅ Concluídos nesta sessão</div>
+      <div id="listaConcluidos"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/utils.js"></script>
+<script>
+  var user = null;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    user = Auth.current();
+    if (!user || user.tipo !== 'aluno') {
+      window.location.href = 'dashboard-admin.html';
+      return;
+    }
+    carregarTreinos();
+  });
+
+  function carregarTreinos() {
+    fetch('/treinos/pendentes/' + user.id)
+      .then(function(r) {
+        if (r.status === 204) return [];
+        return r.json();
+      })
+      .then(function(treinos) {
+        renderPendentes(treinos);
+      })
+      .catch(function() {
+        document.getElementById('listaPendentes').innerHTML =
+          '<div class="treino-vazio"><p style="color:#ee1919">Erro ao carregar treinos.</p></div>';
+      });
+  }
+
+  function renderPendentes(lista) {
+    var container = document.getElementById('listaPendentes');
+    var contador  = document.getElementById('contadorPendentes');
+
+    contador.textContent = lista.length + ' pendente' + (lista.length !== 1 ? 's' : '');
+
+    if (lista.length === 0) {
+      container.innerHTML =
+        '<div class="treino-vazio">' +
+          '<div style="font-size:36px;margin-bottom:10px">🎉</div>' +
+          '<p>Nenhum treino pendente. Bom trabalho!</p>' +
+        '</div>';
+      return;
+    }
+
+    var html = '';
+    lista.forEach(function(t) {
+      var data = t.criado_em
+        ? new Date(t.criado_em).toLocaleDateString('pt-BR')
+        : '—';
+
+      html += '<div class="treino-pendente" id="treino-' + t.id + '">';
+      html +=   '<h3>' + (t.descricao || '—') + '</h3>';
+      html +=   '<p>👨‍🏫 Professor: <strong style="color:#fff">' + (t.professor_nome || '—') + '</strong></p>';
+      html +=   '<p>📅 Passado em: ' + data + '</p>';
+      html +=   '<div class="treino-acoes">';
+      html +=     '<span class="badge badge-yellow">pendente</span>';
+      html +=     '<button class="btn-concluir" id="btn-' + t.id + '" onclick="concluirTreino(' + t.id + ', \'' + (t.descricao || '') + '\')">✓ Concluir Treino</button>';
+      html +=   '</div>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  // Marca o treino como concluído e atualiza a UI
+  function concluirTreino(treinoId, descricao) {
+    var btn = document.getElementById('btn-' + treinoId);
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Concluindo...';
+    }
+
+    fetch('/treinos/concluir/' + treinoId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(dados) {
+      if (dados.mensagem === 'Treino concluído!') {
+        // Remove o card do pendente com animação suave
+        var card = document.getElementById('treino-' + treinoId);
+        if (card) {
+          card.style.transition = 'opacity 0.3s, transform 0.3s';
+          card.style.opacity = '0';
+          card.style.transform = 'translateX(20px)';
+          setTimeout(function() {
+            card.remove();
+            atualizarContador();
+            adicionarConcluido(descricao);
+          }, 300);
+        }
+        toast('Treino concluído! Ótimo trabalho! 💪');
+      } else {
+        toast(dados.mensagem || 'Erro ao concluir.', 'error');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '✓ Concluir Treino';
+        }
+      }
+    })
+    .catch(function() {
+      toast('Erro ao conectar com o servidor.', 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = '✓ Concluir Treino';
+      }
+    });
+  }
+
+  // Atualiza o contador de pendentes após concluir
+  function atualizarContador() {
+    var restantes = document.querySelectorAll('[id^="treino-"]').length;
+    var contador  = document.getElementById('contadorPendentes');
+    contador.textContent = restantes + ' pendente' + (restantes !== 1 ? 's' : '');
+
+    if (restantes === 0) {
+      document.getElementById('listaPendentes').innerHTML =
+        '<div class="treino-vazio">' +
+          '<div style="font-size:36px;margin-bottom:10px">🎉</div>' +
+          '<p>Nenhum treino pendente. Bom trabalho!</p>' +
+        '</div>';
+    }
+  }
+
+  // Adiciona o treino na seção de "concluídos nesta sessão"
+  function adicionarConcluido(descricao) {
+    var secao = document.getElementById('secaoConcluidos');
+    var lista = document.getElementById('listaConcluidos');
+
+    secao.style.display = 'block';
+
+    var div = document.createElement('div');
+    div.className = 'treino-concluido';
+    div.innerHTML =
+      '<span style="font-size:22px">✅</span>' +
+      '<span>' + (descricao || 'Treino concluído') + '</span>';
+    lista.appendChild(div);
+  }
+</script>
+</body>
+</html>

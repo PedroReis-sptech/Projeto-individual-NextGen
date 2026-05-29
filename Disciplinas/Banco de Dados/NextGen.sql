@@ -54,11 +54,15 @@ CREATE TABLE inscricao (
 );
 
 CREATE TABLE treino (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    fk_atleta INT NOT NULL,
-    data_treino DATE NOT NULL,
-    presente TINYINT DEFAULT 1,
-    FOREIGN KEY (fk_atleta) REFERENCES usuario(id)
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    professor_id  INT NOT NULL,
+    aluno_id      INT NOT NULL,
+    descricao     VARCHAR(500) NOT NULL,
+    status        ENUM('pendente', 'concluido') DEFAULT 'pendente',
+    data_conclusao DATETIME DEFAULT NULL,
+    criado_em     DATETIME DEFAULT NOW(),
+    FOREIGN KEY (professor_id) REFERENCES usuario(id),
+    FOREIGN KEY (aluno_id)     REFERENCES usuario(id)
 );
 
 INSERT INTO clube (nome, escudo_url, cidade, estado) VALUES

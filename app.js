@@ -23,7 +23,8 @@ var aquariosRouter     = require("./src/routes/aquarios");
 var empresasRouter     = require("./src/routes/empresas");
 var peneirasRouter     = require("./src/routes/peneiras");
 var estatisticasRouter = require("./src/routes/estatisticas"); 
-var inscricoesRouter   = require("./src/routes/inscricoes");   
+var inscricoesRouter   = require("./src/routes/inscricoes");
+var treinosRouter = require("./src/routes/treinos");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,7 +40,8 @@ app.use("/aquarios",     aquariosRouter);
 app.use("/empresas",     empresasRouter);
 app.use("/peneiras",     peneirasRouter);
 app.use("/estatisticas", estatisticasRouter); 
-app.use("/inscricoes",   inscricoesRouter);   
+app.use("/inscricoes",   inscricoesRouter);
+app.use("/treinos", treinosRouter);    
 
 
 app.listen(PORTA_APP, function () {
