@@ -19,12 +19,12 @@ function criar(req, res) {
         });
 }
 
-function buscarPendentes(req, res) {
+function buscarTodos(req, res) {
     var alunoId = req.params.alunoId;
 
     if (!alunoId) return res.status(400).json({ mensagem: "alunoId não informado." });
 
-    treinoModel.buscarPendentesPorAluno(alunoId)
+    treinoModel.buscarTodosPorAluno(alunoId)
         .then(function(resultado) {
             if (resultado.length === 0) {
                 return res.status(204).send();
@@ -55,4 +55,4 @@ function concluir(req, res) {
         });
 }
 
-module.exports = { criar, buscarPendentes, concluir };
+module.exports = { criar, buscarTodos, concluir };

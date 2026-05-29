@@ -159,13 +159,13 @@
   });
 
   function carregarTreinos() {
-    fetch('/treinos/pendentes/' + user.id)
+    fetch('/treinos/pendentes/' + user.id) // Continua a mesma rota, mas agora o backend traz todos
       .then(function(r) {
         if (r.status === 204) return [];
         return r.json();
       })
       .then(function(treinos) {
-        renderPendentes(treinos);
+        renderTreinos(treinos);
       })
       .catch(function() {
         document.getElementById('listaPendentes').innerHTML =
@@ -173,41 +173,50 @@
       });
   }
 
-  function renderPendentes(lista) {
+  function renderTreinos(lista) {
     var container = document.getElementById('listaPendentes');
     var contador  = document.getElementById('contadorPendentes');
 
-    contador.textContent = lista.length + ' pendente' + (lista.length !== 1 ? 's' : '');
+    contador.textContent = lista.length + ' treino' + (lista.length !== 1 ? 's' : '');
 
     if (lista.length === 0) {
       container.innerHTML =
         '<div class="treino-vazio">' +
           '<div style="font-size:36px;margin-bottom:10px">🎉</div>' +
-          '<p>Nenhum treino pendente. Bom trabalho!</p>' +
+          '<p>Nenhum treino encontrado.</p>' +
         '</div>';
       return;
     }
 
     var html = '';
     lista.forEach(function(t) {
-      var data = t.criado_em
-        ? new Date(t.criado_em).toLocaleDateString('pt-BR')
-        : '—';
+      var data = t.criado_em ? new Date(t.criado_em).toLocaleDateString('pt-BR') : '—';
+      var isConcluido = (t.status === 'concluido');
 
-      html += '<div class="treino-pendente" id="treino-' + t.id + '">';
-      html +=   '<h3>' + (t.descricao || '—') + '</h3>';
-      html +=   '<p>👨‍🏫 Professor: <strong style="color:#fff">' + (t.professor_nome || '—') + '</strong></p>';
-      html +=   '<p>📅 Passado em: ' + data + '</p>';
-      html +=   '<div class="treino-acoes">';
-      html +=     '<span class="badge badge-yellow">pendente</span>';
-      html +=     '<button class="btn-concluir" id="btn-' + t.id + '" onclick="concluirTreino(' + t.id + ', \'' + (t.descricao || '') + '\')">✓ Concluir Treino</button>';
+      // Se estiver concluído, usa a classe verde. Se não, usa a classe normal.
+      var classeCard = isConcluido ? 'treino-concluido' : 'treino-pendente';
+
+      html += '<div class="' + classeCard + '" id="treino-' + t.id + '" style="' + (isConcluido ? 'flex-wrap: wrap;' : '') + '">';
+      html +=   '<div style="flex: 1; min-width: 200px;">';
+      html +=     '<h3>' + (t.descricao || '—') + '</h3>';
+      html +=     '<p style="' + (isConcluido ? 'color: #10b981;' : '') + '">👨‍🏫 Professor: <strong>' + (t.professor_nome || '—') + '</strong></p>';
+      html +=     '<p style="' + (isConcluido ? 'color: #10b981;' : '') + '">📅 Passado em: ' + data + '</p>';
       html +=   '</div>';
+      
+      html +=   '<div class="treino-acoes" id="acoes-' + t.id + '">';
+      if (isConcluido) {
+        html += '<span style="font-size: 16px;">✅ Concluído</span>';
+      } else {
+        html +=     '<span class="badge badge-yellow">pendente</span>';
+        html +=     '<button class="btn-concluir" id="btn-' + t.id + '" onclick="concluirTreino(' + t.id + ', \'' + (t.descricao || '') + '\')">✓ Concluir Treino</button>';
+      }
+      html +=   '</div>';
+      
       html += '</div>';
     });
     container.innerHTML = html;
   }
 
-  // Marca o treino como concluído e atualiza a UI
   function concluirTreino(treinoId, descricao) {
     var btn = document.getElementById('btn-' + treinoId);
     if (btn) {
@@ -221,22 +230,25 @@
     })
     .then(function(r) { return r.json(); })
     .then(function(dados) {
-      if (dados.mensagem === 'Treino concluído!') {
-        // Remove o card do pendente com animação suave
+      if (dados.mensagem === 'Treino concluído!' || dados.status === 200) {
+        // Ao invés de remover, altera a aparência do Card na tela para concluído!
         var card = document.getElementById('treino-' + treinoId);
         if (card) {
-          card.style.transition = 'opacity 0.3s, transform 0.3s';
-          card.style.opacity = '0';
-          card.style.transform = 'translateX(20px)';
-          setTimeout(function() {
-            card.remove();
-            atualizarContador();
-            adicionarConcluido(descricao);
-          }, 300);
+          card.className = 'treino-concluido';
+          card.style.flexWrap = 'wrap';
+          
+          var acoes = document.getElementById('acoes-' + t.id);
+          var acoesDiv = card.querySelector('.treino-acoes');
+          if(acoesDiv) {
+              acoesDiv.innerHTML = '<span style="font-size: 16px;">✅ Concluído</span>';
+          }
+          // Torna os textos verdes (ajuste visual opcional)
+          var paragrafos = card.querySelectorAll('p');
+          paragrafos.forEach(p => p.style.color = '#10b981');
         }
         toast('Treino concluído! Ótimo trabalho! 💪');
       } else {
-        toast(dados.mensagem || 'Erro ao concluir.', 'error');
+        toast('Erro ao concluir.', 'error');
         if (btn) {
           btn.disabled = false;
           btn.textContent = '✓ Concluir Treino';
@@ -250,36 +262,6 @@
         btn.textContent = '✓ Concluir Treino';
       }
     });
-  }
-
-  // Atualiza o contador de pendentes após concluir
-  function atualizarContador() {
-    var restantes = document.querySelectorAll('[id^="treino-"]').length;
-    var contador  = document.getElementById('contadorPendentes');
-    contador.textContent = restantes + ' pendente' + (restantes !== 1 ? 's' : '');
-
-    if (restantes === 0) {
-      document.getElementById('listaPendentes').innerHTML =
-        '<div class="treino-vazio">' +
-          '<div style="font-size:36px;margin-bottom:10px">🎉</div>' +
-          '<p>Nenhum treino pendente. Bom trabalho!</p>' +
-        '</div>';
-    }
-  }
-
-  // Adiciona o treino na seção de "concluídos nesta sessão"
-  function adicionarConcluido(descricao) {
-    var secao = document.getElementById('secaoConcluidos');
-    var lista = document.getElementById('listaConcluidos');
-
-    secao.style.display = 'block';
-
-    var div = document.createElement('div');
-    div.className = 'treino-concluido';
-    div.innerHTML =
-      '<span style="font-size:22px">✅</span>' +
-      '<span>' + (descricao || 'Treino concluído') + '</span>';
-    lista.appendChild(div);
   }
 </script>
 </body>

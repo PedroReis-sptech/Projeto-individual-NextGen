@@ -10,19 +10,19 @@ function criar(professorId, alunoId, descricao) {
     return database.executar(instrucaoSql);
 }
 
-// Busca todos os treinos PENDENTES de um aluno específico
-function buscarPendentesPorAluno(alunoId) {
+// Busca todos os treinos de um aluno específico
+function buscarTodosPorAluno(alunoId) {
     var instrucaoSql = `
         SELECT
             t.id,
             t.descricao,
-            t.status_treino AS status, -- Mudou de t.status para t.status_treino (com apelido para o JS não quebrar)
+            t.status_treino AS status,
             t.criado_em,
             u.nome AS professor_nome
         FROM treino t
         INNER JOIN usuario u ON t.professor_id = u.id
         WHERE t.aluno_id = ${alunoId}
-          AND t.status_treino = 'pendente' -- Mudou de t.status para t.status_treino
+        -- REMOVIDO: AND t.status_treino = 'pendente'
         ORDER BY t.criado_em DESC
     `;
     console.log("Executando SQL:\n" + instrucaoSql);
@@ -41,4 +41,4 @@ function concluir(treinoId) {
     return database.executar(instrucaoSql);
 }
 
-module.exports = { criar, buscarPendentesPorAluno, concluir };
+module.exports = { criar, buscarTodosPorAluno, concluir };

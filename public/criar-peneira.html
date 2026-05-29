@@ -16,8 +16,7 @@
 
     <!-- ===== MENU LATERAL ===== -->
     <nav class="sidebar">
-      <img class="logo" src="../Logo/Next-removebg-preview.png"
-        onerror="this.outerHTML='<div style=\'font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\'>NG</div>'">
+      <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo">
       <a href="dashboard-admin.html" class="sidebar-link">Dashboard</a>
       <a href="perfil.html" class="sidebar-link">Perfil</a>
       <a href="peneiras.html" class="sidebar-link">Peneiras</a>
@@ -121,25 +120,22 @@
         return;
       }
 
-      var html = '';
-    for (var i = 0; i < lista.length; i++) {
+      for (var i = 0; i < lista.length; i++) {
       var p = lista[i];
-      // Formata a data de YYYY-MM-DD para DD/MM/AAAA
       var dataFormatada = p.data_realizacao
         ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
         : '—';
 
-      // Define a cor e o texto do badge baseado no status vindo do Banco de Dados
-      // Se sua API usar p.ativo (true/false), mude a condição abaixo para: if (p.ativo)
       var badgeClass = 'badge-green';
       var badgeTexto = 'ativa';
       
-      if (p.status === 'desativada' || p.ativo === false) {
+      // Checa a coluna "ativa" que vem do banco (seja 0 ou false)
+      if (p.ativa === 0 || p.ativa === false || p.status === 'desativada') {
         badgeClass = 'badge-red';
         badgeTexto = 'desativada';
       }
 
-      html += '<div class="peneira-card" id="pen-' + p.id + '">';
+      html += '<div class="peneira-card" id="pen-' + p.id + '" style="' + (badgeTexto === 'desativada' ? 'opacity: 0.6;' : '') + '">';
       html +=   '<div>';
       html +=     '<h4>' + (p.nome || '—') + '</h4>';
       html +=     '<p>📅 ' + dataFormatada + (p.horario ? ' às ' + p.horario : '') + '</p>';
@@ -150,10 +146,9 @@
       }
       html +=   '</div>';
       html +=   '<div class="actions">';
-      // Usando as variáveis dinâmicas aqui:
       html +=     '<span class="badge ' + badgeClass + '">' + badgeTexto + '</span>';
       
-      // Só mostra o botão de excluir se a peneira ainda estiver ativa
+      // Só mostra o botão de desativar se ela ainda for ativa
       if (badgeTexto === 'ativa') {
         html +=     '<button class="btn-icon" title="Desativar" onclick="desativarPeneira(' + p.id + ')">🗑</button>';
       }

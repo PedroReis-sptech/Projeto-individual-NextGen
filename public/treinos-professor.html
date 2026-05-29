@@ -325,13 +325,19 @@
         ? new Date(t.criado_em).toLocaleDateString('pt-BR')
         : '—';
 
+      // Verifica se está concluído
+      var isConcluido = (t.status === 'concluido');
+      var badgeClass = isConcluido ? 'badge-green' : 'badge-yellow';
+      var badgeText  = isConcluido ? 'concluído' : 'pendente';
+
       html += '<div class="treino-card">';
       html +=   '<div>';
       html +=     '<h4>' + (t.descricao || '—') + '</h4>';
       html +=     '<p>👤 Atleta: <strong style="color:#fff">' + (t.aluno_nome || '—') + '</strong></p>';
       html +=     '<p>📅 Criado em: ' + data + '</p>';
       html +=   '</div>';
-      html +=   '<span class="badge badge-yellow">pendente</span>';
+      // Badge dinâmica
+      html +=   '<span class="badge ' + badgeClass + '">' + badgeText + '</span>';
       html += '</div>';
     });
     container.innerHTML = html;
