@@ -6,34 +6,18 @@ body {
     background: #050a0e;
 }
 
-.bg-grid {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background-image:
-        linear-gradient(rgba(238,25,25,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(238,25,25,.04) 1px, transparent 1px);
-    background-size: 48px 48px;
-}
-
 .bg-glow {
-    position: fixed;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(238,25,25,.12) 0%, transparent 70%);
-    top: -200px;
-    left: -200px;
-    pointer-events: none;
-    z-index: 0;
+    position: absolute;
+    width: 420px;
+    height: 520px;
+    border-radius: 20px;
+    box-shadow: 0 0 120px 10px rgba(238, 25, 25, 0.28);
 }
 
 .card {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     width: 420px;
-    max-width: 96vw;
     background: #0b1218;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 20px;
@@ -43,7 +27,7 @@ body {
 
 .logo-wrap {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 12px;
 }
 .logo-wrap img {
     width: 90px;
