@@ -58,9 +58,6 @@ CREATE TABLE treino (
 	CONSTRAINT status_treino CHECK (status_treino IN ('pendente', 'concluido'))
 );
 
--- Se o banco ja existir, rode estes comandos uma vez:
--- ALTER TABLE usuario ADD COLUMN desempenho INT DEFAULT 50;
--- UPDATE usuario SET desempenho = 50 WHERE desempenho IS NULL;
 
 INSERT INTO clube (nome, escudo_url, cidade, estado) VALUES
   ('Corinthians', 'https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png', 'São Paulo', 'SP'),
@@ -122,15 +119,15 @@ INSERT INTO peneira (nome, descricao, data_realizacao, horario, local_endereco, 
 
 INSERT INTO treino (professor_id, aluno_id, descricao, status_treino, data_conclusao, criado_em) VALUES
 -- ID 4: Pedro Reis (Atacante)
-(2, 4, 'Treino de explosão muscular e tiros de 50 metros para ganho de velocidade.', 'concluido', '2026-04-05 10:30:00', '2026-04-05 08:30:00'),
-(2, 4, 'Treino técnico de fundamentos: passe curto, domínio orientado e condução em velocidade.', 'concluido', '2026-04-12 11:00:00', '2026-04-12 09:00:00'),
-(2, 4, 'Treino tático de movimentação ofensiva, ultrapassagem e posicionamento de infiltração.', 'concluido', '2026-04-19 10:15:00', '2026-04-19 08:00:00'),
-(2, 4, 'Treino físico de resistência aeróbica em circuito intermitente com bola.', 'concluido', '2026-04-26 09:45:00', '2026-04-26 07:30:00'),
-(2, 4, 'Treino de finalização de primeira após cruzamentos laterais rasteiros e aéreos.', 'concluido', '2026-05-03 11:15:00', '2026-05-03 09:00:00'),
-(2, 4, 'Treino de força funcional na academia do clube focado em membros inferiores e core.', 'concluido', '2026-05-10 10:00:00', '2026-05-10 08:30:00'),
-(2, 4, 'Treino tático focado em transição ofensiva rápida e contra-ataque em superioridade numérica.', 'concluido', '2026-05-17 10:30:00', '2026-05-17 08:30:00'),
-(2, 4, 'Treino de finalização e posicionamento dentro da área simulando pivô.', 'concluido', '2026-05-25 11:00:00', '2026-05-25 09:00:00'),
-(2, 4, 'Treino leve de recuperação muscular e fundamentos de cabeceio ofensivo.', 'pendente', NULL, '2026-05-31 15:00:00'),
+(2, 4, 'Treino de explosão muscular e tiros de 50 metros para ganho de velocidade.', 'pendente', '2026-04-05 10:30:00', '2026-04-05 08:30:00'),
+(2, 4, 'Treino técnico de fundamentos: passe curto, domínio orientado e condução em velocidade.', 'pendente', '2026-04-12 11:00:00', '2026-04-12 09:00:00'),
+(2, 4, 'Treino tático de movimentação ofensiva, ultrapassagem e posicionamento de infiltração.', 'pendente', '2026-04-19 10:15:00', '2026-04-19 08:00:00'),
+(2, 4, 'Treino físico de resistência aeróbica em circuito intermitente com bola.', 'pendente', '2026-04-26 09:45:00', '2026-04-26 07:30:00'),
+(2, 4, 'Treino de finalização de primeira após cruzamentos laterais rasteiros e aéreos.', 'pendente', '2026-05-03 11:15:00', '2026-05-03 09:00:00'),
+(2, 4, 'Treino de força funcional na academia do clube focado em membros inferiores e core.', 'pendente', '2026-05-10 10:00:00', '2026-05-10 08:30:00'),
+(2, 4, 'Treino tático focado em transição ofensiva rápida e contra-ataque em superioridade numérica.', 'pendente', '2026-05-17 10:30:00', '2026-05-17 08:30:00'),
+(2, 4, 'Treino de finalização e posicionamento dentro da área simulando pivô.', 'pendente', '2026-06-01 11:00:00', '2026-06-01 09:00:00'),
+(2, 4, 'Treino leve de recuperação muscular e fundamentos de cabeceio ofensivo.', 'pendente', NULL, '2026-06-01 15:00:00'),
   
 -- ID 5: Lucas Oliveira (Goleiro)
 (3, 5, 'Treino específico de fundamentos: pegada firme e saída de bola rasteira.', 'concluido', '2026-05-25 16:30:00', '2026-05-25 15:00:00'),
@@ -190,3 +187,4 @@ INSERT INTO treino (professor_id, aluno_id, descricao, status_treino, data_concl
 (3, 23, 'Treino de posse de bola em espaço reduzido e drible voltado para progressão.', 'pendente', NULL, '2026-05-29 11:30:00');
 
 SELECT * FROM usuario;
+    

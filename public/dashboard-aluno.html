@@ -154,7 +154,7 @@
           }
         });
 
-        montarGraficoEvolucao(dados.kpis.desempenho || 50);
+        montarGraficoEvolucao(dados.kpis.desempenho);
       })
       .catch(function(erro) {
         console.error('Erro ao carregar metricas do aluno:', erro);
@@ -173,7 +173,7 @@
           borderColor: '#ee1919',
           backgroundColor: 'rgba(238,25,25,.1)',
           fill: true,
-          tension: .4,
+          tension: 0.4,
           pointBackgroundColor: '#ee1919'
         }]
       },

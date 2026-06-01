@@ -225,8 +225,8 @@
     lista.forEach(function(t) {
       // Formata a data de criação para o padrão brasileiro
       var data = t.criado_em
-        ? new Date(t.criado_em).toLocaleDateString('pt-BR')
-        : 'sem data';
+    ? t.criado_em.split('T')[0].split('-').reverse().join('/')
+    : 'sem data';
 
       // Define a cor do badge baseado no status
       var badgeClass = t.status === 'concluido' ? 'badge-green' : 'badge-yellow';

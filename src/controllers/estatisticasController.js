@@ -1,12 +1,5 @@
 var modelo = require("../models/estatisticasModel");
 
-// ============================================================
-// Controller de Estatísticas
-// Chama o model e devolve os dados combinados em JSON
-// ============================================================
-
-// GET /estatisticas/admin
-// Retorna todos os KPIs e dados para gráficos do dashboard admin
 function admin(req, res) {
 
     // Promise.all espera TODAS as consultas terminarem antes de responder
@@ -22,7 +15,6 @@ function admin(req, res) {
         modelo.treinosConcluidosPorCategoria()
     ])
     .then(function(resultados) {
-        // Cada item de resultados corresponde à posição no Promise.all acima
         res.status(200).json({
             kpis: {
                 totalAtletas:  resultados[0][0].total,
@@ -43,8 +35,6 @@ function admin(req, res) {
     });
 }
 
-// GET /estatisticas/aluno/:id
-// Retorna KPIs e gráfico de presença do aluno logado
 function aluno(req, res) {
     var idAtleta = req.params.id;
 
@@ -53,14 +43,14 @@ function aluno(req, res) {
         modelo.presencaPorSemana(idAtleta)
     ])
     .then(function(resultados) {
-        var kpis = resultados[0][0] || {};
+        var kpis = resultados[0];
 
         res.status(200).json({
             kpis: {
                 treinosNoMes:      kpis.treinos_mes      || 0,
                 taxaPresenca:      kpis.taxa_presenca     || 0,
                 treinosConcluidos: kpis.treinos_concluidos || 0,
-                desempenho:        kpis.desempenho         || 50
+                desempenho:        kpis.desempenho
             },
             presencaPorSemana: resultados[1]
         });

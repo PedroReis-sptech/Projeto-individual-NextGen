@@ -102,7 +102,7 @@ function treinosConcluidosPorCategoria() {
     return database.executar(instrucaoSql);
 }
 
-// ── KPIs E GRÁFICOS DO ALUNO 
+// KPIs E GRÁFICOS DO ALUNO 
 
 function kpisAluno(idAtleta) {
     var instrucaoSql = `
@@ -128,10 +128,15 @@ function kpisAluno(idAtleta) {
                AND status_treino = 'concluido'
             ) AS treinos_concluidos,
 
-            (SELECT desempenho
-             FROM usuario
-             WHERE id = ${idAtleta}
-            ) AS desempenho
+            (SELECT 
+                desempenho + 
+                (SELECT COUNT(*) 
+                FROM treino 
+                WHERE aluno_id = ${idAtleta}
+                    AND status_treino = 'concluido') AS desempenho
+                    FROM usuario
+                    WHERE id = ${idAtleta}
+                ) AS desempenho
     `;
     return database.executar(instrucaoSql);
 }

@@ -124,8 +124,8 @@
 
     lista.forEach(function(t) {
       var data = t.criado_em
-        ? new Date(t.criado_em).toLocaleDateString('pt-BR')
-        : 'sem data';
+    ? t.criado_em.split('T')[0].split('-').reverse().join('/')
+    : 'sem data';
 
       var classeCard = t.status === 'concluido' ? 'treino-card concluido' : 'treino-card';
 
