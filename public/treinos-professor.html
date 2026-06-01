@@ -5,219 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Treinos — Professor</title>
   <link rel="stylesheet" href="css/tokens.css">
-  <style>
-    /* ── Estilos específicos desta página ── */
-    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800&family=Barlow:wght@400;500;600&display=swap');
-
-    .treino-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    /* Modal overlay */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 500;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.aberto {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #0b1218;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 32px;
-      width: 100%;
-      max-width: 480px;
-      position: relative;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
-    }
-
-    .modal-box h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-
-    .modal-fechar {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: none;
-      color: #a0a0a0;
-      font-size: 20px;
-      cursor: pointer;
-      line-height: 1;
-    }
-    .modal-fechar:hover { color: #fff; }
-
-    /* Cards de treino listados */
-    .treino-card {
-      background: #0e1822;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      transition: border-color 0.2s;
-    }
-    .treino-card:hover { border-color: rgba(238,25,25,0.35); }
-
-    .treino-card h4 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #fff;
-    }
-    .treino-card p {
-      font-size: 12px;
-      color: #a0a0a0;
-      margin: 0;
-    }
-
-    .treino-vazio {
-      text-align: center;
-      padding: 48px;
-      color: #555;
-      border: 1px dashed rgba(255,255,255,0.07);
-      border-radius: 12px;
-    }
-
-    /* Faixa de botões de ação rápida */
-    .acoes-rapidas {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
-    .acoes-rapidas a {
-      text-decoration: none;
-    }
-
-    select option { background: #0b1218; }
-  </style>
+  <link rel="stylesheet" href="css/styleTreinos.css">
 </head>
 <body>
 <div class="layout">
 
   <!-- Menu lateral -->
   <nav class="sidebar">
-    <img class="logo" src="../Logo/Next-removebg-preview.png">
+    <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo NextGen">
     <a href="dashboard-admin.html" class="sidebar-link">Dashboard</a>
     <a href="perfil.html"          class="sidebar-link">Perfil</a>
     <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
     <a href="criar-peneira.html"   class="sidebar-link">Criar Peneira</a>
-    <a href="treinos-professor.html" class="sidebar-link active">Criar treinos</a>
-    <a href="login.html"           class="sidebar-link" onclick="Auth.logout()">Sair</a>
+    <a href="treinos-professor.html" class="sidebar-link active">Criar Treino</a>
+    <a href="login.html" class="sidebar-link" onclick="Auth.logout()">Sair</a>
   </nav>
 
   <main class="main-content">
 
-    <!-- Título -->
     <div class="page-title">Gerenciar Treinos</div>
     <p class="page-sub">Crie e acompanhe os treinos dos seus atletas.</p>
 
-    <!-- Ações rápidas: botão de peneiras e criar treino lado a lado -->
-    <div class="acoes-rapidas">
-      <a href="peneiras.html" class="btn btn-ghost">⚽ Ver Peneiras</a>
-      <button class="btn btn-primary" onclick="abrirModal()">+ Criar Treino</button>
+    <!-- Botão para abrir o modal de criação -->
+    <div class="barra-acoes">
+      <button class="btn btn-primary" onclick="abrirModal()">Criar Treino</button>
     </div>
 
-    <!-- Lista de treinos criados pelo professor -->
-    <div class="treino-header">
-      <span class="page-title" style="font-size:20px">Treinos Criados</span>
+    <!-- Cabeçalho da lista -->
+    <div class="lista-cabecalho">
+      <span class="lista-titulo">Treinos Criados por Você</span>
       <span class="badge badge-red" id="totalTreinos">0 treinos</span>
     </div>
 
+    <!-- Lista de treinos do professor — preenchida pelo JavaScript -->
     <div id="listaTreinos">
-      <div class="treino-vazio">
-        <div style="font-size:36px;margin-bottom:10px">📋</div>
-        <p>Carregando treinos...</p>
-      </div>
+      <p class="msg-carregando">Carregando treinos...</p>
     </div>
 
   </main>
 </div>
 
-<!-- Modal: Criar Treino -->
+<!-- Modal: formulário para criar um treino -->
 <div class="modal-overlay" id="modalCriar">
-  <div class="modal-box">
-    <button class="modal-fechar" onclick="fecharModal()">✕</button>
-    <h2>Novo Treino</h2>
+  <div class="modal-caixa">
 
+    <button class="modal-fechar" onclick="fecharModal()">X</button>
+    <h2 class="modal-titulo">Novo Treino</h2>
+
+    <!-- Seleciona qual aluno vai receber o treino -->
     <div class="form-group">
-      <label>Atleta *</label>
+      <label for="selectAluno">Atleta</label>
       <select id="selectAluno" required>
         <option value="">Carregando atletas...</option>
       </select>
     </div>
 
-    <div class="form-group" style="margin-top:14px">
-      <label>Descrição do treino *</label>
+    <!-- Descrição do treino -->
+    <div class="form-group" style="margin-top: 14px;">
+      <label for="inputDescricao">Descrição do treino</label>
       <textarea id="inputDescricao" rows="4"
-        placeholder="Ex: 3 séries de 20 abdominais + 5km de corrida..."></textarea>
+        placeholder="Ex: 3 séries de 20 abdominais e 5km de corrida..."></textarea>
     </div>
 
-    <div class="btn-row" style="margin-top:20px">
+    <div class="btn-row" style="margin-top: 20px;">
       <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="criarTreino()">Criar Treino →</button>
+      <button class="btn btn-primary" onclick="criarTreino()">Criar Treino</button>
     </div>
 
-    <div id="msgModal" style="margin-top:12px;font-size:13px;font-weight:600;text-align:center"></div>
+    <!-- Mensagem de feedback dentro do modal (erro ou carregando) -->
+    <div id="msgModal" class="msg-modal"></div>
+
   </div>
 </div>
 
 <script src="js/utils.js"></script>
 <script>
+
+  // Variável global que guarda o usuário logado
   var user = null;
 
+  // Quando a página terminar de carregar, executa esta função
   document.addEventListener('DOMContentLoaded', function() {
     user = Auth.current();
+
+    // Se não há usuário logado, ou se for aluno, redireciona
     if (!user || user.tipo === 'aluno') {
       window.location.href = 'dashboard-aluno.html';
       return;
     }
+
+    // Carrega a lista de atletas para o select do modal
     carregarAlunos();
-    carregarTreinosCriados();
+
+    // CORRIGIDO: agora usa a rota correta (/treinos/professor/:id)
+    carregarTreinosDoProfessor();
   });
 
-  // Abre o modal de criação
+  // ── Funções do Modal ───────────────────────────────────────
+
   function abrirModal() {
     document.getElementById('modalCriar').classList.add('aberto');
-    document.getElementById('msgModal').textContent = '';
-    document.getElementById('inputDescricao').value = '';
-    document.getElementById('selectAluno').value = '';
+    document.getElementById('msgModal').textContent  = '';
+    document.getElementById('inputDescricao').value  = '';
+    document.getElementById('selectAluno').value     = '';
   }
 
-  // Fecha o modal
   function fecharModal() {
     document.getElementById('modalCriar').classList.remove('aberto');
   }
 
-  // Fecha modal ao clicar fora
+  // Fecha o modal se o usuário clicar fora da caixa
   document.getElementById('modalCriar').addEventListener('click', function(e) {
     if (e.target === this) fecharModal();
   });
 
-  // Carrega lista de alunos para o select
+  // ── Carrega a lista de alunos para o <select> ──────────────
+
   function carregarAlunos() {
     fetch('/usuarios/alunos')
       .then(function(r) { return r.json(); })
@@ -225,48 +128,54 @@
         var select = document.getElementById('selectAluno');
         select.innerHTML = '<option value="">Selecione um atleta</option>';
         alunos.forEach(function(a) {
-          select.innerHTML += '<option value="' + a.id + '">' + a.nome + ' — ' + (a.posicao || '—') + '</option>';
+          var opcao = a.nome + ' — ' + (a.posicao || 'sem posição');
+          select.innerHTML += '<option value="' + a.id + '">' + opcao + '</option>';
         });
       })
       .catch(function() {
-        document.getElementById('selectAluno').innerHTML = '<option value="">Erro ao carregar</option>';
+        document.getElementById('selectAluno').innerHTML = '<option value="">Erro ao carregar atletas</option>';
       });
   }
 
-  // Cria o treino via API
+  // ── Cria o treino e salva no banco ─────────────────────────
+
   function criarTreino() {
     var alunoId   = document.getElementById('selectAluno').value;
     var descricao = document.getElementById('inputDescricao').value.trim();
     var msg       = document.getElementById('msgModal');
 
+    // Validação simples no front antes de enviar para o servidor
     if (!alunoId || !descricao) {
-      msg.style.color = '#ee1919';
-      msg.textContent = 'Preencha todos os campos.';
+      msg.style.color   = '#ee1919';
+      msg.textContent   = 'Preencha todos os campos.';
       return;
     }
 
     msg.style.color = '#a0a0a0';
-    msg.textContent = 'Criando...';
+    msg.textContent = 'Salvando...';
 
+    // Envia os dados para POST /treinos/criar
     fetch('/treinos/criar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        professorId: user.id,
-        alunoId:     alunoId,
-        descricao:   descricao
+        professorId: user.id,   // id do professor logado
+        alunoId:     alunoId,   // id do aluno selecionado no select
+        descricao:   descricao  // texto digitado
       })
     })
     .then(function(r) { return r.json(); })
     .then(function(dados) {
+      // Se voltou uma mensagem de erro do servidor:
       if (dados.mensagem && !dados.id) {
         msg.style.color = '#ee1919';
         msg.textContent = dados.mensagem;
         return;
       }
+      // Sucesso: fecha o modal, exibe toast e recarrega a lista
       toast('Treino criado com sucesso!');
       fecharModal();
-      carregarTreinosCriados();
+      carregarTreinosDoProfessor();
     })
     .catch(function() {
       msg.style.color = '#ee1919';
@@ -274,74 +183,70 @@
     });
   }
 
-  // Lista os treinos criados pelo professor logado (todos os seus alunos)
-  function carregarTreinosCriados() {
-    // Busca todos alunos e depois os treinos pendentes de cada um
-    fetch('/usuarios/alunos')
-      .then(function(r) { return r.json(); })
-      .then(function(alunos) {
-        var promessas = alunos.map(function(a) {
-          return fetch('/treinos/pendentes/' + a.id)
-            .then(function(r) {
-              if (r.status === 204) return [];
-              return r.json();
-            })
-            .then(function(treinos) {
-              return treinos.map(function(t) {
-                t.aluno_nome = a.nome;
-                return t;
-              });
-            })
-            .catch(function() { return []; });
-        });
+  // ── Carrega os treinos criados por este professor ──────────
+  // CORRIGIDO: usa /treinos/professor/:id em vez de iterar por aluno
 
-        return Promise.all(promessas);
+  function carregarTreinosDoProfessor() {
+    fetch('/treinos/professor/' + user.id)
+      .then(function(r) {
+        // 204 = sem conteúdo (lista vazia), retorna array vazio
+        if (r.status === 204) return [];
+        return r.json();
       })
-      .then(function(todos) {
-        // Achata o array de arrays
-        var lista = [].concat.apply([], todos);
-        renderTreinos(lista);
+      .then(function(treinos) {
+        renderizarTreinos(treinos);
       })
       .catch(function() {
         document.getElementById('listaTreinos').innerHTML =
-          '<div class="treino-vazio"><p style="color:#ee1919">Erro ao carregar treinos.</p></div>';
+          '<p class="msg-erro">Erro ao carregar treinos. Verifique se o servidor está rodando.</p>';
       });
   }
 
-  function renderTreinos(lista) {
+  // ── Monta o HTML dos cards de treino na tela ───────────────
+
+  function renderizarTreinos(lista) {
     var container = document.getElementById('listaTreinos');
     var badge     = document.getElementById('totalTreinos');
 
-    badge.textContent = lista.length + ' treino' + (lista.length !== 1 ? 's' : '');
+    // Atualiza o contador no topo da lista
+    badge.textContent = lista.length + (lista.length === 1 ? ' treino' : ' treinos');
 
+    // Lista vazia: mostra um estado vazio amigável
     if (lista.length === 0) {
-      container.innerHTML = '<div class="treino-vazio"><div style="font-size:36px;margin-bottom:10px">✅</div><p>Nenhum treino pendente no momento.</p></div>';
+      container.innerHTML =
+        '<div class="estado-vazio">' +
+          '<p>Nenhum treino criado ainda.</p>' +
+          '<p style="font-size:13px; color:#666; margin-top:6px">Use o botão acima para criar o primeiro.</p>' +
+        '</div>';
       return;
     }
 
     var html = '';
     lista.forEach(function(t) {
+      // Formata a data de criação para o padrão brasileiro
       var data = t.criado_em
         ? new Date(t.criado_em).toLocaleDateString('pt-BR')
-        : '—';
+        : 'sem data';
 
-      // Verifica se está concluído
-      var isConcluido = (t.status === 'concluido');
-      var badgeClass = isConcluido ? 'badge-green' : 'badge-yellow';
-      var badgeText  = isConcluido ? 'concluído' : 'pendente';
+      // Define a cor do badge baseado no status
+      var badgeClass = t.status === 'concluido' ? 'badge-green' : 'badge-yellow';
+      var badgeTexto = t.status === 'concluido' ? 'Concluido' : 'Pendente';
 
       html += '<div class="treino-card">';
-      html +=   '<div>';
-      html +=     '<h4>' + (t.descricao || '—') + '</h4>';
-      html +=     '<p>👤 Atleta: <strong style="color:#fff">' + (t.aluno_nome || '—') + '</strong></p>';
-      html +=     '<p>📅 Criado em: ' + data + '</p>';
+      html +=   '<div class="treino-card-info">';
+      html +=     '<h4>' + (t.descricao || 'sem descricao') + '</h4>';
+      html +=     '<p>Atleta: <strong>' + (t.aluno_nome || '—') + '</strong>';
+      if (t.aluno_posicao) html += ' — ' + t.aluno_posicao;
+      html +=     '</p>';
+      html +=     '<p>Criado em: ' + data + '</p>';
       html +=   '</div>';
-      // Badge dinâmica
-      html +=   '<span class="badge ' + badgeClass + '">' + badgeText + '</span>';
+      html +=   '<span class="badge ' + badgeClass + '">' + badgeTexto + '</span>';
       html += '</div>';
     });
+
     container.innerHTML = html;
   }
+
 </script>
 </body>
 </html>

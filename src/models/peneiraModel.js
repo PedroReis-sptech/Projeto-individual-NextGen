@@ -4,6 +4,8 @@ function listar() {
     return database.executar(`
         SELECT
             p.*,
+            CASE WHEN p.ativa = 1 THEN 'ativa' ELSE 'desativada' END AS status,
+            p.ativa AS ativo,
             COALESCE(c.nome, 'Sem clube') AS nome_clube,
             c.escudo_url,
             u.nome AS criador_nome
@@ -19,6 +21,8 @@ function listarPorCriador(idCriador) {
     return database.executar(`
         SELECT
             p.*,
+            CASE WHEN p.ativa = 1 THEN 'ativa' ELSE 'desativada' END AS status,
+            p.ativa AS ativo,
             COALESCE(c.nome, 'Sem clube') AS nome_clube,
             c.escudo_url
         FROM peneira p
@@ -32,6 +36,8 @@ function buscarPorId(id) {
     return database.executar(`
         SELECT
             p.*,
+            CASE WHEN p.ativa = 1 THEN 'ativa' ELSE 'desativada' END AS status,
+            p.ativa AS ativo,
             COALESCE(c.nome, 'Sem clube') AS nome_clube,
             c.escudo_url,
             u.nome AS criador_nome

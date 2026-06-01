@@ -13,14 +13,13 @@ function admin(req, res) {
     Promise.all([
         modelo.totalAtletas(),
         modelo.totalPeneiras(),
-        modelo.totalAprovados(),
-        modelo.taxaAprovacao(),
+        modelo.totalTreinosConcluidos(),
+        modelo.taxaConclusaoTreinos(),
         modelo.atletasPorPosicao(),
         modelo.peneirasPorClube(),
         modelo.atletasPorCategoria(),
-        modelo.inscricoesPorMes(),
-        modelo.aprovadosPorCategoria(),
-        modelo.taxaAprovacaoPorClube()
+        modelo.cadastrosPorMes(),
+        modelo.treinosConcluidosPorCategoria()
     ])
     .then(function(resultados) {
         // Cada item de resultados corresponde à posição no Promise.all acima
@@ -28,15 +27,14 @@ function admin(req, res) {
             kpis: {
                 totalAtletas:  resultados[0][0].total,
                 totalPeneiras: resultados[1][0].total,
-                totalAprovados: resultados[2][0].total,
-                taxaAprovacao:  resultados[3][0].taxa || 0
+                totalTreinosConcluidos: resultados[2][0].total,
+                taxaConclusaoTreinos:  resultados[3][0].taxa || 0
             },
             atletasPorPosicao:    resultados[4],
             peneirasPorClube:     resultados[5],
             atletasPorCategoria:  resultados[6],
-            inscricoesPorMes:     resultados[7],
-            aprovadosPorCategoria: resultados[8],
-            taxaAprovacaoPorClube: resultados[9]
+            cadastrosPorMes:      resultados[7],
+            treinosConcluidosPorCategoria: resultados[8]
         });
     })
     .catch(function(erro) {
@@ -61,8 +59,8 @@ function aluno(req, res) {
             kpis: {
                 treinosNoMes:      kpis.treinos_mes      || 0,
                 taxaPresenca:      kpis.taxa_presenca     || 0,
-                peneiraInscritas:  kpis.peneiras_inscritas || 0,
-                aprovacoes:        kpis.aprovacoes         || 0
+                treinosConcluidos: kpis.treinos_concluidos || 0,
+                desempenho:        kpis.desempenho         || 50
             },
             presencaPorSemana: resultados[1]
         });

@@ -3,103 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NextGen · Dashboard Atleta</title>
-  <!-- tokens.css = estilos globais compartilhados -->
+  <title>NextGen - Dashboard Atleta</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/tokens.css">
-  <!-- styleDashboardAluno.css = estilos específicos desta página -->
   <link rel="stylesheet" href="css/styleDashboardAluno.css">
 </head>
 <body>
 <div class="layout">
 
-  <!-- ===== MENU LATERAL ===== -->
   <nav class="sidebar">
     <img class="logo" src="../Logo/Next-removebg-preview.png">
     <a href="dashboard-aluno.html" class="sidebar-link active">Dashboard</a>
-    <a href="perfil.html"          class="sidebar-link">Perfil</a>
-    <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
-    <a href="meus-treinos.html"        class="sidebar-link">Meus treinos</a>
+    <a href="perfil.html" class="sidebar-link">Perfil</a>
+    <a href="peneiras.html" class="sidebar-link">Peneiras</a>
+    <a href="meus-treinos.html" class="sidebar-link">Meus Treinos</a>
     <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
   </nav>
 
-  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <main class="main-content">
 
-    <!-- Chip com avatar e nome do atleta -->
     <div id="userChip" class="user-chip">
       <img id="chipAvatar" src="" alt="Avatar do atleta">
       <div>
-        <span id="chipNome">—</span><br>
-        <small id="chipCategoria">—</small>
+        <span id="chipNome">-</span><br>
+        <small id="chipCategoria">-</small>
       </div>
     </div>
 
-    <!-- Saudação personalizada -->
-    <div class="welcome">Olá, <span id="firstName">Atleta</span>!</div>
-    <p class="page-sub">Sua temporada 2026 · <span id="chipPos">—</span></p>
+    <div class="welcome">Ola, <span id="firstName">Atleta</span>!</div>
+    <p class="page-sub">Sua temporada 2026 - <span id="chipPos">-</span></p>
 
-    <!-- ── Cards de estatísticas pessoais ── -->
-    <!-- Preenchidos via JavaScript com dados do banco -->
-    <div class="stats-grid" id="statsGrid">
-    </div>
+    <div class="stats-grid" id="statsGrid"></div>
 
-    <!-- ── Linha 1 de gráficos ── -->
     <div class="charts-row">
       <div class="chart-box wide">
-        <h3>Presença nos treinos — últimas 8 semanas</h3>
+        <h3>Presenca nos treinos - ultimas 8 semanas</h3>
         <canvas id="cPresenca"></canvas>
       </div>
     </div>
 
-    <!-- ── Linha 2: evolução e próximas peneiras ── -->
     <div class="charts-row">
       <div class="chart-box">
-        <h3>Evolução de desempenho</h3>
+        <h3>Evolucao de desempenho</h3>
         <canvas id="cEvolucao"></canvas>
       </div>
       <div class="chart-box">
-        <h3>Próximas peneiras</h3>
-        <!-- Preenchido via JavaScript com dados do banco -->
-        <div id="proximasPeneiras">
-        </div>
+        <h3>Proximas peneiras</h3>
+        <div id="proximasPeneiras"></div>
       </div>
     </div>
 
   </main>
 </div>
 
-<!-- Chart.js para os gráficos -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- utils.js contém Auth, toast, etc. -->
 <script src="js/utils.js"></script>
 <script>
-function carregarPeneiras() {
+  var graficoEvolucao = null;
+
+  function carregarPeneiras() {
     fetch('/peneiras')
       .then(function(resposta) { return resposta.json(); })
       .then(function(peneiras) {
         var container = document.getElementById('proximasPeneiras');
 
         if (!peneiras || peneiras.length === 0) {
-          container.innerHTML = '<p style="color:var(--grey)">Nenhuma peneira disponível no momento.</p>';
+          container.innerHTML = '<p style="color:var(--grey)">Nenhuma peneira disponivel no momento.</p>';
           return;
         }
 
-        var proximas = peneiras.slice(0, 3);
         var html = '';
+        var limite = 3;
 
-        for (var i = 0; i < proximas.length; i++) {
-          var p = proximas[i];
+        if (peneiras.length < limite) {
+          limite = peneiras.length;
+        }
+
+        for (var i = 0; i < limite; i++) {
+          var p = peneiras[i];
           var dataFormatada = p.data_realizacao
             ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
-            : '—';
+            : '-';
 
           html += '<div class="peneira-mini">';
-          html +=   '<div class="dot">⚽</div>';
+          html +=   '<div class="dot"><span class="material-icons">sports_soccer</span></div>';
           html +=   '<div>';
-          html +=     '<h4>' + (p.nome || '—') + '</h4>';
-          html +=     '<p>' + dataFormatada + (p.cidade ? ' · ' + p.cidade : '') + '</p>';
+          html +=     '<h4>' + (p.nome || '-') + '</h4>';
+          html +=     '<p>' + dataFormatada + (p.cidade ? ' - ' + p.cidade : '') + '</p>';
           html +=   '</div>';
-          html +=   '<span class="badge badge-green" style="margin-left:auto">aberta</span>';
+          html +=   '<span class="badge badge-green" style="margin-left:auto">ativa</span>';
           html += '</div>';
         }
 
@@ -108,22 +100,19 @@ function carregarPeneiras() {
       .catch(function(erro) {
         console.error('Erro ao carregar peneiras:', erro);
         document.getElementById('proximasPeneiras').innerHTML =
-          '<p style="color:var(--red)">Erro ao carregar peneiras.</p>';
+          '<p style="color: red">Erro ao carregar peneiras.</p>';
       });
   }
 
-  // Carrega os KPIs e Gráficos do Aluno vindos da API de forma 100% dinâmica
   function carregarMetricasAluno(idAtleta) {
     fetch('/estatisticas/aluno/' + idAtleta)
       .then(function(resposta) { return resposta.json(); })
       .then(function(dados) {
-        
-        // 1. Montagem dinâmica dos Cards com os valores tratados vindos do banco
         var stats = [
-          { label: 'Treinos no mês',     val: dados.kpis.treinosNoMes, sub: 'atualizado' },
-          { label: '% Presença',         val: (dados.kpis.taxaPresenca ?? 0) + '%', sub: 'histórico total' },
-          { label: 'Peneiras inscritas',  val: dados.kpis.peneiraInscritas, sub: 'esta temporada' },
-          { label: 'Aprovações',         val: dados.kpis.aprovacoes, sub: 'confirmadas' }
+          { label: 'Treinos no mes', val: dados.kpis.treinosNoMes, sub: 'atualizado' },
+          { label: '% Presenca', val: (dados.kpis.taxaPresenca ?? 0) + '%', sub: 'historico total' },
+          { label: 'Treinos concluidos', val: dados.kpis.treinosConcluidos, sub: 'total' },
+          { label: 'Desempenho', val: dados.kpis.desempenho, sub: 'nota atual' }
         ];
 
         var html = '';
@@ -136,10 +125,15 @@ function carregarPeneiras() {
         }
         document.getElementById('statsGrid').innerHTML = html;
 
-        // 2. Montagem do gráfico dinâmico de Presença por Semana
-        var labelsSemanas = dados.presencaPorSemana.map(item => 'Sem ' + item.num_semana);
-        var listaPresentes = dados.presencaPorSemana.map(item => item.presentes);
-        var listaAusencias = dados.presencaPorSemana.map(item => item.ausencias);
+        var labelsSemanas = [];
+        var listaPresentes = [];
+        var listaAusencias = [];
+
+        for (var j = 0; j < dados.presencaPorSemana.length; j++) {
+          labelsSemanas.push('Sem ' + dados.presencaPorSemana[j].num_semana);
+          listaPresentes.push(dados.presencaPorSemana[j].presentes);
+          listaAusencias.push(dados.presencaPorSemana[j].ausencias);
+        }
 
         new Chart(document.getElementById('cPresenca'), {
           type: 'bar',
@@ -147,7 +141,7 @@ function carregarPeneiras() {
             labels: labelsSemanas.length > 0 ? labelsSemanas : ['Sem dados'],
             datasets: [
               { label: 'Presentes', data: listaPresentes.length > 0 ? listaPresentes : [0], backgroundColor: 'rgba(238,25,25,.8)', borderRadius: 6 },
-              { label: 'Ausências', data: listaAusencias.length > 0 ? listaAusencias : [0], backgroundColor: 'rgba(255,255,255,.08)', borderRadius: 6 }
+              { label: 'Ausencias', data: listaAusencias.length > 0 ? listaAusencias : [0], backgroundColor: 'rgba(255,255,255,.08)', borderRadius: 6 }
             ]
           },
           options: {
@@ -160,41 +154,22 @@ function carregarPeneiras() {
           }
         });
 
+        montarGraficoEvolucao(dados.kpis.desempenho || 50);
       })
       .catch(function(erro) {
-        console.error('Erro ao carregar métricas do aluno:', erro);
-        document.getElementById('statsGrid').innerHTML = '<p style="color:var(--red)">Erro ao carregar estatísticas.</p>';
+        console.error('Erro ao carregar metricas do aluno:', erro);
+        document.getElementById('statsGrid').innerHTML = '<p style="color:var(--red)">Erro ao carregar estatisticas.</p>';
       });
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var user = Auth.require('aluno');
-    if (!user) return;
-
-    var nomeEncoded = encodeURIComponent(user.nome || 'A');
-    var avatarUrl = user.foto_perfil ||
-      ('https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=ee1919&color=fff&size=32');
-
-    document.getElementById('chipAvatar').src          = avatarUrl;
-    document.getElementById('chipNome').textContent    = user.nome || '—';
-    document.getElementById('chipCategoria').textContent = user.categoria || '—';
-
-    var primeiroNome = (user.nome || 'Atleta').split(' ')[0];
-    document.getElementById('firstName').textContent = primeiroNome;
-    document.getElementById('chipPos').textContent   = user.posicao || '—';
-
-    // Dispara a carga dinâmica usando a ID do usuário logado
-    carregarMetricasAluno(user.id);
-    carregarPeneiras();
-
-    // Gráfico de evolução visual mantido fixo como exemplo técnico da interface
-    new Chart(document.getElementById('cEvolucao'), {
+  function montarGraficoEvolucao(desempenhoAtual) {
+    graficoEvolucao = new Chart(document.getElementById('cEvolucao'), {
       type: 'line',
       data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai'],
+        labels: ['Inicial', 'Atual'],
         datasets: [{
           label: 'Nota geral',
-          data: [65, 70, 72, 80, 85],
+          data: [50, desempenhoAtual],
           borderColor: '#ee1919',
           backgroundColor: 'rgba(238,25,25,.1)',
           fill: true,
@@ -211,8 +186,27 @@ function carregarPeneiras() {
         }
       }
     });
-  });
+  }
 
+  document.addEventListener('DOMContentLoaded', function() {
+    var user = Auth.require('aluno');
+    if (!user) return;
+
+    var nomeEncoded = encodeURIComponent(user.nome || 'A');
+    var avatarUrl = user.foto_perfil ||
+      ('https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=ee1919&color=fff&size=32');
+
+    document.getElementById('chipAvatar').src = avatarUrl;
+    document.getElementById('chipNome').textContent = user.nome || '-';
+    document.getElementById('chipCategoria').textContent = user.categoria || '-';
+
+    var primeiroNome = (user.nome || 'Atleta').split(' ')[0];
+    document.getElementById('firstName').textContent = primeiroNome;
+    document.getElementById('chipPos').textContent = user.posicao || '-';
+
+    carregarMetricasAluno(user.id);
+    carregarPeneiras();
+  });
 </script>
 </body>
 </html>

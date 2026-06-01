@@ -4,7 +4,7 @@ function autenticar(email, senha) {
     return database.executar(`
         SELECT 
             id, nome, email, tipo,
-            foto_perfil, posicao, categoria, time_coracao,
+            foto_perfil, posicao, categoria, time_coracao, desempenho,
             data_nascimento, cidade, altura_cm, peso_kg
         FROM usuario 
         WHERE email = '${email}' AND senha = '${senha}'
@@ -14,14 +14,15 @@ function autenticar(email, senha) {
 function cadastrar(nome, email, senha, posicao, categoria, timeCoracao, dataNascimento, cidade, alturaCm, pesoKg) {
     return database.executar(`
         INSERT INTO usuario 
-            (nome, email, senha, tipo, posicao, categoria, time_coracao, data_nascimento, cidade, altura_cm, peso_kg)
+            (nome, email, senha, tipo, posicao, categoria, time_coracao, data_nascimento, cidade, altura_cm, peso_kg, desempenho)
         VALUES 
             ('${nome}', '${email}', '${senha}', 'aluno',
              '${posicao || ''}', '${categoria || ''}', '${timeCoracao || ''}',
              ${dataNascimento ? `'${dataNascimento}'` : 'NULL'},
              '${cidade || ''}',
              ${alturaCm || 'NULL'},
-             ${pesoKg   || 'NULL'})
+             ${pesoKg   || 'NULL'},
+             50)
     `);
 }
 

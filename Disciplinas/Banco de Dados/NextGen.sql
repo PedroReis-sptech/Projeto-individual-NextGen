@@ -23,6 +23,7 @@ CREATE TABLE usuario (
     time_coracao VARCHAR(100),
     altura_cm DECIMAL(5, 2),
     peso_kg DECIMAL(5, 2),
+    desempenho INT DEFAULT 50,
     dt_cadastro DATETIME DEFAULT NOW(),
     CONSTRAINT chk_tipo CHECK (tipo IN ('aluno','time','professor'))
 );
@@ -44,16 +45,6 @@ CREATE TABLE peneira (
     FOREIGN KEY (fk_criador) REFERENCES usuario(id)
 );
 
-CREATE TABLE inscricao (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    fk_atleta INT NOT NULL,
-    fk_peneira INT NOT NULL,
-    dt_inscricao DATETIME DEFAULT NOW(),
-    status VARCHAR(30) DEFAULT 'pendente',
-    FOREIGN KEY (fk_atleta) REFERENCES usuario(id),
-    FOREIGN KEY (fk_peneira) REFERENCES peneira(id)
-);
-
 CREATE TABLE treino (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     professor_id  INT NOT NULL,
@@ -66,6 +57,10 @@ CREATE TABLE treino (
     FOREIGN KEY (aluno_id)     REFERENCES usuario(id),
 	CONSTRAINT status_treino CHECK (status_treino IN ('pendente', 'concluido'))
 );
+
+-- Se o banco ja existir, rode estes comandos uma vez:
+-- ALTER TABLE usuario ADD COLUMN desempenho INT DEFAULT 50;
+-- UPDATE usuario SET desempenho = 50 WHERE desempenho IS NULL;
 
 INSERT INTO clube (nome, escudo_url, cidade, estado) VALUES
   ('Corinthians', 'https://upload.wikimedia.org/wikipedia/pt/b/b4/Corinthians_simbolo.png', 'São Paulo', 'SP'),
@@ -83,28 +78,34 @@ INSERT INTO usuario (nome, email, senha, tipo) VALUES
   ('Prof. Carlos Costa', 'carlos.costa@nextgen.com', '123', 'professor'),
   ('Prof. Marcos Almeida', 'marcos.almeida@nextgen.com', '123', 'professor');
 
-INSERT INTO usuario (nome, email, senha, tipo, posicao, categoria, time_coracao, data_nascimento, cidade, altura_cm, peso_kg) VALUES
-  ('Pedro Reis', 'pedro@email.com', '123', 'aluno', 'Atacante', 'Sub-17', 'Corinthians', '2007-03-15', 'São Paulo', 178.00, 72.00),
-  ('Lucas Oliveira', 'lucas@email.com', '123', 'aluno', 'Goleiro', 'Sub-15', 'Palmeiras', '2009-07-22', 'São Paulo', 182.00, 78.00),
-  ('Rafael Souza', 'rafael@email.com', '123', 'aluno', 'Zagueiro', 'Sub-13', 'São Paulo FC', '2011-01-10', 'Guarulhos', 170.00, 65.00),
-  ('Gabriel Silva', 'gabriel@email.com', '123', 'aluno', 'Meia', 'Sub-17', 'Corinthians', '2007-11-05', 'Osasco', 173.00, 68.00),
-  ('Matheus Costa', 'matheus@email.com', '123', 'aluno', 'Lateral', 'Sub-20', 'Santos', '2005-09-18', 'Santos', 175.00, 70.00),
-  ('João Ferreira', 'joao@email.com', '123', 'aluno', 'Volante', 'Sub-15', 'Palmeiras', '2009-04-30', 'São Bernardo', 169.00, 63.00),
-  ('Bruno Martins', 'bruno@email.com', '123', 'aluno', 'Atacante', 'Sub-17', 'Santos', '2007-06-14', 'Santo André', 176.00, 71.00),
-  ('Diego Rocha', 'diego@email.com', '123', 'aluno', 'Meia', 'Sub-13', 'Corinthians', '2011-08-20', 'Mauá', 165.00, 58.00),
-  ('Felipe Nunes', 'felipe@email.com', '123', 'aluno', 'Zagueiro', 'Sub-20', 'São Paulo FC', '2004-12-03', 'Diadema', 181.00, 80.00),
-  ('Gustavo Lima', 'gustavo@email.com', '123', 'aluno', 'Goleiro', 'Sub-17', 'Red Bull', '2007-02-28', 'Campinas', 184.00, 82.00),
-  ('Henrique Alves', 'henrique@email.com', '123', 'aluno', 'Lateral', 'Sub-15', 'Santos', '2009-10-15', 'São Paulo', 168.00, 62.00),
-  ('Igor Santos', 'igor@email.com', '123', 'aluno', 'Volante', 'Sub-13', 'Palmeiras', '2011-03-07', 'São Paulo', 163.00, 55.00),
-  ('Jorge Pereira', 'jorge@email.com', '123', 'aluno', 'Atacante', 'Sub-20', 'Corinthians', '2005-05-25', 'São Paulo', 177.00, 74.00),
-  ('Kaique Barros', 'kaique@email.com', '123', 'aluno', 'Meia', 'Sub-17', 'Palmeiras', '2007-07-19', 'Barueri', 172.00, 67.00),
-  ('Leonardo Cruz', 'leonardo@email.com', '123', 'aluno', 'Zagueiro', 'Sub-15', 'São Paulo FC', '2009-09-09', 'São Paulo', 174.00, 69.00),
-  ('Murilo Dias', 'murilo@email.com', '123', 'aluno', 'Atacante', 'Sub-13', 'Santos', '2011-11-11', 'São Paulo', 161.00, 54.00),
-  ('Natan Pires', 'natan@email.com', '123', 'aluno', 'Goleiro', 'Sub-20', 'Portuguesa', '2004-04-04', 'São Paulo', 186.00, 85.00),
-  ('Otávio Ramos', 'otavio@email.com', '123', 'aluno', 'Lateral', 'Sub-17', 'São Caetano', '2007-01-23', 'São Caetano do Sul', 171.00, 66.00),
-  ('Paulo Teixeira', 'paulo@email.com', '123', 'aluno', 'Volante', 'Sub-15', 'Corinthians', '2009-06-16', 'São Paulo', 167.00, 60.00),
-  ('Rafael Mendes', 'rafaelm@email.com', '123', 'aluno', 'Meia', 'Sub-17', 'Palmeiras', '2006-08-08', 'São Paulo', 175.00, 70.00);
-
+INSERT INTO usuario (nome, email, senha, tipo, posicao, categoria, time_coracao, data_nascimento, cidade, altura_cm, peso_kg, desempenho, dt_cadastro) VALUES
+  -- JANEIRO
+  ('Pedro Reis', 'pedro@email.com', '123', 'aluno', 'Atacante', 'Sub-17', 'Corinthians', '2007-03-15', 'São Paulo', 178.00, 72.00, 50, '2026-01-10 14:30:00'),
+  ('Lucas Oliveira', 'lucas@email.com', '123', 'aluno', 'Goleiro', 'Sub-15', 'Palmeiras', '2009-07-22', 'São Paulo', 182.00, 78.00, 50, '2026-01-18 09:15:00'),
+  ('Rafael Souza', 'rafael@email.com', '123', 'aluno', 'Zagueiro', 'Sub-13', 'São Paulo FC', '2011-01-10', 'Guarulhos', 170.00, 65.00, 50, '2026-01-25 16:45:00'),
+  -- FEVEREIRO
+  ('Gabriel Silva', 'gabriel@email.com', '123', 'aluno', 'Meia', 'Sub-17', 'Corinthians', '2007-11-05', 'Osasco', 173.00, 68.00, 50, '2026-02-05 11:20:00'),
+  ('Matheus Costa', 'matheus@email.com', '123', 'aluno', 'Lateral', 'Sub-20', 'Santos', '2005-09-18', 'Santos', 175.00, 70.00, 50, '2026-02-14 10:00:00'),
+  ('João Ferreira', 'joao@email.com', '123', 'aluno', 'Volante', 'Sub-15', 'Palmeiras', '2009-04-30', 'São Bernardo', 169.00, 63.00, 50, '2026-02-22 15:35:00'),
+  -- MARÇO
+  ('Bruno Martins', 'bruno@email.com', '123', 'aluno', 'Atacante', 'Sub-17', 'Santos', '2007-06-14', 'Santo André', 176.00, 71.00, 50, '2026-03-03 08:40:00'),
+  ('Diego Rocha', 'diego@email.com', '123', 'aluno', 'Meia', 'Sub-13', 'Corinthians', '2011-08-20', 'Mauá', 165.00, 58.00, 50, '2026-03-12 14:10:00'),
+  ('Felipe Nunes', 'felipe@email.com', '123', 'aluno', 'Zagueiro', 'Sub-20', 'São Paulo FC', '2004-12-03', 'Diadema', 181.00, 80.00, 50, '2026-03-27 17:50:00'),
+  -- ABRIL
+  ('Gustavo Lima', 'gustavo@email.com', '123', 'aluno', 'Goleiro', 'Sub-17', 'Red Bull', '2007-02-28', 'Campinas', 184.00, 82.00, 50, '2026-04-02 11:15:00'),
+  ('Henrique Alves', 'henrique@email.com', '123', 'aluno', 'Lateral', 'Sub-15', 'Santos', '2009-10-15', 'São Paulo', 168.00, 62.00, 50, '2026-04-11 16:25:00'),
+  ('Igor Santos', 'igor@email.com', '123', 'aluno', 'Volante', 'Sub-13', 'Palmeiras', '2011-03-07', 'São Paulo', 163.00, 55.00, 50, '2026-04-20 09:00:00'),
+  ('Jorge Pereira', 'jorge@email.com', '123', 'aluno', 'Atacante', 'Sub-20', 'Corinthians', '2005-05-25', 'São Paulo', 177.00, 74.00, 50, '2026-04-29 13:40:00'),
+  -- MAIO
+  ('Kaique Barros', 'kaique@email.com', '123', 'aluno', 'Meia', 'Sub-17', 'Palmeiras', '2007-07-19', 'Barueri', 172.00, 67.00, 50, '2026-05-06 10:50:00'),
+  ('Leonardo Cruz', 'leonardo@email.com', '123', 'aluno', 'Zagueiro', 'Sub-15', 'São Paulo FC', '2009-09-09', 'São Paulo', 174.00, 69.00, 50, '2026-05-15 15:00:00'),
+  ('Murilo Dias', 'murilo@email.com', '123', 'aluno', 'Atacante', 'Sub-13', 'Santos', '2011-11-11', 'São Paulo', 161.00, 54.00, 50, '2026-05-24 11:30:00'),
+  -- JUNHO
+  ('Natan Pires', 'natan@email.com', '123', 'aluno', 'Goleiro', 'Sub-20', 'Portuguesa', '2004-04-04', 'São Paulo', 186.00, 85.00, 50, '2026-06-01 08:20:00'),
+  ('Otávio Ramos', 'otavio@email.com', '123', 'aluno', 'Lateral', 'Sub-17', 'São Caetano', '2007-01-23', 'São Caetano do Sul', 171.00, 66.00, 50, '2026-06-10 14:00:00'),
+  ('Paulo Teixeira', 'paulo@email.com', '123', 'aluno', 'Volante', 'Sub-15', 'Corinthians', '2009-06-16', 'São Paulo', 167.00, 60.00, 50, '2026-06-19 16:10:00'),
+  ('Rafael Mendes', 'rafaelm@email.com', '123', 'aluno', 'Meia', 'Sub-17', 'Palmeiras', '2006-08-08', 'São Paulo', 175.00, 70.00, 50, '2026-06-28 10:05:00');
+  
 INSERT INTO peneira (nome, descricao, data_realizacao, horario, local_endereco, cidade, categoria, vagas, fk_clube, fk_criador) VALUES
   ('Peneira Sub-17 Corinthians', 'Seletiva para categoria Sub-17. Levar atestado médico e RG.', '2026-05-10', '09:00', 'CT Joaquim Grava, Av. Miguel Inácio Cury, 1 - Parque São Jorge', 'São Paulo', 'Sub-17', 30, 1, 1),
   ('Peneira Sub-15 Palmeiras', 'Avaliação técnica Sub-15. Chuteiras e meias obrigatórias.', '2026-05-17', '10:00', 'Academia de Futebol, Av. Turiassú, 871 - Perdizes', 'São Paulo', 'Sub-15', 25, 2, 1),
@@ -119,43 +120,18 @@ INSERT INTO peneira (nome, descricao, data_realizacao, horario, local_endereco, 
   ('Portuguesa Sub-17', 'Portuguesa SP busca atacantes e meias Sub-17.', '2026-07-26', '09:30', 'Estádio do Canindé, R. Comendador Nestor Pereira, 85', 'São Paulo', 'Sub-17', 20, 5, 1),
   ('São Caetano Sub-20', 'Azulão busca reforços para o Sub-20. Apresentar documentos.', '2026-08-02', '08:30', 'Est. Anacleto Campanella, Av. Presidente Juscelino K., 1700', 'São Caetano do Sul', 'Sub-20', 18, 6, 1);
 
-INSERT INTO inscricao (fk_atleta, fk_peneira, status, dt_inscricao) VALUES
--- Inscrições de JANEIRO 2026 (Começo do ano, ritmo mais lento)
-(1, 1, 'aprovado',  '2026-01-10 10:15:00'),
-(2, 1, 'reprovado', '2026-01-15 14:30:00'),
-(3, 2, 'pendente',  '2026-01-22 09:00:00'),
-
--- Inscrições de FEVEREIRO 2026 (Aumento de procura)
-(1, 2, 'pendente',  '2026-02-05 11:20:00'),
-(4, 1, 'aprovado',  '2026-02-12 16:45:00'),
-(2, 3, 'pendente',  '2026-02-18 10:00:00'),
-(3, 3, 'reprovado', '2026-02-26 15:10:00'),
-
--- Inscrições de MARÇO 2026 (Pico de inscrições antes dos campeonatos)
-(1, 3, 'aprovado',  '2026-03-02 08:30:00'),
-(4, 2, 'pendente',  '2026-03-11 13:25:00'),
-(2, 4, 'aprovado',  '2026-03-14 09:40:00'),
-(3, 4, 'pendente',  '2026-03-19 17:05:00'),
-(1, 4, 'reprovado', '2026-03-25 11:15:00'),
-(4, 3, 'pendente',  '2026-03-29 14:20:00'),
-
--- Inscrições de ABRIL 2026 (Estabilização com novos testes)
-(2, 2, 'pendente',  '2026-04-04 10:50:00'),
-(3, 1, 'aprovado',  '2026-04-12 15:30:00'),
-(4, 4, 'reprovado', '2026-04-18 16:00:00'),
-(1, 5, 'pendente',  '2026-04-26 09:10:00'),
-
--- Inscrições de MAIO 2026 (Dados mais recentes do mês atual)
-(2, 5, 'aprovado',  '2026-05-02 14:00:00'),
-(3, 5, 'pendente',  '2026-05-10 11:35:00'),
-(4, 5, 'pendente',  '2026-05-15 13:15:00'),
-(1, 6, 'pendente',  '2026-05-22 16:40:00'),
-(2, 6, 'pendente',  '2026-05-25 10:20:00');
-
 INSERT INTO treino (professor_id, aluno_id, descricao, status_treino, data_conclusao, criado_em) VALUES
 -- ID 4: Pedro Reis (Atacante)
+(2, 4, 'Treino de explosão muscular e tiros de 50 metros para ganho de velocidade.', 'concluido', '2026-04-05 10:30:00', '2026-04-05 08:30:00'),
+(2, 4, 'Treino técnico de fundamentos: passe curto, domínio orientado e condução em velocidade.', 'concluido', '2026-04-12 11:00:00', '2026-04-12 09:00:00'),
+(2, 4, 'Treino tático de movimentação ofensiva, ultrapassagem e posicionamento de infiltração.', 'concluido', '2026-04-19 10:15:00', '2026-04-19 08:00:00'),
+(2, 4, 'Treino físico de resistência aeróbica em circuito intermitente com bola.', 'concluido', '2026-04-26 09:45:00', '2026-04-26 07:30:00'),
+(2, 4, 'Treino de finalização de primeira após cruzamentos laterais rasteiros e aéreos.', 'concluido', '2026-05-03 11:15:00', '2026-05-03 09:00:00'),
+(2, 4, 'Treino de força funcional na academia do clube focado em membros inferiores e core.', 'concluido', '2026-05-10 10:00:00', '2026-05-10 08:30:00'),
+(2, 4, 'Treino tático focado em transição ofensiva rápida e contra-ataque em superioridade numérica.', 'concluido', '2026-05-17 10:30:00', '2026-05-17 08:30:00'),
 (2, 4, 'Treino de finalização e posicionamento dentro da área simulando pivô.', 'concluido', '2026-05-25 11:00:00', '2026-05-25 09:00:00'),
-
+(2, 4, 'Treino leve de recuperação muscular e fundamentos de cabeceio ofensivo.', 'pendente', NULL, '2026-05-31 15:00:00'),
+  
 -- ID 5: Lucas Oliveira (Goleiro)
 (3, 5, 'Treino específico de fundamentos: pegada firme e saída de bola rasteira.', 'concluido', '2026-05-25 16:30:00', '2026-05-25 15:00:00'),
 
@@ -214,4 +190,3 @@ INSERT INTO treino (professor_id, aluno_id, descricao, status_treino, data_concl
 (3, 23, 'Treino de posse de bola em espaço reduzido e drible voltado para progressão.', 'pendente', NULL, '2026-05-29 11:30:00');
 
 SELECT * FROM usuario;
-

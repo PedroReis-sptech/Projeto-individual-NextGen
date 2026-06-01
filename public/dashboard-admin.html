@@ -2,8 +2,9 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NextGen · Dashboard Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1
+  <title>NextGen - Dashboard Admin</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styleDashboardAdmin.css">
 </head>
@@ -12,11 +13,11 @@
 
   <nav class="sidebar">
     <img class="logo" src="../Logo/Next-removebg-preview.png">
-        <a href="dashboard-admin.html" class="sidebar-link active">Dashboard</a>
-    <a href="perfil.html"          class="sidebar-link">Perfil</a>
-    <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
-    <a href="criar-peneira.html"   class="sidebar-link">Criar Peneira</a>
-    <a href="treinos-professor.html"   class="sidebar-link">Criar Treino</a>
+    <a href="dashboard-admin.html" class="sidebar-link active">Dashboard</a>
+    <a href="perfil.html" class="sidebar-link">Perfil</a>
+    <a href="peneiras.html" class="sidebar-link">Peneiras</a>
+    <a href="criar-peneira.html" class="sidebar-link">Criar Peneira</a>
+    <a href="treinos-professor.html" class="sidebar-link">Criar Treino</a>
     <a href="#" class="sidebar-link" onclick="fazerLogout()">Sair</a>
   </nav>
 
@@ -25,13 +26,13 @@
     <div class="page-title">
       Dashboard <span id="adminTag" class="tag-tipo">Time</span>
     </div>
-    <p class="page-sub">Temporada 2026 · São Paulo</p>
+    <p class="page-sub">Temporada 2026 - Sao Paulo</p>
 
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card"><p>Atletas cadastrados</p><h2 id="totalAtletas">...</h2><small id="subAtletas"></small></div>
-      <div class="stat-card"><p>Peneiras ativas</p>   <h2 id="totalPeneiras">...</h2><small id="subPeneiras"></small></div>
-      <div class="stat-card"><p>Atletas aprovados</p> <h2 id="totalAprovados">...</h2><small id="subAprovados"></small></div>
-      <div class="stat-card"><p>Taxa de aprovação</p> <h2 id="taxaAprovacao">...</h2><small id="subTaxa"></small></div>
+      <div class="stat-card"><p>Peneiras ativas</p><h2 id="totalPeneiras">...</h2><small id="subPeneiras"></small></div>
+      <div class="stat-card"><p>Treinos concluidos</p><h2 id="totalTreinosConcluidos">...</h2><small id="subTreinosConcluidos"></small></div>
+      <div class="stat-card"><p>Taxa de conclusao</p><h2 id="taxaConclusaoTreinos">...</h2><small id="subTaxa"></small></div>
     </div>
 
     <div class="charts-row">
@@ -40,7 +41,7 @@
         <canvas id="cPenDia"></canvas>
       </div>
       <div class="chart-box">
-        <h3>Atletas por posição</h3>
+        <h3>Atletas por posicao</h3>
         <canvas id="cPosicoes"></canvas>
       </div>
     </div>
@@ -51,15 +52,15 @@
         <canvas id="cTimes"></canvas>
       </div>
       <div class="chart-box wide">
-        <h3>Aprovados por categoria</h3>
-        <canvas id="cAprovados"></canvas>
+        <h3>Treinos concluidos por categoria</h3>
+        <canvas id="cTreinosCategoria"></canvas>
       </div>
     </div>
 
     <div class="charts-row">
       <div class="chart-box">
-        <h3>Inscrições por mês</h3>
-        <canvas id="cInscricoes"></canvas>
+        <h3>Cadastros por mes</h3>
+        <canvas id="cCadastros"></canvas>
       </div>
       <div class="chart-box">
         <h3>Atletas por categoria</h3>
@@ -70,10 +71,12 @@
     <div class="card" style="margin-top: 8px;">
       <div class="search-bar-header">
         <h3 class="lista-titulo">Atletas cadastrados</h3>
-        <a href="criar-peneira.html" class="btn btn-primary">+ Nova peneira</a>
+        <a href="criar-peneira.html" class="btn btn-primary">
+          Nova peneira
+        </a>
       </div>
       <div class="search-bar">
-        <input type="text" id="searchAtleta" placeholder="Buscar atleta por nome ou posição…" oninput="filtrarAtletas()">
+        <input type="text" id="searchAtleta" placeholder="Buscar atleta por nome ou posicao..." oninput="filtrarAtletas()">
       </div>
       <div id="listaAtletas">
         <p style="color: #a0a0a0; text-align: center; padding: 24px;">Carregando atletas...</p>
@@ -83,12 +86,27 @@
   </main>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/utils.js"></script>
 <script>
-var todosAtletas = [];
+  var todosAtletas = [];
   var COLORS = ['#ee1919', '#f59e0b', '#10b981', '#6366f1', '#06b6d4', '#ec4899'];
+
+  function pegarLabels(lista) {
+    var labels = [];
+    for (var i = 0; i < lista.length; i++) {
+      labels.push(lista[i].label);
+    }
+    return labels;
+  }
+
+  function pegarTotais(lista) {
+    var totais = [];
+    for (var i = 0; i < lista.length; i++) {
+      totais.push(lista[i].total);
+    }
+    return totais;
+  }
 
   function renderAtletas(lista) {
     var container = document.getElementById('listaAtletas');
@@ -105,11 +123,11 @@ var todosAtletas = [];
       html += '<div class="athlete-row">';
       html +=   '<img class="ath-avatar" src="https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=0b1218&color=ee1919&size=38" alt="">';
       html +=   '<div>';
-      html +=     '<div class="ath-name">' + (a.nome || '—') + '</div>';
-      html +=     '<div class="ath-sub">' + (a.posicao || '—') + ' · ' + (a.categoria || '—') + '</div>';
+      html +=     '<div class="ath-name">' + (a.nome || '-') + '</div>';
+      html +=     '<div class="ath-sub">' + (a.posicao || '-') + ' - ' + (a.categoria || '-') + '</div>';
       html +=   '</div>';
       html +=   '<div class="ath-right">';
-      html +=     '<span class="badge ' + (a.tipo === 'aluno' ? 'badge-green' : 'badge-yellow') + '">' + (a.tipo || '—') + '</span>';
+      html +=     '<span class="badge ' + (a.tipo === 'aluno' ? 'badge-green' : 'badge-yellow') + '">' + (a.tipo || '-') + '</span>';
       html +=   '</div>';
       html += '</div>';
     }
@@ -128,14 +146,21 @@ var todosAtletas = [];
 
   function filtrarAtletas() {
     var busca = document.getElementById('searchAtleta').value.toLowerCase();
-    var filtrados = todosAtletas.filter(function(a) {
-      return (a.nome && a.nome.toLowerCase().includes(busca))
-          || (a.posicao && a.posicao.toLowerCase().includes(busca));
-    });
+    var filtrados = [];
+
+    for (var i = 0; i < todosAtletas.length; i++) {
+      var a = todosAtletas[i];
+      var nomeTemBusca = a.nome && a.nome.toLowerCase().includes(busca);
+      var posicaoTemBusca = a.posicao && a.posicao.toLowerCase().includes(busca);
+
+      if (nomeTemBusca || posicaoTemBusca) {
+        filtrados.push(a);
+      }
+    }
+
     renderAtletas(filtrados);
   }
 
-  // Busca a lista completa de atletas para o card inferior
   function carregarListaAtletas() {
     fetch('/usuarios/alunos')
       .then(function(resposta) { return resposta.json(); })
@@ -150,48 +175,36 @@ var todosAtletas = [];
       });
   }
 
-  // Concentra a carga de todas as estatísticas e gráficos do Admin
   function carregarDadosDashboard() {
     fetch('/estatisticas/admin')
       .then(function(resposta) { return resposta.json(); })
       .then(function(dados) {
-        
-        // 1. Preenchimento das KPIs
         document.getElementById('totalAtletas').textContent = dados.kpis.totalAtletas ?? 0;
         document.getElementById('subAtletas').textContent = 'cadastrados';
 
         document.getElementById('totalPeneiras').textContent = dados.kpis.totalPeneiras ?? 0;
         document.getElementById('subPeneiras').textContent = 'ativas agora';
 
-        document.getElementById('totalAprovados').textContent = dados.kpis.totalAprovados ?? 0;
-        document.getElementById('subAprovados').textContent = 'confirmados';
+        document.getElementById('totalTreinosConcluidos').textContent = dados.kpis.totalTreinosConcluidos ?? 0;
+        document.getElementById('subTreinosConcluidos').textContent = 'finalizados';
 
-        document.getElementById('taxaAprovacao').textContent = (dados.kpis.taxaAprovacao ?? 0) + '%';
-        document.getElementById('subTaxa').textContent = 'média geral';
+        document.getElementById('taxaConclusaoTreinos').textContent = (dados.kpis.taxaConclusaoTreinos ?? 0) + '%';
+        document.getElementById('subTaxa').textContent = 'dos treinos';
 
-        // 2. Gráfico: Atletas por Posição (Doughnut)
         new Chart(document.getElementById('cPosicoes'), {
           type: 'doughnut',
           data: {
-            labels: dados.atletasPorPosicao.map(item => item.label),
-            datasets: [{ 
-              data: dados.atletasPorPosicao.map(item => item.total), 
-              backgroundColor: COLORS 
-            }]
+            labels: pegarLabels(dados.atletasPorPosicao),
+            datasets: [{ data: pegarTotais(dados.atletasPorPosicao), backgroundColor: COLORS }]
           },
           options: { responsive: true, plugins: { legend: { labels: { color: '#a0a0a0' } } } }
         });
 
-        // 3. Gráfico: Times com mais peneiras (Bar Horizontal)
         new Chart(document.getElementById('cTimes'), {
           type: 'bar',
           data: {
-            labels: dados.peneirasPorClube.map(item => item.label),
-            datasets: [{ 
-              label: 'Peneiras', 
-              data: dados.peneirasPorClube.map(item => item.total), 
-              backgroundColor: COLORS 
-            }]
+            labels: pegarLabels(dados.peneirasPorClube),
+            datasets: [{ label: 'Peneiras', data: pegarTotais(dados.peneirasPorClube), backgroundColor: COLORS }]
           },
           options: {
             indexAxis: 'y',
@@ -201,16 +214,11 @@ var todosAtletas = [];
           }
         });
 
-        // 4. Gráfico: Atletas por Categoria (Bar Vertical)
         new Chart(document.getElementById('cFaixa'), {
           type: 'bar',
           data: {
-            labels: dados.atletasPorCategoria.map(item => item.label),
-            datasets: [{ 
-              label: 'Atletas', 
-              data: dados.atletasPorCategoria.map(item => item.total), 
-              backgroundColor: COLORS 
-            }]
+            labels: pegarLabels(dados.atletasPorCategoria),
+            datasets: [{ label: 'Atletas', data: pegarTotais(dados.atletasPorCategoria), backgroundColor: COLORS }]
           },
           options: {
             responsive: true,
@@ -219,16 +227,27 @@ var todosAtletas = [];
           }
         });
 
-        // 5. Gráfico: Inscrições por mês (Line)
-        // Mapeando o número do mês para texto
         var mesesNome = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        new Chart(document.getElementById('cInscricoes'), {
+        var labelsMeses = [];
+        var totaisMeses = [];
+        var maiorTotalCadastros = 0;
+
+        for (var i = 0; i < dados.cadastrosPorMes.length; i++) {
+          labelsMeses.push(mesesNome[dados.cadastrosPorMes[i].mes - 1]);
+          totaisMeses.push(dados.cadastrosPorMes[i].total);
+
+          if (dados.cadastrosPorMes[i].total > maiorTotalCadastros) {
+            maiorTotalCadastros = dados.cadastrosPorMes[i].total;
+          }
+        }
+
+        new Chart(document.getElementById('cCadastros'), {
           type: 'line',
           data: {
-            labels: dados.inscricoesPorMes.map(item => mesesNome[item.mes - 1]),
+            labels: labelsMeses,
             datasets: [{
-              label: 'Inscrições',
-              data: dados.inscricoesPorMes.map(item => item.total),
+              label: 'Cadastros',
+              data: totaisMeses,
               borderColor: '#ee1919',
               backgroundColor: 'rgba(238, 25, 25, 0.1)',
               fill: true,
@@ -238,18 +257,28 @@ var todosAtletas = [];
           options: {
             responsive: true,
             plugins: { legend: { display: false } },
-            scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
+            scales: {
+              x: { ticks: { color: '#a0a0a0' } },
+              y: {
+                beginAtZero: true,
+                min: 0,
+                max: maiorTotalCadastros + 1,
+                ticks: {
+                  color: '#a0a0a0',
+                  stepSize: 1
+                }
+              }
+            }
           }
         });
 
-        // 6. Gráfico: Aprovados por Categoria (Line)
-        new Chart(document.getElementById('cAprovados'), {
-          type: 'bar', // Alterado para barras para simplificar a exibição direta da query agrupada por categoria
+        new Chart(document.getElementById('cTreinosCategoria'), {
+          type: 'bar',
           data: {
-            labels: dados.aprovadosPorCategoria.map(item => item.label),
+            labels: pegarLabels(dados.treinosConcluidosPorCategoria),
             datasets: [{
-              label: 'Aprovados',
-              data: dados.aprovadosPorCategoria.map(item => item.total),
+              label: 'Treinos concluidos',
+              data: pegarTotais(dados.treinosConcluidosPorCategoria),
               backgroundColor: '#10b981'
             }]
           },
@@ -259,11 +288,9 @@ var todosAtletas = [];
             scales: { x: { ticks: { color: '#a0a0a0' } }, y: { ticks: { color: '#a0a0a0' } } }
           }
         });
-
-
       })
       .catch(function(erro) {
-        console.error('Erro ao processar estatísticas do admin:', erro);
+        console.error('Erro ao processar estatisticas do admin:', erro);
       });
   }
 
@@ -276,18 +303,16 @@ var todosAtletas = [];
 
     document.getElementById('adminTag').textContent = user.tipo;
 
-    // Inicializa as requisições dinâmicas
     carregarListaAtletas();
     carregarDadosDashboard();
 
-    // Mantido o gráfico estático semanal solicitado na estrutura original do HTML
     new Chart(document.getElementById('cPenDia'), {
       type: 'bar',
       data: {
-        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
         datasets: [
           { label: 'Semana passada', data: [3, 5, 4, 6, 8, 5, 2], backgroundColor: '#333' },
-          { label: 'Semana atual',   data: [5, 7, 6, 9, 11, 7, 3], backgroundColor: '#ee1919' }
+          { label: 'Semana atual', data: [5, 7, 6, 9, 11, 7, 3], backgroundColor: '#ee1919' }
         ]
       },
       options: {
@@ -297,7 +322,6 @@ var todosAtletas = [];
       }
     });
   });
-
 </script>
 </body>
 </html>

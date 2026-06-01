@@ -1,0 +1,236 @@
+/*
+ * styleTreinos.css
+ * Estilos compartilhados para treinos-professor.html e meus-treinos.html
+ * Usa a fonte Barlow já presente no projeto (tokens.css)
+ */
+
+/* ── Barra de ações (botão "Criar Treino") ─────────────────── */
+
+.barra-acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+}
+
+/* ── Cabeçalho da lista com título + contador ─────────────── */
+
+.lista-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.lista-titulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #ffffff;
+}
+
+/* ── Label de seção (ex: "Pendentes" / "Concluidos") ─────── */
+
+.secao-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #a0a0a0;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Card de treino (base) ────────────────────────────────── */
+
+.treino-card {
+    background: #0e1822;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    transition: border-color 0.2s;
+}
+
+.treino-card:hover {
+    border-color: rgba(238, 25, 25, 0.35);
+}
+
+/* Card com status concluído: borda verde sutil */
+.treino-card.concluido {
+    border-color: rgba(16, 185, 129, 0.25);
+    background: rgba(16, 185, 129, 0.04);
+}
+
+/* ── Texto dentro do card ─────────────────────────────────── */
+
+.treino-card-info {
+    flex: 1;
+    min-width: 0; /* evita que texto longo quebre o layout */
+}
+
+.treino-card-info h4 {
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 6px 0;
+    /* Corta o texto se for muito longo e adiciona "..." */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.treino-card-info p {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: #a0a0a0;
+    margin: 0 0 3px 0;
+}
+
+.treino-card-info p strong {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ── Área de ações do card (badge + botão) ────────────────── */
+
+.treino-card-acoes {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    flex-shrink: 0; /* impede que a área de ações encolha */
+}
+
+/* ── Botão "Marcar como feito" ────────────────────────────── */
+
+.btn-concluir {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-concluir:hover {
+    background: #10b981;
+    color: #ffffff;
+}
+
+.btn-concluir:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Estado vazio (quando não há treinos) ─────────────────── */
+
+.estado-vazio {
+    text-align: center;
+    padding: 48px 20px;
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: #a0a0a0;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+}
+
+/* ── Mensagens de carregando / erro ──────────────────────── */
+
+.msg-carregando {
+    color: #555;
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+.msg-erro {
+    color: #ee1919;
+    font-size: 14px;
+    padding: 20px 0;
+}
+
+/* ── Modal: fundo escuro atrás da caixa ──────────────────── */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0; /* equivale a top:0; right:0; bottom:0; left:0 */
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Quando a classe .aberto é adicionada, o modal aparece */
+.modal-overlay.aberto {
+    display: flex;
+}
+
+/* ── Modal: a caixa em si ─────────────────────────────────── */
+
+.modal-caixa {
+    background: #0b1218;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-titulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 22px 0;
+    color: #ffffff;
+}
+
+/* Botão "X" para fechar o modal */
+.modal-fechar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: #a0a0a0;
+    font-size: 16px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.modal-fechar:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Mensagem de feedback dentro do modal */
+.msg-modal {
+    min-height: 20px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 10px;
+}

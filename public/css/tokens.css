@@ -353,3 +353,9 @@ th {
 tr:hover td {
     background: rgba(255, 255, 255, 0.03);
 }
+
+.material-icons {
+    font-size: 18px;
+    line-height: 1;
+    vertical-align: middle;
+}
