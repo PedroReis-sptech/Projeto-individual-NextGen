@@ -14,7 +14,7 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(100) NOT NULL,
-    tipo ENUM('aluno','time','professor') DEFAULT 'aluno',
+    tipo VARCHAR(30) DEFAULT 'aluno',
     foto_perfil VARCHAR(300) DEFAULT NULL,
     data_nascimento DATE,
     cidade VARCHAR(100),
@@ -23,7 +23,8 @@ CREATE TABLE usuario (
     time_coracao VARCHAR(100),
     altura_cm DECIMAL(5, 2),
     peso_kg DECIMAL(5, 2),
-    dt_cadastro DATETIME DEFAULT NOW()
+    dt_cadastro DATETIME DEFAULT NOW(),
+    CONSTRAINT chk_tipo CHECK (tipo IN ('aluno','time','professor'))
 );
 
 CREATE TABLE peneira (
@@ -58,11 +59,12 @@ CREATE TABLE treino (
     professor_id  INT NOT NULL,
     aluno_id      INT NOT NULL,
     descricao     VARCHAR(500) NOT NULL,
-    status        ENUM('pendente', 'concluido') DEFAULT 'pendente',
+    status_treino VARCHAR(15) DEFAULT 'pendente',
     data_conclusao DATETIME DEFAULT NULL,
     criado_em     DATETIME DEFAULT NOW(),
     FOREIGN KEY (professor_id) REFERENCES usuario(id),
-    FOREIGN KEY (aluno_id)     REFERENCES usuario(id)
+    FOREIGN KEY (aluno_id)     REFERENCES usuario(id),
+	CONSTRAINT status_treino CHECK (status_treino IN ('pendente', 'concluido'))
 );
 
 INSERT INTO clube (nome, escudo_url, cidade, estado) VALUES
@@ -149,6 +151,67 @@ INSERT INTO inscricao (fk_atleta, fk_peneira, status, dt_inscricao) VALUES
 (4, 5, 'pendente',  '2026-05-15 13:15:00'),
 (1, 6, 'pendente',  '2026-05-22 16:40:00'),
 (2, 6, 'pendente',  '2026-05-25 10:20:00');
+
+INSERT INTO treino (professor_id, aluno_id, descricao, status_treino, data_conclusao, criado_em) VALUES
+-- ID 4: Pedro Reis (Atacante)
+(2, 4, 'Treino de finalização e posicionamento dentro da área simulando pivô.', 'concluido', '2026-05-25 11:00:00', '2026-05-25 09:00:00'),
+
+-- ID 5: Lucas Oliveira (Goleiro)
+(3, 5, 'Treino específico de fundamentos: pegada firme e saída de bola rasteira.', 'concluido', '2026-05-25 16:30:00', '2026-05-25 15:00:00'),
+
+-- ID 6: Rafael Souza (Zagueiro)
+(2, 6, 'Exercício de tempo de bola aérea e posicionamento de linha defensiva.', 'concluido', '2026-05-26 10:00:00', '2026-05-26 08:30:00'),
+
+-- ID 7: Gabriel Silva (Meia)
+(3, 7, 'Trabalho de transição ofensiva rápida e passes em profundidade quebrando linhas.', 'concluido', '2026-05-26 15:30:00', '2026-05-26 14:00:00'),
+
+-- ID 8: Matheus Costa (Lateral)
+(2, 8, 'Treino de cruzamento após ultrapassagem em velocidade e recomposição.', 'pendente', NULL, '2026-05-27 09:00:00'),
+
+-- ID 9: João Ferreira (Volante)
+(3, 9, 'Combate no meio-campo, técnicas de desarme limpo e distribuição de primeira.', 'pendente', NULL, '2026-05-27 10:00:00'),
+
+-- ID 10: Bruno Martins (Atacante)
+(2, 10, 'Treino focado em drible curto para infiltração lateral e finalização rápida.', 'pendente', NULL, '2026-05-27 14:00:00'),
+
+-- ID 11: Diego Rocha (Meia)
+(3, 11, 'Controle de bola sob pressão e visão de jogo para inversão de jogadas.', 'concluido', '2026-05-27 17:30:00', '2026-05-27 16:00:00'),
+
+-- ID 12: Felipe Nunes (Zagueiro)
+(2, 12, 'Simulação de situações de 1x1 defensivo e cobertura das costas dos laterais.', 'concluido', '2026-05-28 09:30:00', '2026-05-28 08:00:00'),
+
+-- ID 13: Gustavo Lima (Goleiro)
+(3, 13, 'Treino de reações rápidas em chutes à queima-roupa e espalmar direcionado.', 'pendente', NULL, '2026-05-28 10:30:00'),
+
+-- ID 14: Henrique Alves (Lateral)
+(2, 14, 'Aprimoramento de corrida de fundo e passes precisos em direção à linha de fundo.', 'pendente', NULL, '2026-05-28 14:30:00'),
+
+-- ID 15: Igor Santos (Volante)
+(3, 15, 'Posicionamento tático para interceptação de passes e proteção da zaga central.', 'concluido', '2026-05-28 17:00:00', '2026-05-28 15:30:00'),
+
+-- ID 16: Jorge Pereira (Atacante)
+(2, 16, 'Movimentação sem bola no último terço do campo e quebra de linha de impedimento.', 'pendente', NULL, '2026-05-29 08:00:00'),
+
+-- ID 17: Kaique Barros (Meia)
+(3, 17, 'Treino de bola parada: cobrança de faltas frontais e escanteios fechados.', 'pendente', NULL, '2026-05-29 08:30:00'),
+
+-- ID 18: Leonardo Cruz (Zagueiro)
+(2, 18, 'Trabalho de impulsão, força muscular e cabeceio defensivo em escanteios.', 'pendente', NULL, '2026-05-29 09:00:00'),
+
+-- ID 19: Murilo Dias (Atacante)
+(3, 19, 'Fundamento de finalização com a perna não dominante (trabalho de perna esquerda).', 'pendente', NULL, '2026-05-29 09:30:00'),
+
+-- ID 20: Natan Pires (Goleiro)
+(2, 20, 'Treino de posicionamento geométrico da barreira e leitura de batedores.', 'pendente', NULL, '2026-05-29 10:00:00'),
+
+-- ID 21: Otávio Ramos (Lateral)
+(3, 21, 'Simulação de jogo de apoio associado com o meio-campo e ultrapassagem dinâmica.', 'pendente', NULL, '2026-05-29 10:30:00'),
+
+-- ID 22: Paulo Teixeira (Volante)
+(2, 22, 'Trabalho de saída de três (volante recuando entre os zagueiros para iniciar o jogo).', 'pendente', NULL, '2026-05-29 11:00:00'),
+
+-- ID 23: Rafael Mendes (Meia)
+(3, 23, 'Treino de posse de bola em espaço reduzido e drible voltado para progressão.', 'pendente', NULL, '2026-05-29 11:30:00');
 
 SELECT * FROM usuario;
 
