@@ -6,7 +6,7 @@ body {
     background: #050a0e;
 }
 
-.bg-glow {
+.brilho-fundo {
     position: absolute;
     width: 420px;
     height: 520px;
@@ -14,7 +14,7 @@ body {
     box-shadow: 0 0 120px 10px rgba(238, 25, 25, 0.28);
 }
 
-.card {
+.cartao {
     position: relative;
     z-index: 2;
     width: 420px;
@@ -25,15 +25,15 @@ body {
     box-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 
-.logo-wrap {
+.caixa-logo {
     text-align: center;
     margin-bottom: 12px;
 }
-.logo-wrap img {
+.caixa-logo img {
     width: 90px;
 }
 
-.tabs {
+.abas {
     display: flex;
     background: #070d13;
     border-radius: 10px;
@@ -42,7 +42,7 @@ body {
     gap: 4px;
 }
 
-.tab-btn {
+.botao-aba {
     flex: 1;
     padding: 9px;
     border: none;
@@ -58,16 +58,16 @@ body {
     transition: all .2s;
 }
 
-.tab-btn.active {
+.botao-aba.ativo {
     background: #0b1218;
     color: #ffffff;
     box-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 
-.form-section {
+.secao-form {
     display: none;
 }
-.form-section.visible {
+.secao-form.visivel {
     display: block;
 }
 
@@ -79,17 +79,17 @@ h2 {
     margin-bottom: 4px;
 }
 
-.sub {
+.texto-sub {
     color: #a0a0a0;
     font-size: 13px;
     margin-bottom: 24px;
 }
 
-.form-group {
+.grupo-form {
     margin-bottom: 16px;
 }
 
-.btn-primary {
+.botao-principal {
     width: 100%;
     justify-content: center;
     margin-top: 8px;
@@ -97,27 +97,27 @@ h2 {
     padding: 14px;
 }
 
-.msg {
+.mensagem {
     margin-top: 14px;
     text-align: center;
     font-size: 13px;
     font-weight: 600;
 }
 
-.msg.success {
+.mensagem.sucesso {
     color: #10b981;
 }
 
-.msg.error {
+.mensagem.erro {
     color: #ee1919;
 }
 
-.grid2 {
+.grade2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
-.grid2 .full {
+.grade2 .completo {
     grid-column: 1 / -1;
 }

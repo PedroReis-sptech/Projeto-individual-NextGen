@@ -73,13 +73,13 @@ body {
     font-size: 14px;
 }
 
-.cards-resumo {
+.cartoes-resumo {
     display: flex;
     gap: 15px;
     margin-bottom: 25px;
 }
 
-.card-resumo {
+.cartao-resumo {
     background-color: #0b1218;
     border: 1px solid #1a1a1a;
     border-radius: 10px;
@@ -88,13 +88,13 @@ body {
     text-align: center;
 }
 
-.card-resumo p {
+.cartao-resumo p {
     color: #a0a0a0;
     font-size: 13px;
     margin-bottom: 8px;
 }
 
-.card-resumo h2 {
+.cartao-resumo h2 {
     color: #ee1919;
     font-size: 28px;
 }

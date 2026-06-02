@@ -64,8 +64,20 @@ function atualizarPerfil(req, res) {
                     time_coracao, data_nascimento, cidade, altura_cm, peso_kg };
 
     usuarioModel.atualizarPerfil(id, dados)
-        .then(() => res.status(200).json({ mensagem: "Perfil atualizado." }))
-        .catch(erro => {
+        .then(function(resultado) {
+            return usuarioModel.buscarPorId(id)
+                .then(function(usuarioAtualizado) {
+                    if (!usuarioAtualizado || usuarioAtualizado.length === 0) {
+                        return res.status(404).json({ mensagem: "Usuário não encontrado." });
+                    }
+
+                    res.status(200).json({
+                        mensagem: "Perfil atualizado.",
+                        usuario: usuarioAtualizado[0]
+                    });
+                });
+        })
+        .catch(function(erro) {
             console.error("Erro ao atualizar perfil:", erro);
             res.status(500).json({ mensagem: erro.sqlMessage || "Erro interno." });
         });

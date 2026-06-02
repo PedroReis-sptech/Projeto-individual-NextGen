@@ -4,50 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen - Dashboard Atleta</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styleDashboardAluno.css">
 </head>
 <body>
-<div class="layout">
+<div class="estrutura">
 
-  <nav class="sidebar">
+  <nav class="menu-lateral">
     <img class="logo" src="../Logo/Next-removebg-preview.png">
-    <a href="dashboard-aluno.html" class="sidebar-link active">Dashboard</a>
-    <a href="perfil.html" class="sidebar-link">Perfil</a>
-    <a href="peneiras.html" class="sidebar-link">Peneiras</a>
-    <a href="meus-treinos.html" class="sidebar-link">Meus Treinos</a>
-    <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
+    <a href="dashboard-aluno.html" class="link-menu ativo">Dashboard</a>
+    <a href="perfil.html" class="link-menu">Perfil</a>
+    <a href="peneiras.html" class="link-menu">Peneiras</a>
+    <a href="meus-treinos.html" class="link-menu">Meus Treinos</a>
+    <a href="#" class="link-menu" onclick="Auth.logout()">Sair</a>
   </nav>
 
-  <main class="main-content">
+  <main class="conteudo-principal">
 
-    <div id="userChip" class="user-chip">
-      <img id="chipAvatar" src="" alt="Avatar do atleta">
+    <div id="userChip" class="ficha-usuario">
       <div>
         <span id="chipNome">-</span><br>
         <small id="chipCategoria">-</small>
       </div>
     </div>
 
-    <div class="welcome">Ola, <span id="firstName">Atleta</span>!</div>
-    <p class="page-sub">Sua temporada 2026 - <span id="chipPos">-</span></p>
+    <div class="boas-vindas">Ola, <span id="firstName">Atleta</span>!</div>
+    <p class="subtitulo-pagina">Sua temporada 2026 - <span id="chipPos">-</span></p>
 
-    <div class="stats-grid" id="statsGrid"></div>
+    <div class="grade-estatisticas" id="statsGrid"></div>
 
-    <div class="charts-row">
-      <div class="chart-box wide">
+    <div class="linha-graficos">
+      <div class="caixa-grafico largo">
         <h3>Presenca nos treinos - ultimas 8 semanas</h3>
         <canvas id="cPresenca"></canvas>
       </div>
     </div>
 
-    <div class="charts-row">
-      <div class="chart-box">
+    <div class="linha-graficos">
+      <div class="caixa-grafico">
         <h3>Evolucao de desempenho</h3>
         <canvas id="cEvolucao"></canvas>
       </div>
-      <div class="chart-box">
+      <div class="caixa-grafico">
         <h3>Proximas peneiras</h3>
         <div id="proximasPeneiras"></div>
       </div>
@@ -65,10 +63,10 @@
     fetch('/peneiras')
       .then(function(resposta) { return resposta.json(); })
       .then(function(peneiras) {
-        var container = document.getElementById('proximasPeneiras');
+        var caixa = document.getElementById('proximasPeneiras');
 
         if (!peneiras || peneiras.length === 0) {
-          container.innerHTML = '<p style="color:var(--grey)">Nenhuma peneira disponivel no momento.</p>';
+          caixa.innerHTML = '<p style="color:var(--grey)">Nenhuma peneira disponivel no momento.</p>';
           return;
         }
 
@@ -85,17 +83,17 @@
             ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
             : '-';
 
-          html += '<div class="peneira-mini">';
-          html +=   '<div class="dot"><span class="material-icons">sports_soccer</span></div>';
+          html += '<div class="peneira-pequena">';
+          html +=   '<div class="circulo-icone"><span class="icone-futebol">&#9917;</span></div>';
           html +=   '<div>';
           html +=     '<h4>' + (p.nome || '-') + '</h4>';
           html +=     '<p>' + dataFormatada + (p.cidade ? ' - ' + p.cidade : '') + '</p>';
           html +=   '</div>';
-          html +=   '<span class="badge badge-green" style="margin-left:auto">ativa</span>';
+          html +=   '<span class="selo selo-verde" style="margin-left:auto">ativa</span>';
           html += '</div>';
         }
 
-        container.innerHTML = html;
+        caixa.innerHTML = html;
       })
       .catch(function(erro) {
         console.error('Erro ao carregar peneiras:', erro);
@@ -106,20 +104,27 @@
 
   function carregarMetricasAluno(idAtleta) {
     fetch('/estatisticas/aluno/' + idAtleta)
-      .then(function(resposta) { return resposta.json(); })
+      .then(function(resposta) {
+        if (!resposta.ok) {
+          return resposta.json().then(function(err) {
+            throw new Error(err.mensagem || 'Erro ao carregar métricas');
+          });
+        }
+        return resposta.json();
+      })
       .then(function(dados) {
         var stats = [
-          { label: 'Treinos no mes', val: dados.kpis.treinosNoMes, sub: 'atualizado' },
-          { label: '% Presenca', val: (dados.kpis.taxaPresenca ?? 0) + '%', sub: 'historico total' },
-          { label: 'Treinos concluidos', val: dados.kpis.treinosConcluidos, sub: 'total' },
-          { label: 'Desempenho', val: dados.kpis.desempenho, sub: 'nota atual' }
+          { label: 'Treinos no mes', valor: dados.kpis?.treinosNoMes ?? 0, sub: 'atualizado' },
+          { label: '% Presenca', valor: (dados.kpis?.taxaPresenca ?? 0) + '%', sub: 'historico total' },
+          { label: 'Treinos concluidos', valor: dados.kpis?.treinosConcluidos ?? 0, sub: 'total' },
+          { label: 'Desempenho', valor: dados.kpis?.desempenho ?? 0, sub: 'nota atual' }
         ];
 
         var html = '';
         for (var i = 0; i < stats.length; i++) {
-          html += '<div class="stat-card">';
+          html += '<div class="cartao-estatistica">';
           html +=   '<p>' + stats[i].label + '</p>';
-          html +=   '<h2>' + stats[i].val + '</h2>';
+          html +=   '<h2>' + stats[i].valor + '</h2>';
           html +=   '<small>' + stats[i].sub + '</small>';
           html += '</div>';
         }
@@ -192,11 +197,6 @@
     var user = Auth.require('aluno');
     if (!user) return;
 
-    var nomeEncoded = encodeURIComponent(user.nome || 'A');
-    var avatarUrl = user.foto_perfil ||
-      ('https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=ee1919&color=fff&size=32');
-
-    document.getElementById('chipAvatar').src = avatarUrl;
     document.getElementById('chipNome').textContent = user.nome || '-';
     document.getElementById('chipCategoria').textContent = user.categoria || '-';
 

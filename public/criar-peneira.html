@@ -12,43 +12,40 @@
 </head>
 
 <body>
-  <div class="layout">
+  <div class="estrutura">
 
-    <!-- ===== MENU LATERAL ===== -->
-    <nav class="sidebar">
+    <nav class="menu-lateral">
       <img class="logo" src="../Logo/Next-removebg-preview.png"
         onerror="this.outerHTML='<div style=\'font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\'>NG</div>'">
-      <a href="dashboard-admin.html" class="sidebar-link">Dashboard</a>
-      <a href="perfil.html" class="sidebar-link">Perfil</a>
-      <a href="peneiras.html" class="sidebar-link">Peneiras</a>
-      <a href="criar-peneira.html" class="sidebar-link active">Criar Peneira</a>
-      <a href="treinos-professor.html" class="sidebar-link">Criar Treino</a>
-      <a href="#" class="sidebar-link" onclick="Auth.logout()">Sair</a>
+      <a href="dashboard-admin.html" class="link-menu">Dashboard</a>
+      <a href="perfil.html" class="link-menu">Perfil</a>
+      <a href="peneiras.html" class="link-menu">Peneiras</a>
+      <a href="criar-peneira.html" class="link-menu ativo">Criar Peneira</a>
+      <a href="treinos-professor.html" class="link-menu">Criar Treino</a>
+      <a href="#" class="link-menu" onclick="Auth.logout()">Sair</a>
     </nav>
 
-    <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-    <main class="main-content">
-      <div class="page-title">Criar Peneira</div>
-      <p class="page-sub">Cadastre uma nova peneira para os atletas se inscreverem.</p>
+    <main class="conteudo-principal">
+      <div class="titulo-pagina">Criar Peneira</div>
+      <p class="subtitulo-pagina">Cadastre uma nova peneira para os atletas se inscreverem.</p>
 
-      <!-- ===== FORMULÁRIO DE CRIAÇÃO ===== -->
-      <div class="form-panel">
+      <div class="painel-form">
         <h2>Nova peneira</h2>
-        <div class="form-grid">
+        <div class="grade-form">
 
-          <div class="form-group full">
+          <div class="grupo-form completo">
             <label>Nome da peneira *</label>
             <input id="pNome" required placeholder="Ex: Peneira Sub-17 · Corinthians">
           </div>
-          <div class="form-group">
+          <div class="grupo-form">
             <label>Data *</label>
             <input id="pData" type="date" required>
           </div>
-          <div class="form-group">
+          <div class="grupo-form">
             <label>Horário *</label>
             <input id="pHorario" type="time" required>
           </div>
-          <div class="form-group">
+          <div class="grupo-form">
             <label>Categoria *</label>
             <select id="pCategoria" required>
               <option value="">Selecione</option>
@@ -60,39 +57,38 @@
               <option>Profissional</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="grupo-form">
             <label>Vagas</label>
             <input id="pVagas" type="number" placeholder="30">
           </div>
-          <div class="form-group full">
+          <div class="grupo-form completo">
             <label>Local / Endereço *</label>
             <input id="pLocal" required placeholder="Ex: CT Joaquim Grava, São Paulo">
           </div>
-          <div class="form-group full">
+          <div class="grupo-form completo">
             <label>Cidade</label>
             <input id="pCidade" placeholder="Ex: São Paulo">
           </div>
-          <div class="form-group full">
+          <div class="grupo-form completo">
             <label>Clube</label>
             <input id="pClube" placeholder="Ex: Corinthians, Palmeiras, Outro...">
           </div>
-          <div class="form-group full">
+          <div class="grupo-form completo">
             <label>Descrição</label>
             <textarea id="pDesc" rows="4"
               placeholder="Descreva os requisitos, o que o atleta deve levar, etc."></textarea>
           </div>
 
         </div>
-        <div class="btn-row">
-          <button class="btn btn-ghost" onclick="limparForm()">Limpar</button>
-          <button class="btn btn-primary" onclick="criarPeneira()">Criar Peneira →</button>
+        <div class="linha-botoes">
+          <button class="botao botao-transparente" onclick="limparForm()">Limpar</button>
+          <button class="botao botao-principal" onclick="criarPeneira()">Criar Peneira →</button>
         </div>
       </div>
 
-      <!-- ===== LISTA DE PENEIRAS JÁ CRIADAS ===== -->
-      <div class="lista-header">
+      <div class="cabecalho-lista">
         <h3 class="lista-titulo">Peneiras criadas</h3>
-        <span class="badge badge-red" id="totalBadge">0 peneiras</span>
+        <span class="selo selo-vermelho" id="totalBadge">0 peneiras</span>
       </div>
       <!-- Preenchido pela API via JavaScript -->
       <div id="listaCriadas">
@@ -105,70 +101,56 @@
   <script src="js/utils.js"></script>
   <script>
 
-    // ============================================================
-    // Função: renderPeneiras
-    // Recebe uma lista de peneiras e monta o HTML da lista
-    // ============================================================
     function renderPeneiras(lista) {
-      var container = document.getElementById('listaCriadas');
-      var badge = document.getElementById('totalBadge');
+      var caixa = document.getElementById('listaCriadas');
+      var selo = document.getElementById('totalBadge');
 
-      badge.textContent = lista.length + ' peneira' + (lista.length !== 1 ? 's' : '');
+      selo.textContent = lista.length + ' peneira' + (lista.length !== 1 ? 's' : '');
 
       if (!lista || lista.length === 0) {
-        container.innerHTML =
-          '<div class="empty-state"><p>Nenhuma peneira criada ainda.</p></div>';
+        caixa.innerHTML =
+          '<div class="estado-vazio"><p>Nenhuma peneira criada ainda.</p></div>';
         return;
       }
 
       var html = '';
     for (var i = 0; i < lista.length; i++) {
       var p = lista[i];
-      // Formata a data de YYYY-MM-DD para DD/MM/AAAA
       var dataFormatada = p.data_realizacao
         ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
         : '—';
 
-      // Define a cor e o texto do badge baseado no status vindo do Banco de Dados
-      // Se sua API usar p.ativo (true/false), mude a condição abaixo para: if (p.ativo)
-      var badgeClass = 'badge-green';
+      var badgeClass = 'selo-verde';
       var badgeTexto = 'ativa';
       
       if (p.status === 'desativada' || p.ativo === false) {
-        badgeClass = 'badge-red';
+        badgeClass = 'selo-vermelho';
         badgeTexto = 'desativada';
       }
 
-      html += '<div class="peneira-card" id="pen-' + p.id + '">';
+      html += '<div class="cartao-peneira" id="pen-' + p.id + '">';
       html +=   '<div>';
       html +=     '<h4>' + (p.nome || '—') + '</h4>';
       html +=     '<p>📅 ' + dataFormatada + (p.horario ? ' às ' + p.horario : '') + '</p>';
       html +=     '<p>📍 ' + (p.local_endereco || p.cidade || '—') + '</p>';
       html +=     '<p>🏷 ' + (p.categoria || '—') + (p.vagas ? ' · 👥 ' + p.vagas + ' vagas' : '') + '</p>';
       if (p.descricao) {
-        html +=   '<p class="desc-peneira">' + p.descricao + '</p>';
+        html +=   '<p class="descricao-peneira">' + p.descricao + '</p>';
       }
       html +=   '</div>';
-      html +=   '<div class="actions">';
-      // Usando as variáveis dinâmicas aqui:
-      html +=     '<span class="badge ' + badgeClass + '">' + badgeTexto + '</span>';
-      
-      // Só mostra o botão de excluir se a peneira ainda estiver ativa
+      html +=   '<div class="acoes">';
+      html +=     '<span class="selo ' + badgeClass + '">' + badgeTexto + '</span>';
+
       if (badgeTexto === 'ativa') {
-        html +=     '<button class="btn-icon" title="Desativar" onclick="desativarPeneira(' + p.id + ')">🗑</button>';
+        html +=     '<button class="botao-icone" title="Desativar" onclick="desativarPeneira(' + p.id + ')">🗑</button>';
       }
       
       html +=   '</div>';
       html += '</div>';
     }
-      container.innerHTML = html;
+      caixa.innerHTML = html;
     }
 
-    // ============================================================
-    // Função: carregarPeneirass
-    // Busca as peneiras criadas pelo usuário logado via API
-    // GET /peneiras/criador/:idCriador
-    // ============================================================
     function carregarPeneiras() {
       var user = Auth.current();
       if (!user) return;
@@ -185,10 +167,6 @@
         });
     }
 
-    // ============================================================
-    // Função: criarPeneira
-    // Envia os dados do formulário para POST /peneiras/criar
-    // ============================================================
     function criarPeneira() {
       var nome = document.getElementById('pNome').value.trim();
       var data = document.getElementById('pData').value;
@@ -197,16 +175,15 @@
       var local     = document.getElementById('pLocal').value.trim();
       var clube     = document.getElementById('pClube').value.trim();
 
-      // Validação dos campos obrigatórios
+      
       if (!nome || !data || !horario || !categoria || !local) {
-        toast('Preencha todos os campos obrigatórios.', 'error');
+        alerta('Preencha todos os campos obrigatórios.', 'erro');
         return;
       }
 
       var user = Auth.current();
       if (!user) return;
 
-      // Chama a API real do servidor Node.js
       fetch('/peneiras/criar', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -218,7 +195,7 @@
       localEndereco:   local,
       cidade:          document.getElementById('pCidade').value,
       vagas:           document.getElementById('pVagas').value,
-      clube:           clube, // <-- ADICIONE ESTA LINHA (verifique se sua API aceita o nome "clube")
+      clube:           clube,
       descricao:       document.getElementById('pDesc').value.trim(),
       fkCriador:       user.id
     })
@@ -226,42 +203,35 @@
         .then(function (resposta) { return resposta.json(); })
         .then(function (resultado) {
           if (resultado.mensagem && !resultado.id) {
-            toast(resultado.mensagem, 'error');
+            alerta(resultado.mensagem, 'erro');
             return;
           }
-          toast('Peneira criada com sucesso!');
+          alerta('Peneira criada com sucesso!');
           limparForm();
-          carregarPeneiras(); // Recarrega a lista
+          carregarPeneiras(); 
         })
         .catch(function (erro) {
           console.error('Erro ao criar peneira:', erro);
-          toast('Erro ao conectar com o servidor.', 'error');
+          alerta('Erro ao conectar com o servidor.', 'erro');
         });
     }
 
-    // ============================================================
-    // Função: desativarPeneira
-    // Chama DELETE /peneiras/desativar/:id para desativar
-    // ============================================================
     function desativarPeneira(id) {
       if (!confirm('Desativar esta peneira?')) return;
 
       fetch('/peneiras/desativar/' + id, { method: 'DELETE' })
         .then(function (resposta) { return resposta.json(); })
         .then(function () {
-          toast('Peneira desativada.');
-          carregarPeneiras(); // Recarrega a lista
+          alerta('Peneira desativada.');
+          carregarPeneiras(); 
         })
         .catch(function (erro) {
           console.error('Erro ao desativar:', erro);
-          toast('Erro ao desativar a peneira.', 'error');
+          alerta('Erro ao desativar a peneira.', 'erro');
         });
     }
 
-    // ============================================================
-    // Função: limparForm
-    // Limpa todos os campos do formulário
-    // ============================================================
+
     function limparForm() {
       var campos = ['pNome', 'pData', 'pHorario', 'pVagas', 'pLocal', 'pCidade', 'pDesc'];
       for (var i = 0; i < campos.length; i++) {
@@ -271,17 +241,13 @@
       document.getElementById('pClube').value = '';
     }
 
-    // ============================================================
-    // Quando a página termina de carregar, executa tudo
-    // ============================================================
     document.addEventListener('DOMContentLoaded', function () {
       var user = Auth.current();
-      // Redireciona alunos de volta para o dashboard deles
+      
       if (!user || user.tipo === 'aluno') {
         window.location.href = 'dashboard-aluno.html';
         return;
       }
-      // Carrega as peneiras do criador logado
       carregarPeneiras();
     });
 

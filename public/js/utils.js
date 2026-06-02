@@ -1,15 +1,15 @@
-function toast(msg, type = 'success') {
-    let container = document.getElementById('toastContainer');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toastContainer';
-        container.className = 'toast-container';
-        document.body.appendChild(container);
+function alerta(mensagem, type = 'sucesso') {
+    let caixa = document.getElementById('toastContainer');
+    if (!caixa) {
+        caixa = document.createElement('div');
+        caixa.id = 'toastContainer';
+        caixa.className = 'caixa-alertas';
+        document.body.appendChild(caixa);
     }
     const t = document.createElement('div');
-    t.className = `toast toast-${type}`;
-    t.innerHTML = `<span>${type === 'success' ? '✓' : '✕'}</span> ${msg}`;
-    container.appendChild(t);
+    t.className = `alerta alerta-${type}`;
+    t.innerHTML = `<span>${type === 'sucesso' ? '✓' : '✕'}</span> ${mensagem}`;
+    caixa.appendChild(t);
     setTimeout(() => {
         t.remove();
     }, 3200);
@@ -47,22 +47,30 @@ const Auth = {
 
 function markActiveLink() {
     const path = window.location.pathname.split('/').pop();
-    document.querySelectorAll('.sidebar-link').forEach(a => {
-        if (a.getAttribute('href') === path) a.classList.add('active');
-    });
+    const links = document.querySelectorAll('.link-menu');
+
+    for (let i = 0; i < links.length; i++) {
+        if (links[i].getAttribute('href') === path) {
+            links[i].classList.add('ativo');
+        }
+    }
 }
 document.addEventListener('DOMContentLoaded', markActiveLink);
 
 function validateRequired(formEl) {
     let ok = true;
-    formEl.querySelectorAll('[required]').forEach(el => {
-        el.style.borderColor = '';
-        if (!el.value.trim()) {
-            el.style.borderColor = '#ee1919';
+    const campos = formEl.querySelectorAll('[required]');
+
+    for (let i = 0; i < campos.length; i++) {
+        campos[i].style.borderColor = '';
+
+        if (!campos[i].value.trim()) {
+            campos[i].style.borderColor = '#ee1919';
             ok = false;
         }
-    });
-    if (!ok) toast('Preencha todos os campos obrigatórios.', 'error');
+    }
+
+    if (!ok) alerta('Preencha todos os campos obrigatórios.', 'erro');
     return ok;
 }
 
@@ -79,4 +87,8 @@ function initAvatarUpload(inputId, previewId) {
         };
         reader.readAsDataURL(file);
     });
+}
+
+function toast(mensagem, tipo = 'sucesso') {
+    alerta(mensagem, tipo);
 }

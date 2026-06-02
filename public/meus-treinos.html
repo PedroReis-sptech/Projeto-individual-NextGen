@@ -8,37 +8,37 @@
   <link rel="stylesheet" href="css/styleTreinos.css">
 </head>
 <body>
-<div class="layout">
+<div class="estrutura">
 
   <!-- Menu lateral -->
-  <nav class="sidebar">
+  <nav class="menu-lateral">
     <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo NextGen">
-    <a href="dashboard-aluno.html" class="sidebar-link">Dashboard</a>
-    <a href="perfil.html"          class="sidebar-link">Perfil</a>
-    <a href="peneiras.html"        class="sidebar-link">Peneiras</a>
-    <a href="meus-treinos.html"    class="sidebar-link active">Meus Treinos</a>
-    <a href="login.html"           class="sidebar-link" onclick="Auth.logout()">Sair</a>
+    <a href="dashboard-aluno.html" class="link-menu">Dashboard</a>
+    <a href="perfil.html"          class="link-menu">Perfil</a>
+    <a href="peneiras.html"        class="link-menu">Peneiras</a>
+    <a href="meus-treinos.html"    class="link-menu ativo">Meus Treinos</a>
+    <a href="login.html"           class="link-menu" onclick="Auth.logout()">Sair</a>
   </nav>
 
-  <main class="main-content">
+  <main class="conteudo-principal">
 
-    <div class="page-title">Meus Treinos</div>
-    <p class="page-sub">Treinos passados pelo seu professor.</p>
+    <div class="titulo-pagina">Meus Treinos</div>
+    <p class="subtitulo-pagina">Treinos passados pelo seu professor.</p>
 
     <!-- Contador de treinos pendentes -->
     <div style="margin-bottom: 20px;">
-      <span class="badge badge-red" id="contadorPendentes">Carregando...</span>
+      <span class="selo selo-vermelho" id="contadorPendentes">Carregando...</span>
     </div>
 
     <!-- Seção: treinos pendentes -->
-    <div class="secao-label">Pendentes</div>
+    <div class="rotulo-secao">Pendentes</div>
     <div id="listaPendentes">
       <p class="msg-carregando">Carregando treinos...</p>
     </div>
 
     <!-- Seção: treinos concluídos (aparece separado logo abaixo) -->
     <div style="margin-top: 32px;" id="secaoConcluidos">
-      <div class="secao-label">Concluidos</div>
+      <div class="rotulo-secao">Concluidos</div>
       <div id="listaConcluidos">
         <!-- Preenchido pelo JavaScript -->
       </div>
@@ -52,11 +52,10 @@
 
   var user = null;
 
-  // Quando a página carregar, verifica o login e busca os treinos
   document.addEventListener('DOMContentLoaded', function() {
     user = Auth.current();
 
-    // Se não for aluno, redireciona para o dashboard de admin
+    
     if (!user || user.tipo !== 'aluno') {
       window.location.href = 'dashboard-admin.html';
       return;
@@ -65,13 +64,10 @@
     carregarTreinos();
   });
 
-  // ── Busca os treinos do aluno logado ───────────────────────
-  // CORRIGIDO: usa /treinos/aluno/:id em vez de /treinos/pendentes/:id
-
   function carregarTreinos() {
     fetch('/treinos/aluno/' + user.id)
       .then(function(r) {
-        // 204 = lista vazia, retorna array vazio para o then seguinte tratar
+        
         if (r.status === 204) return [];
         return r.json();
       })
@@ -84,21 +80,17 @@
       });
   }
 
-  // ── Separa pendentes de concluídos e monta o HTML ──────────
-
   function renderizarTreinos(lista) {
     var containerPendentes  = document.getElementById('listaPendentes');
     var containerConcluidos = document.getElementById('listaConcluidos');
     var contador            = document.getElementById('contadorPendentes');
 
-    // Separa a lista em dois grupos
+    
     var pendentes  = lista.filter(function(t) { return t.status !== 'concluido'; });
     var concluidos = lista.filter(function(t) { return t.status === 'concluido'; });
 
-    // Atualiza o badge com a quantidade de pendentes
     contador.textContent = pendentes.length + (pendentes.length === 1 ? ' pendente' : ' pendentes');
 
-    // Renderiza os pendentes
     if (pendentes.length === 0) {
       containerPendentes.innerHTML =
         '<div class="estado-vazio">' +
@@ -109,15 +101,13 @@
       containerPendentes.innerHTML = montarHtmlCards(pendentes, true);
     }
 
-    // Renderiza os concluídos
+    
     if (concluidos.length === 0) {
       containerConcluidos.innerHTML = '<p style="color: #555; font-size: 13px;">Nenhum treino concluido ainda.</p>';
     } else {
       containerConcluidos.innerHTML = montarHtmlCards(concluidos, false);
     }
   }
-
-  // ── Monta o HTML de um grupo de cards ─────────────────────
 
   function montarHtmlCards(lista, mostrarBotaoConcluir) {
     var html = '';
@@ -127,24 +117,24 @@
     ? t.criado_em.split('T')[0].split('-').reverse().join('/')
     : 'sem data';
 
-      var classeCard = t.status === 'concluido' ? 'treino-card concluido' : 'treino-card';
+      var classeCard = t.status === 'concluido' ? 'cartao-treino concluido' : 'cartao-treino';
 
       html += '<div class="' + classeCard + '" id="treino-' + t.id + '">';
-      html +=   '<div class="treino-card-info">';
+      html +=   '<div class="info-cartao-treino">';
       html +=     '<h4>' + (t.descricao || 'sem descricao') + '</h4>';
       html +=     '<p>Professor: <strong>' + (t.professor_nome || '—') + '</strong></p>';
       html +=     '<p>Passado em: ' + data + '</p>';
       html +=   '</div>';
 
-      html +=   '<div class="treino-card-acoes" id="acoes-' + t.id + '">';
+      html +=   '<div class="acoes-cartao-treino" id="acoes-' + t.id + '">';
       if (mostrarBotaoConcluir) {
-        // Badge amarelo + botão para marcar como feito
-        html += '<span class="badge badge-yellow">Pendente</span>';
-        html += '<button class="btn btn-concluir" id="btn-' + t.id + '"';
+        
+        html += '<span class="selo selo-amarelo">Pendente</span>';
+        html += '<button class="botao botao-concluir" id="btn-' + t.id + '"';
         html += ' onclick="concluirTreino(' + t.id + ')">Marcar como feito</button>';
       } else {
-        // Apenas badge verde, sem botão
-        html += '<span class="badge badge-green">Concluido</span>';
+        
+        html += '<span class="selo selo-verde">Concluido</span>';
       }
       html +=   '</div>';
 
@@ -154,15 +144,12 @@
     return html;
   }
 
-  // ── Marca um treino como concluído ─────────────────────────
-
   function concluirTreino(treinoId) {
-    var btn = document.getElementById('btn-' + treinoId);
-
-    // Desabilita o botão para evitar cliques duplos
-    if (btn) {
-      btn.disabled    = true;
-      btn.textContent = 'Salvando...';
+    var botao = document.getElementById('btn-' + treinoId);
+    
+    if (botao) {
+      botao.disabled    = true;
+      botao.textContent = 'Salvando...';
     }
 
     fetch('/treinos/concluir/' + treinoId, {
@@ -172,22 +159,22 @@
     .then(function(r) { return r.json(); })
     .then(function(dados) {
       if (dados.mensagem === 'Treino concluido!') {
-        // Recarrega a lista inteira para refletir a mudança corretamente
-        toast('Treino marcado como feito!');
+        
+        alerta('Treino marcado como feito!');
         carregarTreinos();
       } else {
-        toast('Erro ao concluir treino.', 'error');
-        if (btn) {
-          btn.disabled    = false;
-          btn.textContent = 'Marcar como feito';
+        alerta('Erro ao concluir treino.', 'erro');
+        if (botao) {
+          botao.disabled    = false;
+          botao.textContent = 'Marcar como feito';
         }
       }
     })
     .catch(function() {
-      toast('Erro ao conectar com o servidor.', 'error');
-      if (btn) {
-        btn.disabled    = false;
-        btn.textContent = 'Marcar como feito';
+      alerta('Erro ao conectar com o servidor.', 'erro');
+      if (botao) {
+        botao.disabled    = false;
+        botao.textContent = 'Marcar como feito';
       }
     });
   }

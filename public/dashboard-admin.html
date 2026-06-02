@@ -2,81 +2,80 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1
+  <meta name="viewport" content="width=device-width, initial-scale=1>.0">
   <title>NextGen - Dashboard Admin</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styleDashboardAdmin.css">
 </head>
 <body>
-<div class="layout">
+<div class="estrutura">
 
-  <nav class="sidebar">
+  <nav class="menu-lateral">
     <img class="logo" src="../Logo/Next-removebg-preview.png">
-    <a href="dashboard-admin.html" class="sidebar-link active">Dashboard</a>
-    <a href="perfil.html" class="sidebar-link">Perfil</a>
-    <a href="peneiras.html" class="sidebar-link">Peneiras</a>
-    <a href="criar-peneira.html" class="sidebar-link">Criar Peneira</a>
-    <a href="treinos-professor.html" class="sidebar-link">Criar Treino</a>
-    <a href="#" class="sidebar-link" onclick="fazerLogout()">Sair</a>
+    <a href="dashboard-admin.html" class="link-menu ativo">Dashboard</a>
+    <a href="perfil.html" class="link-menu">Perfil</a>
+    <a href="peneiras.html" class="link-menu">Peneiras</a>
+    <a href="criar-peneira.html" class="link-menu">Criar Peneira</a>
+    <a href="treinos-professor.html" class="link-menu">Criar Treino</a>
+    <a href="#" class="link-menu" onclick="fazerLogout()">Sair</a>
   </nav>
 
-  <main class="main-content">
+  <main class="conteudo-principal">
 
-    <div class="page-title">
-      Dashboard <span id="adminTag" class="tag-tipo">Time</span>
+    <div class="titulo-pagina">
+      Dashboard <span id="adminTag" class="etiqueta-tipo">Time</span>
     </div>
-    <p class="page-sub">Temporada 2026 - Sao Paulo</p>
+    <p class="subtitulo-pagina">Temporada 2026 - Sao Paulo</p>
 
-    <div class="stats-grid" id="statsGrid">
-      <div class="stat-card"><p>Atletas cadastrados</p><h2 id="totalAtletas">...</h2><small id="subAtletas"></small></div>
-      <div class="stat-card"><p>Peneiras ativas</p><h2 id="totalPeneiras">...</h2><small id="subPeneiras"></small></div>
-      <div class="stat-card"><p>Treinos concluidos</p><h2 id="totalTreinosConcluidos">...</h2><small id="subTreinosConcluidos"></small></div>
-      <div class="stat-card"><p>Taxa de conclusao</p><h2 id="taxaConclusaoTreinos">...</h2><small id="subTaxa"></small></div>
+    <div class="grade-estatisticas" id="statsGrid">
+      <div class="cartao-estatistica"><p>Atletas cadastrados</p><h2 id="totalAtletas">...</h2><small id="subAtletas"></small></div>
+      <div class="cartao-estatistica"><p>Peneiras ativas</p><h2 id="totalPeneiras">...</h2><small id="subPeneiras"></small></div>
+      <div class="cartao-estatistica"><p>Treinos concluidos</p><h2 id="totalTreinosConcluidos">...</h2><small id="subTreinosConcluidos"></small></div>
+      <div class="cartao-estatistica"><p>Taxa de conclusao</p><h2 id="taxaConclusaoTreinos">...</h2><small id="subTaxa"></small></div>
     </div>
 
-    <div class="charts-row">
-      <div class="chart-box wide">
+    <div class="linha-graficos">
+      <div class="caixa-grafico largo">
         <h3>Peneiras por dia (semana atual vs. anterior)</h3>
         <canvas id="cPenDia"></canvas>
       </div>
-      <div class="chart-box">
+      <div class="caixa-grafico">
         <h3>Atletas por posicao</h3>
         <canvas id="cPosicoes"></canvas>
       </div>
     </div>
 
-    <div class="charts-row">
-      <div class="chart-box">
+    <div class="linha-graficos">
+      <div class="caixa-grafico">
         <h3>Times com mais peneiras</h3>
         <canvas id="cTimes"></canvas>
       </div>
-      <div class="chart-box wide">
+      <div class="caixa-grafico largo">
         <h3>Treinos concluidos por categoria</h3>
         <canvas id="cTreinosCategoria"></canvas>
       </div>
     </div>
 
-    <div class="charts-row">
-      <div class="chart-box">
+    <div class="linha-graficos">
+      <div class="caixa-grafico">
         <h3>Cadastros por mes</h3>
         <canvas id="cCadastros"></canvas>
       </div>
-      <div class="chart-box">
+      <div class="caixa-grafico">
         <h3>Atletas por categoria</h3>
         <canvas id="cFaixa"></canvas>
       </div>
     </div>
 
-    <div class="card" style="margin-top: 8px;">
-      <div class="search-bar-header">
+    <div class="cartao" style="margin-top: 8px;">
+      <div class="cabecalho-busca">
         <h3 class="lista-titulo">Atletas cadastrados</h3>
-        <a href="criar-peneira.html" class="btn btn-primary">
+        <a href="criar-peneira.html" class="botao botao-principal">
           Nova peneira
         </a>
       </div>
-      <div class="search-bar">
-        <input type="text" id="searchAtleta" placeholder="Buscar atleta por nome ou posicao..." oninput="filtrarAtletas()">
+      <div class="barra-busca">
+        <input type="text" id="pesquisarAtleta" placeholder="Buscar atleta por nome ou posicao..." oninput="filtrarAtletas()">
       </div>
       <div id="listaAtletas">
         <p style="color: #a0a0a0; text-align: center; padding: 24px;">Carregando atletas...</p>
@@ -109,29 +108,27 @@
   }
 
   function renderAtletas(lista) {
-    var container = document.getElementById('listaAtletas');
+    var caixa = document.getElementById('listaAtletas');
 
     if (lista.length === 0) {
-      container.innerHTML = '<p style="color: #a0a0a0; text-align: center; padding: 24px;">Nenhum atleta encontrado.</p>';
+      caixa.innerHTML = '<p style="color: #a0a0a0; text-align: center; padding: 24px;">Nenhum atleta encontrado.</p>';
       return;
     }
 
     var html = '';
     for (var i = 0; i < lista.length; i++) {
       var a = lista[i];
-      var nomeEncoded = encodeURIComponent(a.nome || 'A');
-      html += '<div class="athlete-row">';
-      html +=   '<img class="ath-avatar" src="https://ui-avatars.com/api/?name=' + nomeEncoded + '&background=0b1218&color=ee1919&size=38" alt="">';
+      html += '<div class="linha-atleta">';
       html +=   '<div>';
-      html +=     '<div class="ath-name">' + (a.nome || '-') + '</div>';
-      html +=     '<div class="ath-sub">' + (a.posicao || '-') + ' - ' + (a.categoria || '-') + '</div>';
+      html +=     '<div class="nome-atleta">' + (a.nome || '-') + '</div>';
+      html +=     '<div class="dados-atleta">' + (a.posicao || '-') + ' - ' + (a.categoria || '-') + '</div>';
       html +=   '</div>';
-      html +=   '<div class="ath-right">';
-      html +=     '<span class="badge ' + (a.tipo === 'aluno' ? 'badge-green' : 'badge-yellow') + '">' + (a.tipo || '-') + '</span>';
+      html +=   '<div class="lado-atleta">';
+      html +=     '<span class="selo ' + (a.tipo === 'aluno' ? 'selo-verde' : 'selo-amarelo') + '">' + (a.tipo || '-') + '</span>';
       html +=   '</div>';
       html += '</div>';
     }
-    container.innerHTML = html;
+    caixa.innerHTML = html;
   }
 
   var dadosTexto = localStorage.getItem('ng_user');
@@ -145,7 +142,7 @@
   }
 
   function filtrarAtletas() {
-    var busca = document.getElementById('searchAtleta').value.toLowerCase();
+    var busca = document.getElementById('pesquisarAtleta').value.toLowerCase();
     var filtrados = [];
 
     for (var i = 0; i < todosAtletas.length; i++) {

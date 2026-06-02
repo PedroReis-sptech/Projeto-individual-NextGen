@@ -188,3 +188,37 @@ INSERT INTO treino (professor_id, aluno_id, descricao, status_treino, data_concl
 
 SELECT * FROM usuario;
     
+ SELECT
+            (SELECT COUNT(*)
+             FROM treino
+             WHERE aluno_id = 4
+               AND MONTH(criado_em) = MONTH(CURDATE())
+               AND YEAR(criado_em)  = YEAR(CURDATE())
+            ) AS treinos_mes,
+
+            (SELECT ROUND(
+                COUNT(CASE WHEN status_treino = 'concluido' THEN 1 END) * 100.0
+                / CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END
+             , 1)
+             FROM treino
+             WHERE aluno_id = 4
+            ) AS taxa_presenca,
+
+            (SELECT COUNT(*)
+             FROM treino
+             WHERE aluno_id = 4
+               AND status_treino = 'concluido'
+            ) AS treinos_concluidos,
+
+            (
+                (SELECT COALESCE(desempenho, 0)
+                 FROM usuario
+                 WHERE id = 4
+                )
+                +
+                (SELECT COUNT(*)
+                 FROM treino
+                 WHERE aluno_id = 4
+                   AND status_treino = 'concluido'
+                )
+            ) AS desempenho

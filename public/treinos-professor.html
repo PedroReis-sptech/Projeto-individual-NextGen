@@ -10,7 +10,6 @@
 <body>
 <div class="layout">
 
-  <!-- Menu lateral -->
   <nav class="sidebar">
     <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo NextGen">
     <a href="dashboard-admin.html" class="sidebar-link">Dashboard</a>
@@ -26,18 +25,15 @@
     <div class="page-title">Gerenciar Treinos</div>
     <p class="page-sub">Crie e acompanhe os treinos dos seus atletas.</p>
 
-    <!-- Botão para abrir o modal de criação -->
     <div class="barra-acoes">
       <button class="btn btn-primary" onclick="abrirModal()">Criar Treino</button>
     </div>
 
-    <!-- Cabeçalho da lista -->
     <div class="lista-cabecalho">
       <span class="lista-titulo">Treinos Criados por Você</span>
       <span class="badge badge-red" id="totalTreinos">0 treinos</span>
     </div>
 
-    <!-- Lista de treinos do professor — preenchida pelo JavaScript -->
     <div id="listaTreinos">
       <p class="msg-carregando">Carregando treinos...</p>
     </div>
@@ -45,14 +41,12 @@
   </main>
 </div>
 
-<!-- Modal: formulário para criar um treino -->
 <div class="modal-overlay" id="modalCriar">
   <div class="modal-caixa">
 
     <button class="modal-fechar" onclick="fecharModal()">X</button>
     <h2 class="modal-titulo">Novo Treino</h2>
 
-    <!-- Seleciona qual aluno vai receber o treino -->
     <div class="form-group">
       <label for="selectAluno">Atleta</label>
       <select id="selectAluno" required>
@@ -60,7 +54,6 @@
       </select>
     </div>
 
-    <!-- Descrição do treino -->
     <div class="form-group" style="margin-top: 14px;">
       <label for="inputDescricao">Descrição do treino</label>
       <textarea id="inputDescricao" rows="4"
@@ -72,7 +65,6 @@
       <button class="btn btn-primary" onclick="criarTreino()">Criar Treino</button>
     </div>
 
-    <!-- Mensagem de feedback dentro do modal (erro ou carregando) -->
     <div id="msgModal" class="msg-modal"></div>
 
   </div>
@@ -81,27 +73,21 @@
 <script src="js/utils.js"></script>
 <script>
 
-  // Variável global que guarda o usuário logado
   var user = null;
 
-  // Quando a página terminar de carregar, executa esta função
   document.addEventListener('DOMContentLoaded', function() {
     user = Auth.current();
 
-    // Se não há usuário logado, ou se for aluno, redireciona
+
     if (!user || user.tipo === 'aluno') {
       window.location.href = 'dashboard-aluno.html';
       return;
     }
-
-    // Carrega a lista de atletas para o select do modal
+    
     carregarAlunos();
 
-    // CORRIGIDO: agora usa a rota correta (/treinos/professor/:id)
     carregarTreinosDoProfessor();
   });
-
-  // ── Funções do Modal ───────────────────────────────────────
 
   function abrirModal() {
     document.getElementById('modalCriar').classList.add('aberto');
@@ -113,13 +99,10 @@
   function fecharModal() {
     document.getElementById('modalCriar').classList.remove('aberto');
   }
-
-  // Fecha o modal se o usuário clicar fora da caixa
+  
   document.getElementById('modalCriar').addEventListener('click', function(e) {
     if (e.target === this) fecharModal();
   });
-
-  // ── Carrega a lista de alunos para o <select> ──────────────
 
   function carregarAlunos() {
     fetch('/usuarios/alunos')
@@ -137,14 +120,11 @@
       });
   }
 
-  // ── Cria o treino e salva no banco ─────────────────────────
-
   function criarTreino() {
     var alunoId   = document.getElementById('selectAluno').value;
     var descricao = document.getElementById('inputDescricao').value.trim();
     var msg       = document.getElementById('msgModal');
-
-    // Validação simples no front antes de enviar para o servidor
+    
     if (!alunoId || !descricao) {
       msg.style.color   = '#ee1919';
       msg.textContent   = 'Preencha todos os campos.';
@@ -153,43 +133,46 @@
 
     msg.style.color = '#a0a0a0';
     msg.textContent = 'Salvando...';
-
-    // Envia os dados para POST /treinos/criar
+    
     fetch('/treinos/criar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        professorId: user.id,   // id do professor logado
-        alunoId:     alunoId,   // id do aluno selecionado no select
-        descricao:   descricao  // texto digitado
+        professorId: user.id,   
+        alunoId:     alunoId,   
+        descricao:   descricao  
       })
     })
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) {
+        return r.json().then(function(errorBody) {
+          throw new Error(errorBody.mensagem || 'Erro ao criar treino.');
+        });
+      }
+      return r.json();
+    })
     .then(function(dados) {
-      // Se voltou uma mensagem de erro do servidor:
       if (dados.mensagem && !dados.id) {
         msg.style.color = '#ee1919';
         msg.textContent = dados.mensagem;
         return;
       }
-      // Sucesso: fecha o modal, exibe toast e recarrega a lista
+
       toast('Treino criado com sucesso!');
       fecharModal();
       carregarTreinosDoProfessor();
     })
-    .catch(function() {
+    .catch(function(erro) {
       msg.style.color = '#ee1919';
-      msg.textContent = 'Erro ao conectar com o servidor.';
+      msg.textContent = erro.message || 'Erro ao conectar com o servidor.';
     });
   }
 
-  // ── Carrega os treinos criados por este professor ──────────
-  // CORRIGIDO: usa /treinos/professor/:id em vez de iterar por aluno
 
   function carregarTreinosDoProfessor() {
     fetch('/treinos/professor/' + user.id)
       .then(function(r) {
-        // 204 = sem conteúdo (lista vazia), retorna array vazio
+        
         if (r.status === 204) return [];
         return r.json();
       })
@@ -202,16 +185,12 @@
       });
   }
 
-  // ── Monta o HTML dos cards de treino na tela ───────────────
-
   function renderizarTreinos(lista) {
     var container = document.getElementById('listaTreinos');
     var badge     = document.getElementById('totalTreinos');
 
-    // Atualiza o contador no topo da lista
     badge.textContent = lista.length + (lista.length === 1 ? ' treino' : ' treinos');
 
-    // Lista vazia: mostra um estado vazio amigável
     if (lista.length === 0) {
       container.innerHTML =
         '<div class="estado-vazio">' +
@@ -223,12 +202,12 @@
 
     var html = '';
     lista.forEach(function(t) {
-      // Formata a data de criação para o padrão brasileiro
+      
       var data = t.criado_em
     ? t.criado_em.split('T')[0].split('-').reverse().join('/')
     : 'sem data';
 
-      // Define a cor do badge baseado no status
+      
       var badgeClass = t.status === 'concluido' ? 'badge-green' : 'badge-yellow';
       var badgeTexto = t.status === 'concluido' ? 'Concluido' : 'Pendente';
 

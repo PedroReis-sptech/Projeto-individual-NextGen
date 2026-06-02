@@ -11,7 +11,7 @@ body {
     padding: 40px 20px;
 }
 
-.container {
+.caixa {
     max-width: 1200px;
     margin: auto;
 }
@@ -36,7 +36,7 @@ body {
     font-size: 16px;
 }
 
-.busca-wrap {
+.caixa-busca {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -47,7 +47,7 @@ body {
     min-width: 280px;
 }
 
-.busca-wrap input {
+.caixa-busca input {
     background: transparent;
     border: none;
     color: white;
@@ -57,17 +57,17 @@ body {
     padding: 0;
 }
 
-.busca-wrap input::placeholder {
+.caixa-busca input::placeholder {
     color: #555;
 }
 
-.grid-peneiras {
+.grade-peneiras {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
 }
 
-.card-peneira {
+.cartao-peneira {
     background-color: #0b1218;
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 25px;
@@ -78,12 +78,12 @@ body {
     gap: 12px;
 }
 
-.card-peneira:hover {
+.cartao-peneira:hover {
     transform: translateY(-6px);
     border-color: #ee1919;
 }
 
-.card-header {
+.cabecalho-cartao {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -97,7 +97,7 @@ body {
     flex-shrink: 0;
 }
 
-.badge-clube {
+.selo-clube {
     background: #070d13;
     padding: 5px 12px;
     border-radius: 20px;
@@ -106,19 +106,19 @@ body {
     font-weight: bold;
 }
 
-.card-peneira h3 {
+.cartao-peneira h3 {
     font-size: 17px;
     color: white;
     margin: 0;
 }
 
-.card-infos {
+.infos-cartao {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.card-info-item {
+.item-info {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -126,7 +126,7 @@ body {
     color: #b0b0b0;
 }
 
-.info-footer {
+.rodape-info {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
@@ -135,7 +135,7 @@ body {
     padding-top: 14px;
 }
 
-.btn-detalhes {
+.botao-detalhes {
     background-color: #ee1919;
     color: white;
     text-decoration: none;
@@ -149,7 +149,7 @@ body {
     transition: background-color 0.2s;
 }
 
-.btn-detalhes:hover {
+.botao-detalhes:hover {
     background-color: #b91212;
 }
 
@@ -175,7 +175,7 @@ body {
     text-align: center;
 }
 
-.btn-voltar {
+.botao-voltar {
     color: gray;
     text-decoration: none;
     font-size: 20px;
@@ -185,6 +185,6 @@ body {
     transition: color 0.2s;
 }
 
-.btn-voltar:hover {
+.botao-voltar:hover {
     color: white;
 }

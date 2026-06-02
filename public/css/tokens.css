@@ -54,7 +54,7 @@ label {
     margin-bottom: 6px;
 }
 
-.btn {
+.botao {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -70,46 +70,46 @@ label {
     transition: all 0.2s;
 }
 
-.btn-primary {
+.botao-principal {
     background: #ee1919;
     color: #fff;
 }
 
-.btn-primary:hover {
+.botao-principal:hover {
     background: #b91212;
     transform: translateY(-1px);
 }
 
-.btn-ghost {
+.botao-transparente {
     background: transparent;
     color: #a0a0a0;
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.btn-ghost:hover {
+.botao-transparente:hover {
     color: #ffffff;
     border-color: #555;
 }
 
-.btn-danger {
+.botao-perigo {
     background: rgba(238, 25, 25, 0.15);
     color: #ee1919;
     border: 1px solid rgba(238, 25, 25, 0.4);
 }
 
-.btn-danger:hover {
+.botao-perigo:hover {
     background: #ee1919;
     color: #fff;
 }
 
-.card {
+.cartao {
     background: #0b1218;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 24px;
 }
 
-.badge {
+.selo {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 20px;
@@ -119,27 +119,27 @@ label {
     letter-spacing: 0.05em;
 }
 
-.badge-red {
+.selo-vermelho {
     background: rgba(238, 25, 25, 0.15);
     color: #ee1919;
 }
 
-.badge-green {
+.selo-verde {
     background: rgba(16, 185, 129, 0.15);
     color: #10b981;
 }
 
-.badge-yellow {
+.selo-amarelo {
     background: rgba(245, 158, 11, 0.15);
     color: #f59e0b;
 }
 
-.badge-blue {
+.selo-azul {
     background: rgba(99, 102, 241, 0.15);
     color: #818cf8;
 }
 
-.toast-container {
+.caixa-alertas {
     position: fixed;
     bottom: 24px;
     right: 24px;
@@ -149,7 +149,7 @@ label {
     z-index: 9999;
 }
 
-.toast {
+.alerta {
     padding: 14px 20px;
     border-radius: 10px;
     font-size: 14px;
@@ -160,24 +160,24 @@ label {
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
-.toast-success {
+.alerta-sucesso {
     background: #0f2a1e;
     border: 1px solid #10b981;
     color: #10b981;
 }
 
-.toast-error {
+.alerta-erro {
     background: #2a0f0f;
     border: 1px solid #ee1919;
     color: #ee1919;
 }
 
-.layout {
+.estrutura {
     display: flex;
     min-height: 100vh;
 }
 
-.sidebar {
+.menu-lateral {
     width: 220px;
     min-height: 100vh;
     background: #0b1218;
@@ -192,13 +192,13 @@ label {
     z-index: 100;
 }
 
-.sidebar .logo {
+.menu-lateral .logo {
     width: 90px;
     margin: 0 auto 28px;
     display: block;
 }
 
-.sidebar-link {
+.link-menu {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -210,30 +210,30 @@ label {
     transition: all 0.15s;
 }
 
-.sidebar-link:hover {
+.link-menu:hover {
     background: rgba(255, 255, 255, 0.05);
     color: #ffffff;
 }
 
-.sidebar-link.active {
+.link-menu.ativo {
     background: #ee1919;
     color: #fff;
 }
 
-.sidebar-sep {
+.divisor-menu {
     height: 1px;
     background: rgba(255, 255, 255, 0.08);
     margin: 10px 0;
 }
 
-.main-content {
+.conteudo-principal {
     margin-left: 220px;
     padding: 36px;
     flex: 1;
     max-width: calc(100vw - 220px);
 }
 
-.page-title {
+.titulo-pagina {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 32px;
     font-weight: 800;
@@ -242,27 +242,27 @@ label {
     margin-bottom: 4px;
 }
 
-.page-sub {
+.subtitulo-pagina {
     color: #a0a0a0;
     font-size: 14px;
     margin-bottom: 28px;
 }
 
-.stats-grid {
+.grade-estatisticas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
     margin-bottom: 28px;
 }
 
-.stat-card {
+.cartao-estatistica {
     background: #0b1218;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 20px;
 }
 
-.stat-card p {
+.cartao-estatistica p {
     font-size: 12px;
     color: #a0a0a0;
     text-transform: uppercase;
@@ -270,26 +270,26 @@ label {
     margin-bottom: 8px;
 }
 
-.stat-card h2 {
+.cartao-estatistica h2 {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 34px;
     font-weight: 800;
     color: #ee1919;
 }
 
-.stat-card small {
+.cartao-estatistica small {
     font-size: 12px;
     color: #555;
 }
 
-.charts-row {
+.linha-graficos {
     display: flex;
     gap: 16px;
     margin-bottom: 16px;
     flex-wrap: wrap;
 }
 
-.chart-box {
+.caixa-grafico {
     background: #0b1218;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
@@ -298,11 +298,11 @@ label {
     min-width: 260px;
 }
 
-.chart-box.wide {
+.caixa-grafico.largo {
     flex: 2;
 }
 
-.chart-box h3 {
+.caixa-grafico h3 {
     font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
@@ -311,22 +311,22 @@ label {
     margin-bottom: 16px;
 }
 
-.form-grid {
+.grade-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
 
-.form-grid .full {
+.grade-form .completo {
     grid-column: 1 / -1;
 }
 
-.form-group {
+.grupo-form {
     display: flex;
     flex-direction: column;
 }
 
-.table-wrap {
+.caixa-tabela {
     overflow-x: auto;
 }
 
@@ -352,10 +352,4 @@ th {
 
 tr:hover td {
     background: rgba(255, 255, 255, 0.03);
-}
-
-.material-icons {
-    font-size: 18px;
-    line-height: 1;
-    vertical-align: middle;
 }

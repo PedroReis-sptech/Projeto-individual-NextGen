@@ -9,14 +9,14 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="caixa">
 
         <header class="cabecalho">
             <div class="cabecalho-texto">
                 <h1>Proximas Peneiras</h1>
                 <p>Oportunidades reais nos grandes clubes de Sao Paulo.</p>
             </div>
-            <div class="busca-wrap">
+            <div class="caixa-busca">
                 <input
                     type="text"
                     id="campoBusca"
@@ -26,12 +26,12 @@
             </div>
         </header>
 
-        <div class="grid-peneiras" id="gridPeneiras">
+        <div class="grade-peneiras" id="gridPeneiras">
             <p class="msg-carregando">Carregando peneiras...</p>
         </div>
 
         <div class="acoes-finais">
-            <a href="dashboard-aluno.html" class="btn-voltar">
+            <a href="dashboard-aluno.html" class="botao-voltar">
                 Voltar para a Dashboard
             </a>
         </div>
@@ -76,34 +76,34 @@
                     dataFormatada = p.data_realizacao.split('T')[0].split('-').reverse().join('/');
                 }
 
-                html += '<div class="card-peneira">';
+                html += '<div class="cartao-peneira">';
 
-                html += '<div class="card-header">';
+                html += '<div class="cabecalho-cartao">';
                 html += '<div class="circulo-time"></div>';
-                html += '<span class="badge-clube">' + (p.nome_clube || p.nome_time || 'Sem clube') + '</span>';
+                html += '<span class="selo-clube">' + (p.nome_clube || p.nome_time || 'Sem clube') + '</span>';
                 html += '</div>';
 
                 html += '<h3>' + (p.nome) + '</h3>';
 
-                html += '<div class="card-infos">';
+                html += '<div class="infos-cartao">';
 
-                html += '<div class="card-info-item">';
+                html += '<div class="item-info">';
                 html += '<span>Data:</span>';
                 html += '<span>' + dataFormatada + (p.horario ? ' ás ' + p.horario : '') + '</span>';
                 html += '</div>';
 
-                html += '<div class="card-info-item">';
+                html += '<div class="item-info">';
                 html += '<span>Local:</span>';
                 html += '<span>' + (p.cidade || p.local_endereco) + '</span>';
                 html += '</div>';
 
-                html += '<div class="card-info-item">';
+                html += '<div class="item-info">';
                 html += '<span>Categoria:</span>';
                 html += '<span>' + (p.categoria) + '</span>';
                 html += '</div>';
 
                 if (p.vagas) {
-                    html += '<div class="card-info-item">';
+                    html += '<div class="item-info">';
                     html += '<span>Vagas:</span>';
                     html += '<span>' + p.vagas + '</span>';
                     html += '</div>';
@@ -111,9 +111,9 @@
 
                 html += '</div>';
 
-                html += '<div class="info-footer">';
-                html += '<span class="badge badge-green">aberta</span>';
-                html += '<a href="detalhe-peneira.html?id=' + p.id + '" class="btn-detalhes">';
+                html += '<div class="rodape-info">';
+                html += '<span class="selo selo-verde">aberta</span>';
+                html += '<a href="detalhe-peneira.html?id=' + p.id + '" class="botao-detalhes">';
                 html += 'Ver detalhes';
                 html += '</a>';
                 html += '</div>';

@@ -1,18 +1,8 @@
-/*
- * styleTreinos.css
- * Estilos compartilhados para treinos-professor.html e meus-treinos.html
- * Usa a fonte Barlow já presente no projeto (tokens.css)
- */
-
-/* ── Barra de ações (botão "Criar Treino") ─────────────────── */
-
 .barra-acoes {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 24px;
 }
-
-/* ── Cabeçalho da lista com título + contador ─────────────── */
 
 .lista-cabecalho {
     display: flex;
@@ -30,9 +20,89 @@
     color: #ffffff;
 }
 
-/* ── Label de seção (ex: "Pendentes" / "Concluidos") ─────── */
+.layout,
+.estrutura {
+    display: flex;
+    min-height: 100vh;
+    background: #050a0e;
+}
 
-.secao-label {
+.menu-lateral,
+.sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #0b1218;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.menu-lateral .logo,
+.sidebar .logo {
+    width: 90px;
+    max-width: 140px;
+    display: block;
+    margin: 0 auto 16px;
+}
+
+.link-menu,
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #a0a0a0;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.2s, color 0.2s;
+}
+
+.link-menu:hover,
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+}
+
+.link-menu.ativo,
+.sidebar-link.active {
+    background: #ee1919;
+    color: #ffffff;
+}
+
+.conteudo-principal,
+.main-content {
+    margin-left: 240px;
+    padding: 36px 38px;
+    flex: 1;
+    min-height: 100vh;
+}
+
+.titulo-pagina,
+.page-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.subtitulo-pagina,
+.page-sub {
+    color: #a0a0a0;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+
+.rotulo-secao {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 13px;
     font-weight: 700;
@@ -44,9 +114,8 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* ── Card de treino (base) ────────────────────────────────── */
-
-.treino-card {
+.treino-card,
+.cartao-treino {
     background: #0e1822;
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 12px;
@@ -56,63 +125,72 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, transform 0.2s;
 }
 
-.treino-card:hover {
+.treino-card:hover,
+.cartao-treino:hover {
     border-color: rgba(238, 25, 25, 0.35);
+    transform: translateY(-1px);
 }
 
-/* Card com status concluído: borda verde sutil */
-.treino-card.concluido {
+.treino-card.concluido,
+.cartao-treino.concluido {
     border-color: rgba(16, 185, 129, 0.25);
     background: rgba(16, 185, 129, 0.04);
 }
 
-/* ── Texto dentro do card ─────────────────────────────────── */
-
-.treino-card-info {
+.treino-card-info,
+.info-cartao-treino {
     flex: 1;
-    min-width: 0; /* evita que texto longo quebre o layout */
+    min-width: 0;
 }
 
-.treino-card-info h4 {
+.treino-card-info h4,
+.info-cartao-treino h4 {
     font-family: 'Barlow', sans-serif;
     font-size: 14px;
     font-weight: 600;
     color: #ffffff;
     margin: 0 0 6px 0;
-    /* Corta o texto se for muito longo e adiciona "..." */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.treino-card-info p {
+.treino-card-info p,
+.info-cartao-treino p {
     font-family: 'Barlow', sans-serif;
     font-size: 13px;
     color: #a0a0a0;
     margin: 0 0 3px 0;
 }
 
-.treino-card-info p strong {
+.treino-card-info p strong,
+.info-cartao-treino p strong {
     color: #ffffff;
     font-weight: 600;
 }
 
-/* ── Área de ações do card (badge + botão) ────────────────── */
+.estado-vazio {
+    text-align: center;
+    padding: 48px 20px;
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: #a0a0a0;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+}
 
-.treino-card-acoes {
+.acoes-cartao-treino {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 10px;
-    flex-shrink: 0; /* impede que a área de ações encolha */
+    flex-shrink: 0;
 }
 
-/* ── Botão "Marcar como feito" ────────────────────────────── */
-
-.btn-concluir {
+.botao-concluir {
     background: rgba(16, 185, 129, 0.12);
     color: #10b981;
     border: 1px solid rgba(16, 185, 129, 0.35);
@@ -126,29 +204,35 @@
     white-space: nowrap;
 }
 
-.btn-concluir:hover {
+.botao-concluir:hover {
     background: #10b981;
     color: #ffffff;
 }
 
-.btn-concluir:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.selo {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* ── Estado vazio (quando não há treinos) ─────────────────── */
-
-.estado-vazio {
-    text-align: center;
-    padding: 48px 20px;
-    border: 1px dashed rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    color: #a0a0a0;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
+.selo-vermelho {
+    background: rgba(238, 25, 25, 0.15);
+    color: #ee1919;
 }
 
-/* ── Mensagens de carregando / erro ──────────────────────── */
+.selo-verde {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+.selo-amarelo {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
 
 .msg-carregando {
     color: #555;
@@ -162,33 +246,135 @@
     padding: 20px 0;
 }
 
-/* ── Modal: fundo escuro atrás da caixa ──────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s, color 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: #ee1919;
+    color: #ffffff;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.botao {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.botao-principal {
+    background: #ee1919;
+    color: #fff;
+}
+
+.botao-principal:hover {
+    background: #b91212;
+    transform: translateY(-1px);
+}
+
+.botao-transparente {
+    background: transparent;
+    color: #a0a0a0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.botao-transparente:hover {
+    color: #ffffff;
+    border-color: #555;
+}
+
+.botao-perigo {
+    background: rgba(238, 25, 25, 0.15);
+    color: #ee1919;
+    border: 1px solid rgba(238, 25, 25, 0.4);
+}
+
+.botao-perigo:hover {
+    background: #ee1919;
+    color: #fff;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.badge-red {
+    background: rgba(238, 25, 25, 0.14);
+    color: #ee1919;
+}
+
+.badge-green {
+    background: rgba(16, 185, 129, 0.14);
+    color: #10b981;
+}
+
+.badge-yellow {
+    background: rgba(245, 158, 11, 0.14);
+    color: #f59e0b;
+}
 
 .modal-overlay {
     display: none;
     position: fixed;
-    inset: 0; /* equivale a top:0; right:0; bottom:0; left:0 */
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(4px);
+    inset: 0;
     z-index: 500;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
-/* Quando a classe .aberto é adicionada, o modal aparece */
 .modal-overlay.aberto {
     display: flex;
 }
-
-/* ── Modal: a caixa em si ─────────────────────────────────── */
 
 .modal-caixa {
     background: #0b1218;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    padding: 32px;
+    padding: 28px 24px 24px;
     width: 100%;
-    max-width: 480px;
+    max-width: 500px;
     position: relative;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
@@ -198,11 +384,10 @@
     font-size: 22px;
     font-weight: 800;
     text-transform: uppercase;
-    margin: 0 0 22px 0;
+    margin: 0 0 18px 0;
     color: #ffffff;
 }
 
-/* Botão "X" para fechar o modal */
 .modal-fechar {
     position: absolute;
     top: 16px;
@@ -215,22 +400,60 @@
     font-weight: 700;
     cursor: pointer;
     line-height: 1;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 8px;
+    border-radius: 6px;
     transition: color 0.2s, background 0.2s;
 }
 
 .modal-fechar:hover {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.08);
 }
 
-/* Mensagem de feedback dentro do modal */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #131b24;
+    color: #ffffff;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    outline: none;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: rgba(238, 25, 25, 0.45);
+}
+
+.btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
 .msg-modal {
     min-height: 20px;
     font-family: 'Barlow', sans-serif;
     font-size: 13px;
     font-weight: 600;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 12px;
+    color: #ffffff;
 }

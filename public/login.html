@@ -9,60 +9,60 @@
   <link rel="stylesheet" href="css/styleLogin.css">
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow"></div>
+  <div class="grade-fundo"></div>
+  <div class="brilho-fundo"></div>
 
-  <div class="card">
-    <div class="logo-wrap">
+  <div class="cartao">
+    <div class="caixa-logo">
       <img src="../Logo/Next-removebg-preview.png" alt="NextGen" onerror="this.style.display='none'">
     </div>
 
     <!-- Abas -->
-    <div class="tabs">
-      <button class="tab-btn active" id="btnLogin"    onclick="switchTab('login')">Entrar</button>
-      <button class="tab-btn"        id="btnCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
+    <div class="abas">
+      <button class="botao-aba ativo" id="btnLogin"    onclick="switchTab('login')">Entrar</button>
+      <button class="botao-aba"        id="btnCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
     </div>
 
     <!-- Login -->
-    <div class="form-section visible" id="secLogin">
+    <div class="secao-form visivel" id="secLogin">
       <h2>Bem-vindo de volta</h2>
-      <p class="sub">Entre para ver as peneiras abertas.</p>
+      <p class="texto-sub">Entre para ver as peneiras abertas.</p>
 
-      <div class="form-group">
+      <div class="grupo-form">
         <label>E-mail</label>
         <input id="inEmail" type="email" placeholder="seu@email.com" required>
       </div>
-      <div class="form-group">
+      <div class="grupo-form">
         <label>Senha</label>
         <input id="inSenha" type="password" placeholder="••••••••" required>
       </div>
 
-      <button class="btn btn-primary" onclick="logar()">Entrar</button>
-      <div class="msg" id="msgLogin"></div>
+      <button class="botao botao-principal" onclick="logar()">Entrar</button>
+      <div class="mensagem" id="msgLogin"></div>
     </div>
 
     <!-- Cadastro -->
-    <div class="form-section" id="secCadastro">
+    <div class="secao-form" id="secCadastro">
       <h2>Crie sua conta</h2>
 
-      <div class="grid2">
-        <div class="form-group full">
+      <div class="grade2">
+        <div class="grupo-form completo">
           <label>Nome completo *</label>
           <input id="cNome" type="text" placeholder="Seu nome" required>
         </div>
-        <div class="form-group full">
+        <div class="grupo-form completo">
           <label>E-mail *</label>
           <input id="cEmail" type="email" placeholder="seu@email.com" required>
         </div>
-        <div class="form-group">
+        <div class="grupo-form">
           <label>Senha *</label>
           <input id="cSenha" type="password" placeholder="Mínimo 6 caracteres" required>
         </div>
-        <div class="form-group">
+        <div class="grupo-form">
           <label>Data de nascimento</label>
           <input id="cNasc" type="date">
         </div>
-        <div class="form-group">
+        <div class="grupo-form">
           <label>Posição *</label>
           <select id="cPosicao" required>
             <option value="">Selecione</option>
@@ -74,7 +74,7 @@
             <option>Atacante</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="grupo-form">
           <label>Categoria *</label>
           <select id="cCategoria" required>
             <option value="">Selecione</option>
@@ -86,26 +86,26 @@
             <option>Profissional</option>
           </select>
         </div>
-        <div class="form-group full">
+        <div class="grupo-form completo">
           <label>Time do coração</label>
           <input id="cTime" type="text" placeholder="Ex: Corinthians">
         </div>
-        <div class="form-group">
+        <div class="grupo-form">
           <label>Altura (cm)</label>
           <input id="cAltura" type="number" placeholder="Ex: 175">
         </div>
-        <div class="form-group">
+        <div class="grupo-form">
           <label>Peso (kg)</label>
           <input id="cPeso" type="number" placeholder="Ex: 68">
         </div>
-        <div class="form-group full">
+        <div class="grupo-form completo">
           <label>Cidade</label>
           <input id="cCidade" type="text" placeholder="Ex: São Paulo">
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="cadastrar()">Criar conta</button>
-      <div class="msg" id="msgCadastro"></div>
+      <button class="botao botao-principal" onclick="cadastrar()">Criar conta</button>
+      <div class="mensagem" id="msgCadastro"></div>
     </div>
   </div>
 
@@ -120,29 +120,27 @@
 
     // Troca abas
     function switchTab(aba) {
-      document.getElementById('secLogin').classList.toggle('visible',    aba === 'login');
-      document.getElementById('secCadastro').classList.toggle('visible', aba === 'cadastro');
-      document.getElementById('btnLogin').classList.toggle('active',     aba === 'login');
-      document.getElementById('btnCadastro').classList.toggle('active',  aba === 'cadastro');
+      document.getElementById('secLogin').classList.toggle('visivel',    aba === 'login');
+      document.getElementById('secCadastro').classList.toggle('visivel', aba === 'cadastro');
+      document.getElementById('btnLogin').classList.toggle('ativo',     aba === 'login');
+      document.getElementById('btnCadastro').classList.toggle('ativo',  aba === 'cadastro');
     }
 
     // LOGIN
     function logar() {
       var email = document.getElementById('inEmail').value.trim();
       var senha = document.getElementById('inSenha').value.trim();
-      var msg   = document.getElementById('msgLogin');
+      var mensagem   = document.getElementById('msgLogin');
 
-      // Validação básica no front
       if (!email || !senha) {
-        msg.textContent = 'Preencha o e-mail e a senha.';
-        msg.className = 'msg error';
+        mensagem.textContent = 'Preencha o e-mail e a senha.';
+        mensagem.className = 'mensagem erro';
         return;
       }
 
-      msg.textContent = 'Verificando...';
-      msg.className = 'msg';
+      mensagem.textContent = 'Verificando...';
+      mensagem.className = 'mensagem';
 
-      // Chama a API real no servidor Node.js
       fetch('/usuarios/autenticar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -155,17 +153,15 @@
         return resposta.json();
       })
       .then(function(dados) {
-        // Se a API retornou um erro (ex: 403 - usuário não encontrado)
         if (dados.mensagem) {
-          msg.textContent = dados.mensagem;
-          msg.className = 'msg error';
+          mensagem.textContent = dados.mensagem;
+          mensagem.className = 'mensagem erro';
           return;
         }
 
-        // Login bem sucedido: salva o usuário e redireciona
         Auth.login(dados);
-        msg.textContent = 'Redirecionando...';
-        msg.className = 'msg success';
+        mensagem.textContent = 'Redirecionando...';
+        mensagem.className = 'mensagem sucesso';
 
         setTimeout(function() {
           if (dados.tipo === 'aluno') {
@@ -176,10 +172,9 @@
         }, 800);
       })
       .catch(function(erro) {
-        // Erro de conexão com o servidor
         console.error('Erro ao conectar com o servidor:', erro);
-        msg.textContent = 'Erro ao conectar com o servidor. Verifique se ele está rodando.';
-        msg.className = 'msg error';
+        mensagem.textContent = 'Erro ao conectar com o servidor. Verifique se ele está rodando.';
+        mensagem.className = 'mensagem erro';
       });
     }
 
@@ -190,25 +185,22 @@
       var senha     = document.getElementById('cSenha').value.trim();
       var posicao   = document.getElementById('cPosicao').value;
       var categoria = document.getElementById('cCategoria').value;
-      var msg       = document.getElementById('msgCadastro');
+      var mensagem       = document.getElementById('msgCadastro');
 
-      // Validações antes de enviar para o servidor
       if (!nome || !email || !senha || !posicao || !categoria) {
-        msg.textContent = 'Preencha todos os campos obrigatórios (marcados com *).';
-        msg.className = 'msg error';
+        mensagem.textContent = 'Preencha todos os campos obrigatórios (marcados com *).';
+        mensagem.className = 'mensagem erro';
         return;
       }
       if (senha.length < 6) {
-        msg.textContent = 'A senha deve ter ao menos 6 caracteres.';
-        msg.className = 'msg error';
+        mensagem.textContent = 'A senha deve ter ao menos 6 caracteres.';
+        mensagem.className = 'mensagem erro';
         return;
       }
 
-      msg.textContent = 'Cadastrando...';
-      msg.className = 'msg';
+      mensagem.textContent = 'Cadastrando...';
+      mensagem.className = 'mensagem';
 
-      // Chama a API real no servidor Node.js
-      // O controller espera os campos com o sufixo "Server"
       fetch('/usuarios/cadastrar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -229,19 +221,15 @@
         return resposta.json();
       })
       .then(function(dados) {
-        // Se o servidor retornou uma mensagem de erro
         if (dados.mensagem && dados.id === undefined) {
-          msg.textContent = dados.mensagem;
-          msg.className = 'msg error';
+          mensagem.textContent = dados.mensagem;
+          mensagem.className = 'mensagem erro';
           return;
         }
 
-        // Cadastro feito com sucesso!
-        // Agora faz login automático para redirecionar o usuário
-        msg.textContent = 'Conta criada! Fazendo login...';
-        msg.className = 'msg success';
+        mensagem.textContent = 'Conta criada! Fazendo login...';
+        mensagem.className = 'mensagem sucesso';
 
-        // Salva os dados básicos na sessão e redireciona
         Auth.login({
           id:           dados.id,
           nome:         nome,
@@ -258,8 +246,8 @@
       })
       .catch(function(erro) {
         console.error('Erro ao cadastrar:', erro);
-        msg.textContent = 'Erro ao conectar com o servidor. Verifique se ele está rodando.';
-        msg.className = 'msg error';
+        mensagem.textContent = 'Erro ao conectar com o servidor. Verifique se ele está rodando.';
+        mensagem.className = 'mensagem erro';
       });
     }
 

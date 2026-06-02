@@ -10,53 +10,46 @@
   <link rel="stylesheet" href="css/stylePerfil.css">
 </head>
 <body>
-<div class="layout">
+<div class="estrutura">
 
   <!-- ===== MENU LATERAL ===== -->
   <!-- Preenchido dinamicamente pelo JavaScript abaixo -->
-  <nav class="sidebar" id="sidebar"></nav>
+  <nav class="menu-lateral" id="menu-lateral"></nav>
 
   <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-  <main class="main-content">
+  <main class="conteudo-principal">
 
     <!-- Herói do perfil: avatar + nome + badges -->
-    <div class="profile-hero">
-      <div class="avatar-wrap">
-        <img id="avatarPreview" class="avatar-img"
-             src="https://ui-avatars.com/api/?name=Atleta&background=ee1919&color=fff&size=110"
-             alt="Foto de perfil">
-        <!-- Input de arquivo oculto -->
-        <input type="file" id="avatarInput" accept="image/*">
+    <div class="destaque-perfil">
+      <div class="caixa-avatar">
       </div>
-      <div class="hero-info">
+      <div class="info-destaque">
         <h2 id="heroNome"></h2>
         <p  id="heroEmail"></p>
-        <div class="hero-badges" id="heroBadges"></div>
+        <div class="selos-destaque" id="heroBadges"></div>
       </div>
     </div>
 
-    <!-- Navegação por abas -->
-    <div class="tabs-nav">
-      <button class="tab-btn active" onclick="switchTab('dados',  this)">Meus Dados</button>
+    <div class="nav-abas">
+      <button class="botao-aba ativo">Meus Dados</button>
     </div>
 
-    <!-- ===== ABA: MEUS DADOS ===== -->
-    <div class="tab-panel visible" id="tab-dados">
-      <div class="card">
+    <div class="painel-aba visivel" id="tab-dados">
+      <div class="cartao">
 
-        <div class="section-title">Informações Pessoais</div>
-        <div class="form-grid">
-          <div class="form-group"><label>Nome *</label>            <input id="fNome"  required></div>
-          <div class="form-group"><label>Login (e-mail) *</label>  <input id="fEmail" type="email" required></div>
-          <div class="form-group"><label>Nova senha</label>        <input id="fSenha"  type="password" placeholder="Deixe em branco para manter"></div>
-          <div class="form-group"><label>Confirmar senha</label>   <input id="fSenha2" type="password" placeholder="Repita a senha"></div>
-          <div class="form-group"><label>Data de nascimento</label><input id="fNasc"   type="date"></div>
-          <div class="form-group"><label>Cidade</label>            <input id="fCidade" placeholder="Ex: São Paulo"></div>
+        <div class="titulo-secao">Informações Pessoais</div>
+        <div class="grade-form">
+          <div class="grupo-form"><label>Nome *</label>            <input id="fNome"  required></div>
+          <div class="grupo-form"><label>Login (e-mail) *</label>  <input id="fEmail" type="email" required></div>
+          <div class="grupo-form"><label>Nova senha</label>        <input id="fSenha"  type="password" placeholder="Deixe em branco para manter"></div>
+          <div class="grupo-form"><label>Confirmar senha</label>   <input id="fSenha2" type="password" placeholder="Repita a senha"></div>
+          <div class="grupo-form"><label>Data de nascimento</label><input id="fNasc"   type="date"></div>
+          <div class="grupo-form"><label>Cidade</label>            <input id="fCidade" placeholder="Ex: São Paulo"></div>
         </div>
 
-        <div class="section-title">Informações Esportivas</div>
-        <div class="form-grid">
-          <div class="form-group">
+        <div class="titulo-secao">Informações Esportivas</div>
+        <div class="grade-form">
+          <div class="grupo-form">
             <label>Posição *</label>
             <select id="fPosicao" required>
               <option value="">Selecione</option>
@@ -64,7 +57,7 @@
               <option>Volante</option><option>Meia</option><option>Atacante</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="grupo-form">
             <label>Categoria *</label>
             <select id="fCategoria" required>
               <option value="">Selecione</option>
@@ -72,14 +65,14 @@
               <option>Sub-17</option><option>Sub-20</option><option>Profissional</option>
             </select>
           </div>
-          <div class="form-group full"><label>Time do coração</label><input id="fTime"   placeholder="Ex: Corinthians"></div>
-          <div class="form-group">     <label>Altura (cm)</label>   <input id="fAltura" type="number" placeholder="175"></div>
-          <div class="form-group">     <label>Peso (kg)</label>     <input id="fPeso"   type="number" placeholder="68"></div>
+          <div class="grupo-form completo"><label>Time do coração</label><input id="fTime"   placeholder="Ex: Corinthians"></div>
+          <div class="grupo-form">     <label>Altura (cm)</label>   <input id="fAltura" type="number" placeholder="175"></div>
+          <div class="grupo-form">     <label>Peso (kg)</label>     <input id="fPeso"   type="number" placeholder="68"></div>
         </div>
 
-        <div class="btn-row">
-          <button class="btn btn-ghost"   onclick="cancelar()">Cancelar</button>
-          <button class="btn btn-primary" onclick="salvar()">Salvar alterações</button>
+        <div class="linha-botoes">
+          <button class="botao botao-transparente"   onclick="cancelar()">Cancelar</button>
+          <button class="botao botao-principal" onclick="salvar()">Salvar alterações</button>
         </div>
       </div>
     </div>
@@ -92,10 +85,6 @@
 <script src="js/utils.js"></script>
 <script>
 
-  // ============================================================
-  // Função: buildSidebar
-  // Monta o menu lateral de acordo com o tipo do usuário logado
-  // ============================================================
   function buildSidebar(tipo) {
     var links;
 
@@ -118,48 +107,36 @@
       ];
     }
 
-    var sidebar = document.getElementById('sidebar');
+    var menu_lateral = document.getElementById('menu-lateral');
     var html = '<img class="logo" src="../Logo/Next-removebg-preview.png">';
     for (var i = 0; i < links.length; i++) {
       var l = links[i];
-      html += '<a href="' + l.href + '" class="sidebar-link' + (l.ativo ? ' active' : '') + '">' + l.label + '</a>';
+      html += '<a href="' + l.href + '" class="link-menu' + (l.ativo ? ' ativo' : '') + '">' + l.label + '</a>';
     }
-    sidebar.innerHTML = html;
+    menu_lateral.innerHTML = html;
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-var container = document.getElementById('historicoPeneiras'); 
-if (!container) return;
-    // Verifica se há usuário logado
+var caixa = document.getElementById('historicoPeneiras'); 
+if (!caixa) return;
+    
     var user = Auth.current();
     if (!user) {
       window.location.href = 'login.html';
       return;
     }
 
-    // Monta o menu lateral
     buildSidebar(user.tipo);
 
-    // Ativa o preview de troca de foto
-    initAvatarUpload('avatarInput', 'avatarPreview');
-
-    // ── Preenche o herói com dados do usuário ──
+    
     document.getElementById('heroNome').textContent  = user.nome  || '—';
     document.getElementById('heroEmail').textContent = user.email || '—';
 
-    if (user.foto_perfil) {
-      document.getElementById('avatarPreview').src = user.foto_perfil;
-    } else {
-      document.getElementById('avatarPreview').src =
-        'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.nome || 'A') + '&background=ee1919&color=fff&size=110';
-    }
-
     var badges = document.getElementById('heroBadges');
-    if (user.posicao)      badges.innerHTML += '<span class="badge badge-red">'    + user.posicao      + '</span>';
-    if (user.categoria)    badges.innerHTML += '<span class="badge badge-blue">'   + user.categoria    + '</span>';
-    if (user.time_coracao) badges.innerHTML += '<span class="badge badge-yellow">❤ ' + user.time_coracao + '</span>';
+    if (user.posicao)      badges.innerHTML += '<span class="selo selo-vermelho">'    + user.posicao      + '</span>';
+    if (user.categoria)    badges.innerHTML += '<span class="selo selo-azul">'   + user.categoria    + '</span>';
+    if (user.time_coracao) badges.innerHTML += '<span class="selo selo-amarelo">❤ ' + user.time_coracao + '</span>';
 
-    // ── Preenche os campos do formulário ──
     function preencher(id, valor) {
       var campo = document.getElementById(id);
       if (campo && valor) campo.value = valor;
@@ -175,38 +152,28 @@ if (!container) return;
     preencher('fPeso',     user.peso_kg);
 
 
-  }); // fim DOMContentLoaded
+  }); 
 
-  // ============================================================
-  // Função: switchTab
-  // Troca a aba visível quando o usuário clica nos botões
-  // ============================================================
   function switchTab(nome, botaoClicado) {
-    // Esconde todos os painéis e desativa todos os botões
-    document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('visible'); });
-    document.querySelectorAll('.tab-btn').forEach(function(b)   { b.classList.remove('active');  });
-    // Mostra o painel e ativa o botão clicado
-    document.getElementById('tab-' + nome).classList.add('visible');
-    botaoClicado.classList.add('active');
+    
+    document.querySelectorAll('.painel-aba').forEach(function(p) { p.classList.remove('visivel'); });
+    document.querySelectorAll('.botao-aba').forEach(function(b)   { b.classList.remove('ativo');  });
+    
+    document.getElementById('tab-' + nome).classList.add('visivel');
+    botaoClicado.classList.add('ativo');
   }
 
-  // ============================================================
-  // Função: salvar
-  // Salva as alterações do perfil via PUT /usuarios/:id/perfil
-  // ============================================================
   function salvar() {
     var senha  = document.getElementById('fSenha').value;
     var senha2 = document.getElementById('fSenha2').value;
-
-    // Valida senhas iguais antes de enviar
+    
     if (senha && senha !== senha2) {
-      toast('As senhas não coincidem.', 'error');
+      alerta('As senhas não coincidem.', 'erro');
       return;
     }
 
     var user = Auth.current();
 
-    // Monta o objeto com os novos dados
     var dadosAtualizados = {
       nome:            document.getElementById('fNome').value    || user.nome,
       email:           document.getElementById('fEmail').value   || user.email,
@@ -220,40 +187,38 @@ if (!container) return;
     };
     if (senha) dadosAtualizados.senha = senha;
 
-    // Chama a API real para persistir no banco
     fetch('/usuarios/' + user.id + '/perfil', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dadosAtualizados)
     })
-    .then(function(resposta) { return resposta.json(); })
+    .then(function(resposta) {
+      if (!resposta.ok) {
+        return resposta.json().then(function(errorBody) {
+          throw new Error(errorBody.mensagem || 'Erro ao salvar perfil.');
+        });
+      }
+      return resposta.json();
+    })
     .then(function(resultado) {
-      // Atualiza também a sessão local
-      Object.assign(user, dadosAtualizados);
-
-      // Salva foto de perfil se foi trocada
-      var img = document.getElementById('avatarPreview');
-      if (img.src && !img.src.includes('ui-avatars')) {
-        user.foto_perfil = img.src;
+      if (resultado.usuario) {
+        Object.assign(user, resultado.usuario);
+      } else {
+        Object.assign(user, dadosAtualizados);
       }
 
       Auth.login(user);
-      toast('Perfil atualizado com sucesso!');
+      alerta('Perfil atualizado com sucesso!');
 
-      // Atualiza o herói
       document.getElementById('heroNome').textContent  = user.nome;
       document.getElementById('heroEmail').textContent = user.email;
     })
     .catch(function(erro) {
       console.error('Erro ao salvar perfil:', erro);
-      toast('Erro ao salvar. Verifique o servidor.', 'error');
+      alerta(erro.message || 'Erro ao salvar. Verifique o servidor.', 'erro');
     });
   }
 
-  // ============================================================
-  // Função: cancelar
-  // Recarrega a página para descartar alterações não salvas
-  // ============================================================
   function cancelar() {
     location.reload();
   }

@@ -1,4 +1,4 @@
-.peneira-card {
+.cartao-peneira {
     background: #0e1822;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
@@ -11,29 +11,29 @@
     transition: border-color 0.2s;
 }
 
-.peneira-card:hover {
+.cartao-peneira:hover {
     border-color: rgba(238, 25, 25, 0.4);
 }
 
-.peneira-card h4 {
+.cartao-peneira h4 {
     font-size: 15px;
     font-weight: 600;
     margin-bottom: 4px;
 }
 
-.peneira-card p {
+.cartao-peneira p {
     font-size: 13px;
     color: #a0a0a0;
     margin-bottom: 2px;
 }
 
-.peneira-card .actions {
+.cartao-peneira .acoes {
     display: flex;
     gap: 8px;
     flex-shrink: 0;
 }
 
-.btn-icon {
+.botao-icone {
     width: 34px;
     height: 34px;
     border-radius: 10px;
@@ -48,12 +48,12 @@
     transition: 0.2s;
 }
 
-.btn-icon:hover {
+.botao-icone:hover {
     color: #ee1919;
     border-color: rgba(238, 25, 25, 0.4);
 }
 
-.empty-state {
+.estado-vazio {
     text-align: center;
     padding: 48px;
     color: #a0a0a0;
@@ -61,13 +61,12 @@
     border-radius: 16px;
 }
 
-.empty-state div,
-.empty-state .material-icons {
+.estado-vazio div {
     font-size: 40px;
     margin-bottom: 12px;
 }
 
-.form-panel {
+.painel-form {
     background: #0b1218;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
@@ -75,7 +74,7 @@
     margin-bottom: 28px;
 }
 
-.form-panel h2 {
+.painel-form h2 {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 22px;
     font-weight: 800;
@@ -83,14 +82,14 @@
     margin-bottom: 22px;
 }
 
-.btn-row {
+.linha-botoes {
     display: flex;
     gap: 12px;
     justify-content: flex-end;
     margin-top: 20px;
 }
 
-.lista-header {
+.cabecalho-lista {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -104,7 +103,7 @@
     text-transform: uppercase;
 }
 
-.desc-peneira {
+.descricao-peneira {
     margin-top: 6px;
     font-size: 12px;
     color: #666;

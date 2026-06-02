@@ -27,12 +27,18 @@ function cadastrar(nome, email, senha, posicao, categoria, timeCoracao, dataNasc
 }
 
 function atualizarPerfil(id, dados) {
+    function escapeSql(value) {
+        return String(value).replace(/'/g, "''");
+    }
+
     var sets = Object.entries(dados)
         .filter(function(item) {
             return item[1] !== undefined && item[1] !== '';
         })
         .map(function(item) {
-            return item[0] + " = '" + item[1] + "'";
+            var chave = item[0];
+            var valor = item[1];
+            return chave + " = '" + escapeSql(valor) + "'";
         })
         .join(', ');
 
@@ -41,6 +47,15 @@ function atualizarPerfil(id, dados) {
     }
 
     return database.executar("UPDATE usuario SET " + sets + " WHERE id = " + id);
+}
+
+function buscarPorId(id) {
+    return database.executar(`
+        SELECT id, nome, email, tipo, foto_perfil, posicao, categoria, time_coracao, desempenho,
+               data_nascimento, cidade, altura_cm, peso_kg
+        FROM usuario
+        WHERE id = ${id}
+    `);
 }
 
 function listarAlunos() {
@@ -52,4 +67,4 @@ function listarAlunos() {
     `);
 }
 
-module.exports = { autenticar, cadastrar, atualizarPerfil, listarAlunos };
+module.exports = { autenticar, cadastrar, atualizarPerfil, buscarPorId, listarAlunos };

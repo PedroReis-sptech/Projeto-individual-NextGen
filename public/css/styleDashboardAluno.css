@@ -1,4 +1,4 @@
-.user-chip {
+.ficha-usuario {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -10,7 +10,7 @@
     width: fit-content;
 }
 
-.user-chip img {
+.ficha-usuario img {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -18,28 +18,28 @@
     border: 2px solid #ee1919;
 }
 
-.user-chip span {
+.ficha-usuario span {
     font-size: 14px;
     font-weight: 600;
 }
 
-.user-chip small {
+.ficha-usuario small {
     font-size: 11px;
     color: #a0a0a0;
 }
 
-.welcome {
+.boas-vindas {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 36px;
     font-weight: 800;
     text-transform: uppercase;
 }
 
-.welcome span {
+.boas-vindas span {
     color: #ee1919;
 }
 
-.peneira-mini {
+.peneira-pequena {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -52,11 +52,11 @@
     transition: border-color .2s;
 }
 
-.peneira-mini:hover {
+.peneira-pequena:hover {
     border-color: #ee1919;
 }
 
-.peneira-mini .dot {
+.peneira-pequena .circulo-icone {
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -69,13 +69,18 @@
     flex-shrink: 0;
 }
 
-.peneira-mini h4 {
+.icone-futebol {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.peneira-pequena h4 {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 2px;
 }
 
-.peneira-mini p {
+.peneira-pequena p {
     font-size: 12px;
     color: #a0a0a0;
 }

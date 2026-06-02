@@ -1,8 +1,8 @@
-.layout {
+.estrutura {
     display: flex;
 }
 
-.profile-hero {
+.destaque-perfil {
     background: linear-gradient(135deg, #0e1822 0%, #0b1218 100%);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 16px;
@@ -15,12 +15,12 @@
     overflow: hidden;
 }
 
-.avatar-wrap {
+.caixa-foto {
     position: relative;
     flex-shrink: 0;
 }
 
-.avatar-img {
+.img-foto {
     width: 110px;
     height: 110px;
     border-radius: 50%;
@@ -29,7 +29,7 @@
     background: #0e1822;
 }
 
-.avatar-edit-btn {
+.botao-editar-foto {
     position: absolute;
     bottom: 4px;
     right: 4px;
@@ -47,7 +47,7 @@
     transition: .2s;
 }
 
-.avatar-edit-btn:hover {
+.botao-editar-foto:hover {
     background: #b91212;
     transform: scale(1.1);
 }
@@ -56,27 +56,27 @@
     display: none;
 }
 
-.hero-info h2 {
+.info-destaque h2 {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 30px;
     font-weight: 800;
     text-transform: uppercase;
 }
 
-.hero-info p {
+.info-destaque p {
     color: #a0a0a0;
     font-size: 14px;
     margin-top: 4px;
 }
 
-.hero-badges {
+.selos-destaque {
     display: flex;
     gap: 8px;
     margin-top: 12px;
     flex-wrap: wrap;
 }
 
-.tabs-nav {
+.menu-abas {
     display: flex;
     gap: 4px;
     background: #0b1218;
@@ -87,7 +87,7 @@
     width: fit-content;
 }
 
-.tab-btn {
+.botao-aba {
     padding: 8px 20px;
     border: none;
     border-radius: 8px;
@@ -102,20 +102,20 @@
     transition: .2s;
 }
 
-.tab-btn.active {
+.botao-aba.ativo {
     background: #ee1919;
     color: #fff;
 }
 
-.tab-panel {
+.painel-aba {
     display: none;
 }
 
-.tab-panel.visible {
+.painel-aba.visivel {
     display: block;
 }
 
-.section-title {
+.titulo-secao {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px;
     font-weight: 700;
@@ -127,28 +127,28 @@
     padding-bottom: 10px;
 }
 
-.btn-row {
+.linha-botoes {
     display: flex;
     gap: 12px;
     justify-content: flex-end;
     margin-top: 24px;
 }
 
-.my-stats {
+.minhas-estatisticas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 14px;
     margin-bottom: 24px;
 }
 
-.my-stat {
+.minha-estatistica {
     background: #0e1822;
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 10px;
     padding: 18px 16px;
 }
 
-.my-stat p {
+.minha-estatistica p {
     font-size: 11px;
     color: #a0a0a0;
     text-transform: uppercase;
@@ -156,19 +156,19 @@
     margin-bottom: 6px;
 }
 
-.my-stat h3 {
+.minha-estatistica h3 {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 28px;
     font-weight: 800;
     color: #ee1919;
 }
 
-.my-stat small {
+.minha-estatistica small {
     font-size: 11px;
     color: #555;
 }
 
-.peneira-item {
+.item-peneira {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -179,18 +179,18 @@
     margin-bottom: 10px;
 }
 
-.peneira-item h4 {
+.item-peneira h4 {
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 2px;
 }
 
-.peneira-item p {
+.item-peneira p {
     font-size: 12px;
     color: #a0a0a0;
 }
 
-.historico-titulo {
+.titulo-historico {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 18px;
     font-weight: 800;

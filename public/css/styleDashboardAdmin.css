@@ -1,4 +1,4 @@
-.tag-tipo {
+.etiqueta-tipo {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -11,7 +11,7 @@
     vertical-align: middle;
 }
 
-.athlete-row {
+.linha-atleta {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -21,15 +21,15 @@
     transition: background .15s;
 }
 
-.athlete-row:hover {
+.linha-atleta:hover {
     background: rgba(255,255,255,.03);
 }
 
-.athlete-row:last-child {
+.linha-atleta:last-child {
     border-bottom: none;
 }
 
-.ath-avatar {
+.foto-atleta {
     width: 38px;
     height: 38px;
     border-radius: 50%;
@@ -38,36 +38,36 @@
     flex-shrink: 0;
 }
 
-.ath-name {
+.nome-atleta {
     font-size: 14px;
     font-weight: 600;
 }
 
-.ath-sub {
+.dados-atleta {
     font-size: 12px;
     color: #a0a0a0;
 }
 
-.ath-right {
+.lado-atleta {
     margin-left: auto;
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-.search-bar {
+.barra-busca {
     display: flex;
     gap: 10px;
     align-items: center;
     margin-bottom: 16px;
 }
 
-.search-bar input {
+.barra-busca input {
     max-width: 320px;
     flex: 1;
 }
 
-.search-bar-header {
+.cabecalho-busca {
     display: flex;
     align-items: center;
     justify-content: space-between;

@@ -2,7 +2,6 @@ var modelo = require("../models/estatisticasModel");
 
 function admin(req, res) {
 
-    // Promise.all espera TODAS as consultas terminarem antes de responder
     Promise.all([
         modelo.totalAtletas(),
         modelo.totalPeneiras(),
@@ -42,15 +41,15 @@ function aluno(req, res) {
         modelo.kpisAluno(idAtleta),
         modelo.presencaPorSemana(idAtleta)
     ])
-    .then(function(resultados) {
-        var kpis = resultados[0];
+.then(function(resultados) {
+        var kpis = resultados[0][0];
 
         res.status(200).json({
             kpis: {
                 treinosNoMes:      kpis.treinos_mes      || 0,
                 taxaPresenca:      kpis.taxa_presenca     || 0,
                 treinosConcluidos: kpis.treinos_concluidos || 0,
-                desempenho:        kpis.desempenho
+                desempenho:        kpis.desempenho         
             },
             presencaPorSemana: resultados[1]
         });
