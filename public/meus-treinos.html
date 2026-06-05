@@ -10,14 +10,13 @@
 <body>
 <div class="estrutura">
 
-  <!-- Menu lateral -->
   <nav class="menu-lateral">
     <img class="logo" src="../Logo/Next-removebg-preview.png" alt="Logo NextGen">
     <a href="dashboard-aluno.html" class="link-menu">Dashboard</a>
     <a href="perfil.html"          class="link-menu">Perfil</a>
     <a href="peneiras.html"        class="link-menu">Peneiras</a>
     <a href="meus-treinos.html"    class="link-menu ativo">Meus Treinos</a>
-    <a href="login.html"           class="link-menu" onclick="Auth.logout()">Sair</a>
+    <a href="login.html"           class="link-menu" onclick="storage.logout()">Sair</a>
   </nav>
 
   <main class="conteudo-principal">
@@ -25,35 +24,65 @@
     <div class="titulo-pagina">Meus Treinos</div>
     <p class="subtitulo-pagina">Treinos passados pelo seu professor.</p>
 
-    <!-- Contador de treinos pendentes -->
     <div style="margin-bottom: 20px;">
       <span class="selo selo-vermelho" id="contadorPendentes">Carregando...</span>
     </div>
 
-    <!-- Seção: treinos pendentes -->
     <div class="rotulo-secao">Pendentes</div>
     <div id="listaPendentes">
       <p class="msg-carregando">Carregando treinos...</p>
     </div>
 
-    <!-- Seção: treinos concluídos (aparece separado logo abaixo) -->
     <div style="margin-top: 32px;" id="secaoConcluidos">
       <div class="rotulo-secao">Concluidos</div>
       <div id="listaConcluidos">
-        <!-- Preenchido pelo JavaScript -->
       </div>
     </div>
 
   </main>
 </div>
 
-<script src="js/utils.js"></script>
 <script>
+  var storage = {
+    login: function(user) {
+      localStorage.setItem('sessaoUser', JSON.stringify(user));
+    },
+    logout: function() {
+      localStorage.removeItem('sessaoUser');
+      window.location.href = 'login.html';
+    },
+    current: function() {
+      try {
+        return JSON.parse(localStorage.getItem('sessaoUser')) || null;
+      } catch(e) {
+        return null;
+      }
+    }
+  };
+
+  function alerta(mensagem, tipo) {
+    var tipo_final = tipo || 'sucesso';
+    var caixa = document.getElementById('toastContainer');
+    if (!caixa) {
+      caixa = document.createElement('div');
+      caixa.id = 'toastContainer';
+      caixa.className = 'caixa-alertas';
+      document.body.appendChild(caixa);
+    }
+    var t = document.createElement('div');
+    t.className = 'alerta alerta-' + tipo_final;
+    t.innerHTML = '<span>' + (tipo_final === 'sucesso' ? '✓' : '✕') + '</span> ' + mensagem;
+    caixa.appendChild(t);
+    setTimeout(function() {
+      t.remove();
+    }, 3200);
+  }
+
 
   var user = null;
 
   document.addEventListener('DOMContentLoaded', function() {
-    user = Auth.current();
+    user = storage.current();
 
     
     if (!user || user.tipo !== 'aluno') {
@@ -149,7 +178,7 @@
     
     if (botao) {
       botao.disabled    = true;
-      botao.textContent = 'Salvando...';
+      botao.innerHTML = 'Salvando...';
     }
 
     fetch('/treinos/concluir/' + treinoId, {

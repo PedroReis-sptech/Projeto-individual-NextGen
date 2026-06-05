@@ -86,8 +86,55 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/utils.js"></script>
 <script>
+  var storage = {
+    login: function(user) {
+      localStorage.setItem('sessaoUser', JSON.stringify(user));
+    },
+    logout: function() {
+      localStorage.removeItem('sessaoUser');
+      window.location.href = 'login.html';
+    },
+    current: function() {
+      try {
+        return JSON.parse(localStorage.getItem('sessaoUser')) || null;
+      } catch(e) {
+        return null;
+      }
+    },
+      require: function(tipo) {
+  var u = this.current();
+  if (!u) {
+    window.location.href = 'login.html';
+    return null;
+  }
+  if (tipo && u.tipo !== tipo) {
+    window.location.href = u.tipo === 'aluno' ? 'dashboard-aluno.html' : 'dashboard-admin.html';
+    return null;
+  }
+  return u;
+}
+  };
+
+  function alerta(mensagem, tipo) {
+    var tipo_final = tipo || 'sucesso';
+    var caixa = document.getElementById('toastContainer');
+    if (!caixa) {
+      caixa = document.createElement('div');
+      caixa.id = 'toastContainer';
+      caixa.className = 'caixa-alertas';
+      document.body.appendChild(caixa);
+    }
+    var t = document.createElement('div');
+    t.className = 'alerta alerta-' + tipo_final;
+    t.innerHTML = '<span>' + (tipo_final === 'sucesso' ? '✓' : '✕') + '</span> ' + mensagem;
+    caixa.appendChild(t);
+    setTimeout(function() {
+      t.remove();
+    }, 3200);
+  }
+
+
   var todosAtletas = [];
   var COLORS = ['#ee1919', '#f59e0b', '#10b981', '#6366f1', '#06b6d4', '#ec4899'];
 
@@ -131,13 +178,13 @@
     caixa.innerHTML = html;
   }
 
-  var dadosTexto = localStorage.getItem('ng_user');
+  var dadosTexto = localStorage.getItem('sessaoUser');
   if (!dadosTexto) {
     window.location.href = 'login.html';
   }
 
   function fazerLogout() {
-    localStorage.removeItem('ng_user');
+    localStorage.removeItem('sessaoUser');
     window.location.href = 'login.html';
   }
 
@@ -292,7 +339,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    var user = Auth.current();
+    var user = storage.current();
     if (!user || user.tipo === 'aluno') {
       window.location.href = 'dashboard-aluno.html';
       return;

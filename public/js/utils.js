@@ -15,17 +15,17 @@ function alerta(mensagem, type = 'sucesso') {
     }, 3200);
 }
 
-const Auth = {
+const storage = {
     login(user) {
-        localStorage.setItem('ng_user', JSON.stringify(user));
+        localStorage.setItem('sessaoUser', JSON.stringify(user));
     },
     logout() {
-        localStorage.removeItem('ng_user');
+        localStorage.removeItem('sessaoUser');
         window.location.href = 'login.html';
     },
     current() {
         try {
-            return JSON.parse(localStorage.getItem('ng_user')) || null;
+            return JSON.parse(localStorage.getItem('sessaoUser')) || null;
         }
         catch {
             return null;

@@ -109,10 +109,43 @@
     </div>
   </div>
 
-  <script src="js/utils.js"></script>
   <script>
+    var storage = {
+      login: function(user) {
+        localStorage.setItem('sessaoUser', JSON.stringify(user));
+      },
+      logout: function() {
+        localStorage.removeItem('sessaoUser');
+        window.location.href = 'login.html';
+      },
+      current: function() {
+        try {
+          return JSON.parse(localStorage.getItem('sessaoUser')) || null;
+        } catch(e) {
+          return null;
+        }
+      }
+    };
 
-    // Verifica ?aba=cadastro
+    function alerta(mensagem, tipo) {
+      var tipo_final = tipo || 'sucesso';
+      var caixa = document.getElementById('toastContainer');
+      if (!caixa) {
+        caixa = document.createElement('div');
+        caixa.id = 'toastContainer';
+        caixa.className = 'caixa-alertas';
+        document.body.appendChild(caixa);
+      }
+      var t = document.createElement('div');
+      t.className = 'alerta alerta-' + tipo_final;
+      t.innerHTML = '<span>' + (tipo_final === 'sucesso' ? '✓' : '✕') + '</span> ' + mensagem;
+      caixa.appendChild(t);
+      setTimeout(function() {
+        t.remove();
+      }, 3200);
+    }
+
+
     var parametros = new URLSearchParams(location.search);
     if (parametros.get('aba') === 'cadastro') {
       switchTab('cadastro');
@@ -159,7 +192,7 @@
           return;
         }
 
-        Auth.login(dados);
+        storage.login(dados);
         mensagem.textContent = 'Redirecionando...';
         mensagem.className = 'mensagem sucesso';
 
@@ -230,7 +263,7 @@
         mensagem.textContent = 'Conta criada! Fazendo login...';
         mensagem.className = 'mensagem sucesso';
 
-        Auth.login({
+        storage.login({
           id:           dados.id,
           nome:         nome,
           email:        email,

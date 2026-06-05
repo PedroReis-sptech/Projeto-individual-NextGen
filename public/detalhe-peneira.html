@@ -66,52 +66,39 @@
     </div>
 
     <script>
-        var urlParams = new URLSearchParams(window.location.search);
-        var idPeneira = urlParams.get('id');
+        let urlParams = new URLSearchParams(window.location.search);
+        let idPeneira = urlParams.get('id');
 
         function carregarPeneira() {
             if (!idPeneira) {
-                mostrarErro('ID da peneira não fornecido.');
+                alert('ID da peneira não fornecido');
                 return;
             }
 
             fetch('/peneiras/' + idPeneira)
-                .then(function (resposta) {
-                    if (!resposta.ok) {
-                        throw new Error('Erro ao buscar detalhes da peneira.');
-                    }
+                .then(function(resposta) {
                     return resposta.json();
                 })
-                .then(function (peneira) {
+                .then(function(peneira) {
                     document.getElementById('nomeClube').textContent = peneira.nome_clube || 'Sem clube';
                     document.getElementById('nomePeneira').textContent = peneira.nome;
                     document.getElementById('categoriaBadge').textContent = peneira.categoria;
-                    document.getElementById('descricaoPeneira').textContent = peneira.descricao || 'Nenhuma descrição fornecida.';
+                    document.getElementById('descricaoPeneira').textContent = peneira.descricao;
                     document.getElementById('cidadePeneira').textContent = peneira.cidade;
                     document.getElementById('localPeneira').textContent = peneira.local_endereco;
                     document.getElementById('horarioPeneira').textContent = peneira.horario;
-
-                    if (peneira.data_realizacao) {
-                        var dataFormatada = new Date(peneira.data_realizacao).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-                        document.getElementById('dataPeneira').textContent = dataFormatada;
-                    }
+                    document.getElementById('dataPeneira').textContent = peneira.data_realizacao;
 
                     document.getElementById('estadoCarregando').classList.add('escondido');
                     document.getElementById('conteudo').classList.remove('escondido');
                 })
-                .catch(function (erro) {
-                    console.error(erro);
-                    mostrarErro('Não foi possível carregar os detalhes desta peneira.');
+                .catch(function(erro) {
+                    console.error('Erro:', erro);
+                    alert('Erro ao carregar peneira');
                 });
         }
 
-        function mostrarErro(mensagem) {
-            document.getElementById('estadoCarregando').classList.add('escondido');
-            document.getElementById('textoErro').textContent = message;
-            document.getElementById('estadoErro').classList.remove('escondido');
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             carregarPeneira();
         });
     </script>

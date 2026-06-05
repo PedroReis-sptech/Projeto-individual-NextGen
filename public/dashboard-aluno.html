@@ -16,7 +16,7 @@
     <a href="perfil.html" class="link-menu">Perfil</a>
     <a href="peneiras.html" class="link-menu">Peneiras</a>
     <a href="meus-treinos.html" class="link-menu">Meus Treinos</a>
-    <a href="#" class="link-menu" onclick="Auth.logout()">Sair</a>
+    <a href="#" class="link-menu" onclick="storage.logout()">Sair</a>
   </nav>
 
   <main class="conteudo-principal">
@@ -55,8 +55,53 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="js/utils.js"></script>
 <script>
+  var storage = {
+  login: function(user) {
+    localStorage.setItem('sessaoUser', JSON.stringify(user));
+  },
+  logout: function() {
+    localStorage.removeItem('sessaoUser');
+    window.location.href = 'login.html';
+  },
+  current: function() {
+    try {
+      return JSON.parse(localStorage.getItem('sessaoUser')) || null;
+    } catch(e) {
+      return null;
+    }
+  },
+  require: function(tipo) {
+  var u = this.current();
+  if (!u) {
+    window.location.href = 'login.html';
+    return null;
+  }
+  if (tipo && u.tipo !== tipo) {
+    window.location.href = u.tipo === 'aluno' ? 'dashboard-aluno.html' : 'dashboard-admin.html';
+    return null;
+  }
+  return u;
+}
+};
+
+function alerta(mensagem, tipo) {
+  var tipo_final = tipo || 'sucesso';
+  var caixa = document.getElementById('toastContainer');
+  if (!caixa) {
+    caixa = document.createElement('div');
+    caixa.id = 'toastContainer';
+    caixa.className = 'caixa-alertas';
+    document.body.appendChild(caixa);
+  }
+  var t = document.createElement('div');
+  t.className = 'alerta alerta-' + tipo_final;
+  t.innerHTML = '<span>' + (tipo_final === 'sucesso' ? '✓' : '✕') + '</span> ' + mensagem;
+  caixa.appendChild(t);
+  setTimeout(function() {
+    t.remove();
+  }, 3200);
+}
   var graficoEvolucao = null;
 
   function carregarPeneiras() {
@@ -194,7 +239,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    var user = Auth.require('aluno');
+    var user = storage.require('aluno');
     if (!user) return;
 
     document.getElementById('chipNome').textContent = user.nome || '-';
