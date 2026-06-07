@@ -13,8 +13,7 @@
   <div class="estrutura">
 
     <nav class="menu-lateral">
-      <img class="logo" src="../Logo/Next-removebg-preview.png"
-        onerror="this.outerHTML='<div style=\'font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--red);text-align:center;margin-bottom:28px\'>NG</div>'">
+      <img class="logo" src="../Logo/Next-removebg-preview.png" onclick="window.location.href = 'index.html'">
       <a href="dashboard-admin.html" class="link-menu">Dashboard</a>
       <a href="perfil.html" class="link-menu">Perfil</a>
       <a href="peneiras.html" class="link-menu">Peneiras</a>
@@ -86,7 +85,7 @@
 
       <div class="cabecalho-lista">
         <h3 class="lista-titulo">Peneiras criadas</h3>
-        <span class="selo selo-vermelho" id="totalBadge">0 peneiras</span>
+        <span class="selo selo-vermelho" id="totalTira">0 peneiras</span>
       </div>
       <div id="listaCriadas">
       </div>
@@ -126,7 +125,7 @@
 
     function renderPeneiras(lista) {
       var caixa = document.getElementById('listaCriadas');
-      var selo = document.getElementById('totalBadge');
+      var selo = document.getElementById('totalTira');
 
       selo.textContent = lista.length + ' peneira' + (lista.length !== 1 ? 's' : '');
 
@@ -143,12 +142,12 @@
         ? p.data_realizacao.split('T')[0].split('-').reverse().join('/')
         : '—';
 
-      var badgeClass = 'selo-verde';
-      var badgeTexto = 'ativa';
+      var tiraClass = 'selo-verde';
+      var tiraTexto = 'ativa';
       
       if (p.status === 'desativada' || p.ativo === false) {
-        badgeClass = 'selo-vermelho';
-        badgeTexto = 'desativada';
+        tiraClass = 'selo-vermelho';
+        tiraTexto = 'desativada';
       }
 
       html += '<div class="cartao-peneira" id="pen-' + p.id + '">';
@@ -162,9 +161,9 @@
       }
       html +=   '</div>';
       html +=   '<div class="acoes">';
-      html +=     '<span class="selo ' + badgeClass + '">' + badgeTexto + '</span>';
+      html +=     '<span class="selo ' + tiraClass + '">' + tiraTexto + '</span>';
 
-      if (badgeTexto === 'ativa') {
+      if (tiraTexto === 'ativa') {
         html +=     '<button class="botao-icone" title="Desativar" onclick="desativarPeneira(' + p.id + ')">🗑</button>';
       }
       

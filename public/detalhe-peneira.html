@@ -37,7 +37,7 @@
             </div>
 
             <div class="cartao-detalhe-principal">
-                
+
                 <div class="secao-info">
                     <h2>Informações de Local e Horário</h2>
                     <div class="linhas-info">
@@ -56,7 +56,8 @@
                 </div>
 
                 <div class="caixa-aviso">
-                    <p><strong>IMPORTANTE:</strong> Certifique-se de comparecer ao local com os equipamentos necessários (chuteira, caneleira e calção).</p>
+                    <p><strong>IMPORTANTE:</strong> Certifique-se de comparecer ao local com os equipamentos necessários
+                        (chuteira, caneleira e calção).</p>
                 </div>
 
             </div>
@@ -76,10 +77,13 @@
             }
 
             fetch('/peneiras/' + idPeneira)
-                .then(function(resposta) {
+                .then(function (resposta) {
                     return resposta.json();
                 })
-                .then(function(peneira) {
+                .then(function (peneira) {
+                    var dataFormatada = peneira.data_realizacao
+                        ? peneira.data_realizacao.split('T')[0].split('-').reverse().join('/')
+                        : '-';
                     document.getElementById('nomeClube').textContent = peneira.nome_clube || 'Sem clube';
                     document.getElementById('nomePeneira').textContent = peneira.nome;
                     document.getElementById('categoriaBadge').textContent = peneira.categoria;
@@ -87,18 +91,18 @@
                     document.getElementById('cidadePeneira').textContent = peneira.cidade;
                     document.getElementById('localPeneira').textContent = peneira.local_endereco;
                     document.getElementById('horarioPeneira').textContent = peneira.horario;
-                    document.getElementById('dataPeneira').textContent = peneira.data_realizacao;
+                    document.getElementById('dataPeneira').textContent = dataFormatada;
 
                     document.getElementById('estadoCarregando').classList.add('escondido');
                     document.getElementById('conteudo').classList.remove('escondido');
                 })
-                .catch(function(erro) {
+                .catch(function (erro) {
                     console.error('Erro:', erro);
                     alert('Erro ao carregar peneira');
                 });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             carregarPeneira();
         });
     </script>

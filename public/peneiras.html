@@ -26,7 +26,7 @@
             </div>
         </header>
 
-        <div class="grade-peneiras" id="gridPeneiras">
+        <div class="grade-peneiras" id="gradePeneiras">
             <p class="msg-carregando">Carregando peneiras...</p>
         </div>
 
@@ -53,16 +53,16 @@
                 })
                 .catch(function(erro) {
                     console.error('Erro ao carregar peneiras:', erro);
-                    document.getElementById('gridPeneiras').innerHTML =
+                    document.getElementById('gradePeneiras').innerHTML =
                         '<p class="msg-erro">Erro ao carregar. Verifique se o servidor estÃ¡ rodando.</p>';
                 });
         }
 
         function renderizarCards(lista) {
-            var grid = document.getElementById('gridPeneiras');
+            var grade = document.getElementById('gradePeneiras');
 
             if (!lista || lista.length === 0) {
-                grid.innerHTML = '<p class="msg-vazio">Nenhuma peneira disponÃ­vel no momento.</p>';
+                grade.innerHTML = '<p class="msg-vazio">Nenhuma peneira disponÃ­vel no momento.</p>';
                 return;
             }
 
@@ -121,7 +121,7 @@
                 html += '</div>';
             }
 
-            grid.innerHTML = html;
+            grade.innerHTML = html;
         }
 
         function filtrarPeneiras() {

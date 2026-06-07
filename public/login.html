@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen · Entrar</title>
-  <!-- sem CSS inline -->
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/styleLogin.css">
 </head>
@@ -14,16 +13,14 @@
 
   <div class="cartao">
     <div class="caixa-logo">
-      <img src="../Logo/Next-removebg-preview.png" alt="NextGen" onerror="this.style.display='none'">
+      <img src="../Logo/Next-removebg-preview.png" alt="NextGen" onclick="window.location.href = 'index.html'">
     </div>
 
-    <!-- Abas -->
     <div class="abas">
       <button class="botao-aba ativo" id="btnLogin"    onclick="switchTab('login')">Entrar</button>
       <button class="botao-aba"        id="btnCadastro" onclick="switchTab('cadastro')">Cadastrar</button>
     </div>
 
-    <!-- Login -->
     <div class="secao-form visivel" id="secLogin">
       <h2>Bem-vindo de volta</h2>
       <p class="texto-sub">Entre para ver as peneiras abertas.</p>
@@ -41,7 +38,6 @@
       <div class="mensagem" id="msgLogin"></div>
     </div>
 
-    <!-- Cadastro -->
     <div class="secao-form" id="secCadastro">
       <h2>Crie sua conta</h2>
 

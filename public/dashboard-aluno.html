@@ -11,7 +11,7 @@
 <div class="estrutura">
 
   <nav class="menu-lateral">
-    <img class="logo" src="../Logo/Next-removebg-preview.png">
+    <img class="logo" src="../Logo/Next-removebg-preview.png" onclick="window.location.href = 'index.html'">
     <a href="dashboard-aluno.html" class="link-menu ativo">Dashboard</a>
     <a href="perfil.html" class="link-menu">Perfil</a>
     <a href="peneiras.html" class="link-menu">Peneiras</a>
@@ -21,17 +21,17 @@
 
   <main class="conteudo-principal">
 
-    <div id="userChip" class="ficha-usuario">
+    <div id="userCard" class="ficha-usuario">
       <div>
-        <span id="chipNome">-</span><br>
-        <small id="chipCategoria">-</small>
+        <span id="cardNome">-</span><br>
+        <small id="cardCategoria">-</small>
       </div>
     </div>
 
-    <div class="boas-vindas">Ola, <span id="firstName">Atleta</span>!</div>
-    <p class="subtitulo-pagina">Sua temporada 2026 - <span id="chipPos">-</span></p>
+    <div class="boas-vindas">Ola, <span id="primNome">Atleta</span>!</div>
+    <p class="subtitulo-pagina">Sua temporada 2026 - <span id="cardPos">-</span></p>
 
-    <div class="grade-estatisticas" id="statsGrid"></div>
+    <div class="grade-estatisticas" id="gradeStats"></div>
 
     <div class="linha-graficos">
       <div class="caixa-grafico largo">
@@ -159,21 +159,21 @@ function alerta(mensagem, tipo) {
       })
       .then(function(dados) {
         var stats = [
-          { label: 'Treinos no mes', valor: dados.kpis?.treinosNoMes ?? 0, sub: 'atualizado' },
-          { label: '% Presenca', valor: (dados.kpis?.taxaPresenca ?? 0) + '%', sub: 'historico total' },
-          { label: 'Treinos concluidos', valor: dados.kpis?.treinosConcluidos ?? 0, sub: 'total' },
-          { label: 'Desempenho', valor: dados.kpis?.desempenho ?? 0, sub: 'nota atual' }
+          { nome: 'Treinos no mes', valor: dados.kpis.treinosNoMes || 0, sub: 'atualizado' },
+          { nome: '% Presenca', valor: (dados.kpis.taxaPresenca || 0) + '%', sub: 'historico total' },
+          { nome: 'Treinos concluidos', valor: dados.kpis.treinosConcluidos || 0, sub: 'total' },
+          { nome: 'Desempenho', valor: dados.kpis.desempenho || 0, sub: 'nota atual' }
         ];
 
         var html = '';
         for (var i = 0; i < stats.length; i++) {
           html += '<div class="cartao-estatistica">';
-          html +=   '<p>' + stats[i].label + '</p>';
+          html +=   '<p>' + stats[i].nome + '</p>';
           html +=   '<h2>' + stats[i].valor + '</h2>';
           html +=   '<small>' + stats[i].sub + '</small>';
           html += '</div>';
         }
-        document.getElementById('statsGrid').innerHTML = html;
+        document.getElementById('gradeStats').innerHTML = html;
 
         var labelsSemanas = [];
         var listaPresentes = [];
@@ -208,7 +208,7 @@ function alerta(mensagem, tipo) {
       })
       .catch(function(erro) {
         console.error('Erro ao carregar metricas do aluno:', erro);
-        document.getElementById('statsGrid').innerHTML = '<p style="color:var(--red)">Erro ao carregar estatisticas.</p>';
+        document.getElementById('gradeStats').innerHTML = '<p style="color:var(--red)">Erro ao carregar estatisticas.</p>';
       });
   }
 
@@ -242,12 +242,12 @@ function alerta(mensagem, tipo) {
     var user = storage.require('aluno');
     if (!user) return;
 
-    document.getElementById('chipNome').textContent = user.nome || '-';
-    document.getElementById('chipCategoria').textContent = user.categoria || '-';
+    document.getElementById('cardNome').textContent = user.nome || '-';
+    document.getElementById('cardCategoria').textContent = user.categoria || '-';
 
     var primeiroNome = (user.nome || 'Atleta').split(' ')[0];
-    document.getElementById('firstName').textContent = primeiroNome;
-    document.getElementById('chipPos').textContent = user.posicao || '-';
+    document.getElementById('primNome').textContent = primeiroNome;
+    document.getElementById('cardPos').textContent = user.posicao || '-';
 
     carregarMetricasAluno(user.id);
     carregarPeneiras();

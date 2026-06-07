@@ -47,10 +47,6 @@
     transition: .2s;
 }
 
-.botao-editar-foto:hover {
-    background: #b91212;
-    transform: scale(1.1);
-}
 
 #avatarInput {
     display: none;
@@ -76,36 +72,19 @@
     flex-wrap: wrap;
 }
 
-.menu-abas {
-    display: flex;
-    gap: 4px;
-    background: #0b1218;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    padding: 4px;
-    margin-bottom: 24px;
-    width: fit-content;
-}
-
-.botao-aba {
+.aba-dados {
     padding: 8px 20px;
-    border: none;
+    width: fit-content;
+    border: 2px solid rgba(255,255,255,0.08);
     border-radius: 8px;
-    background: transparent;
-    color: #a0a0a0;
+    margin-bottom: 24px;
+    background: #ee1919;
+    color: #fff;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .05em;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.botao-aba.ativo {
-    background: #ee1919;
-    color: #fff;
-}
+    cursor: pointer;}
 
 .painel-aba {
     display: none;
@@ -120,7 +99,6 @@
     font-size: 15px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: .08em;
     color: #a0a0a0;
     margin: 24px 0 14px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -152,7 +130,6 @@
     font-size: 11px;
     color: #a0a0a0;
     text-transform: uppercase;
-    letter-spacing: .06em;
     margin-bottom: 6px;
 }
 

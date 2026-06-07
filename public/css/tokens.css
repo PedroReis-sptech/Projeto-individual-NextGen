@@ -49,7 +49,6 @@ label {
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
     color: #a0a0a0;
     margin-bottom: 6px;
 }
@@ -63,7 +62,6 @@ label {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
     border: none;
@@ -116,7 +114,6 @@ label {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 .selo-vermelho {
@@ -238,7 +235,6 @@ label {
     font-size: 32px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     margin-bottom: 4px;
 }
 
@@ -266,7 +262,6 @@ label {
     font-size: 12px;
     color: #a0a0a0;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
     margin-bottom: 8px;
 }
 
@@ -306,7 +301,6 @@ label {
     font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
     color: #a0a0a0;
     margin-bottom: 16px;
 }
@@ -345,7 +339,6 @@ th, td {
 th {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
     color: #a0a0a0;
     font-weight: 600;
 }

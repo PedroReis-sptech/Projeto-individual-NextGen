@@ -16,7 +16,6 @@
     font-size: 18px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
     color: #ffffff;
 }
 
@@ -107,7 +106,6 @@
     font-size: 13px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
     color: #a0a0a0;
     margin-bottom: 14px;
     padding-bottom: 8px;
@@ -216,7 +214,6 @@
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 .selo-vermelho {
@@ -289,7 +286,6 @@
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.04em;
     text-transform: uppercase;
     cursor: pointer;
     border: none;
@@ -336,7 +332,6 @@
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.02em;
 }
 
 .badge-red {

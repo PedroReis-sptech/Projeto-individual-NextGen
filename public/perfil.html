@@ -12,14 +12,10 @@
 <body>
 <div class="estrutura">
 
-  <!-- ===== MENU LATERAL ===== -->
-  <!-- Preenchido dinamicamente pelo JavaScript abaixo -->
-  <nav class="menu-lateral" id="menu-lateral"></nav>
+  <div class="menu-lateral" id="menu-lateral"></div>
 
-  <!-- ===== CONTEÚDO PRINCIPAL ===== -->
   <main class="conteudo-principal">
 
-    <!-- Herói do perfil: avatar + nome + badges -->
     <div class="destaque-perfil">
       <div class="caixa-avatar">
       </div>
@@ -30,9 +26,7 @@
       </div>
     </div>
 
-    <div class="nav-abas">
-      <button class="botao-aba ativo">Meus Dados</button>
-    </div>
+      <div class="aba-dados">Meus Dados</div>
 
     <div class="painel-aba visivel" id="tab-dados">
       <div class="cartao">
@@ -142,7 +136,7 @@
     }
 
     var menu_lateral = document.getElementById('menu-lateral');
-    var html = '<img class="logo" src="../Logo/Next-removebg-preview.png">';
+    var html = '<img class="logo" src="../Logo/Next-removebg-preview.png" onclick="window.location.href = \'index.html\'">';
     for (var i = 0; i < links.length; i++) {
       var l = links[i];
       html += '<a href="' + l.href + '" class="link-menu' + (l.ativo ? ' ativo' : '') + '">' + l.label + '</a>';
@@ -169,7 +163,7 @@ if (!caixa) return;
     var badges = document.getElementById('heroBadges');
     if (user.posicao)      badges.innerHTML += '<span class="selo selo-vermelho">'    + user.posicao      + '</span>';
     if (user.categoria)    badges.innerHTML += '<span class="selo selo-azul">'   + user.categoria    + '</span>';
-    if (user.time_coracao) badges.innerHTML += '<span class="selo selo-amarelo">❤ ' + user.time_coracao + '</span>';
+    if (user.time_coracao) badges.innerHTML += '<span class="selo selo-amarelo"> ' + user.time_coracao + '</span>';
 
     function preencher(id, valor) {
       var campo = document.getElementById(id);
